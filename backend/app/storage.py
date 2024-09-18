@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
 from typing import Any, List, Optional, Sequence, Union
 
+import bcrypt
+
 from langchain_core.messages import AnyMessage
 from langchain_core.runnables import RunnableConfig
 
@@ -208,13 +210,55 @@ async def delete_thread(user_id: str, thread_id: str):
             user_id,
         )
 
-
-async def get_or_create_user(sub: str) -> tuple[User, bool]:
-    """Returns a tuple of the user and a boolean indicating whether the user was created."""
+async def get_projects(user_id: str) -> List[dict]:
+    """Get all projects for a user."""
     async with get_pg_pool().acquire() as conn:
-        if user := await conn.fetchrow('SELECT * FROM "user" WHERE sub = $1', sub):
-            return user, False
-        user = await conn.fetchrow(
-            'INSERT INTO "user" (sub) VALUES ($1) RETURNING *', sub
+        return await conn.fetch("SELECT * FROM project WHERE user_id = $1", user_id)
+
+async def create_project(user_id: str, project_id: str, *, name: str, config: dict) -> dict:
+    """Create a new project."""
+    async with get_pg_pool().acquire() as conn:
+        await conn.execute(
+            "INSERT INTO project (user_id, name, config) VALUES ($1, $2, $3, $4)",
+            user_id,
+            name,
+            config,
         )
-        return user, True
+        return {
+            "project_id": project_id,
+            "user_id": user_id,
+            "name": name,
+            "config": config,
+        }
+    
+async def delete_project(user_id: str, project_id: str) -> None:
+    """Delete a project by ID."""
+    async with get_pg_pool().acquire() as conn:
+        await conn.execute(
+            "DELETE FROM project WHERE project_id = $1 AND user_id = $2",
+            project_id,
+            user_id,
+        )   
+
+async def get_user(email: str, password: str) -> User:
+    """Returns the user."""
+    async with get_pg_pool().acquire() as conn:
+        user = await conn.fetchrow('SELECT * FROM "user" WHERE email = $1', email)
+        if user is not None:
+            if bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
+                return dict(user)
+
+        return None
+
+async def create_user(email: str, password: str) -> User:
+    """Create a new user."""
+    bytes = password.encode("utf-8")
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(bytes, salt)
+    print(hashed)
+    print(email)
+    async with get_pg_pool().acquire() as conn:
+        user = await conn.fetchrow(
+            'INSERT INTO "user" (email, password) VALUES ($1, $2) RETURNING *', email, hashed.decode("utf-8")
+        )
+        return user

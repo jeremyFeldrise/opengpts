@@ -6,6 +6,7 @@ from typing import Optional, Union
 from pydantic import BaseSettings, root_validator, validator
 
 
+
 class AuthType(Enum):
     NOOP = "noop"
     JWT_LOCAL = "jwt_local"

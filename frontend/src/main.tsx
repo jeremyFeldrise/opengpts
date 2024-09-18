@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { StrictMode } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { NotFound } from "./components/NotFound.tsx";
+import Login from "./components/Login.tsx";
 
 function getCookie(name: string) {
   const cookie = document.cookie
@@ -35,13 +36,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Login></Login>}></Route>
           <Route path="/thread/:chatId" element={<App />} />
           <Route
             path="/assistant/:assistantId/edit"
             element={<App edit={true} />}
           />
           <Route path="/assistant/:assistantId" element={<App />} />
-          <Route path="/" element={<App />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

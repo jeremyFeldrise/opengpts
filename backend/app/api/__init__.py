@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.assistants import router as assistants_router
 from app.api.runs import router as runs_router
 from app.api.threads import router as threads_router
+from app.api.authentication import router as authentication_router
 
 router = APIRouter()
 
@@ -11,7 +12,11 @@ router = APIRouter()
 async def ok():
     return {"ok": True}
 
-
+router.include_router(
+    authentication_router,
+    prefix="/auth",
+    tags=["auth"],
+)
 router.include_router(
     assistants_router,
     prefix="/assistants",

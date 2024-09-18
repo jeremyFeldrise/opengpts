@@ -7,11 +7,24 @@ from typing_extensions import TypedDict
 class User(TypedDict):
     user_id: str
     """The ID of the user."""
-    sub: str
-    """The sub of the user (from a JWT token)."""
+    email: str
+    """The email of the user."""
     created_at: datetime
     """The time the user was created."""
+    projects: list[str]
+    """The projects the user has access to."""
 
+class Project(TypedDict):
+    project_id: str
+    """The ID of the project."""
+    user_id: str
+    """The ID of the user that owns the project."""
+    name: str
+    """The name of the project."""
+    updated_at: datetime
+    """The last time the project was updated."""
+    metadata: Optional[dict]
+    """The metadata of the project."""
 
 class Assistant(TypedDict):
     """Assistant model."""
