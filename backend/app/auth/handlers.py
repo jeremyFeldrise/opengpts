@@ -37,7 +37,8 @@ class JWTAuthBase(AuthHandler):
         except jwt.PyJWTError as e:
             raise HTTPException(status_code=401, detail=str(e))
 
-        user, _ = await storage.get_user(payload["sub"])
+
+        user = await storage.get_user_by_id(payload["user_id"])
         return user
 
     @abstractmethod
@@ -51,16 +52,20 @@ class JWTAuthBase(AuthHandler):
 
 class JWTAuthLocal(JWTAuthBase):
     """Auth handler that uses a hardcoded decode key from env."""
-
+    print("JWTAuthLocal")
     def decode_token(self, token: str, decode_key: str) -> dict:
-        return jwt.decode(
+        print("token", token)
+        decode =  jwt.decode(
             token,
             decode_key,
             issuer=settings.jwt_local.iss,
             audience=settings.jwt_local.aud,
-            algorithms=[settings.jwt_local.alg.upper()],
-            options={"require": ["exp", "iss", "aud", "sub"]},
+            algorithms=[settings.jwt_local.alg],
+            options={"require": ["exp", "iss", "aud", "user_id"]},
         )
+        print("decoded")
+        print("decode", decode)
+        return decode
 
     def get_decode_key(self, token: str) -> str:
         return settings.jwt_local.decode_key

@@ -37,7 +37,9 @@ class JWTSettingsLocal(JWTSettingsBase):
         be able to set it from env, we set it as a base64 encoded string and
         decode it here.
         """
-        return b64decode(values["decode_key_b64"]).decode("utf-8")
+        print("decode_key b64")
+        print(values["decode_key_b64"])
+        return values["decode_key_b64"]
 
 
 class JWTSettingsOIDC(JWTSettingsBase):

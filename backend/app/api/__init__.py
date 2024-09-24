@@ -4,6 +4,7 @@ from app.api.assistants import router as assistants_router
 from app.api.runs import router as runs_router
 from app.api.threads import router as threads_router
 from app.api.authentication import router as authentication_router
+from app.api.projects import router as projects_router
 
 router = APIRouter()
 
@@ -16,6 +17,11 @@ router.include_router(
     authentication_router,
     prefix="/auth",
     tags=["auth"],
+)
+router.include_router(
+    projects_router,
+    prefix="/projects",
+    tags=["projects"],
 )
 router.include_router(
     assistants_router,

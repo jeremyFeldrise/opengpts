@@ -1,28 +1,20 @@
-import { useCallback } from "react";
+import { useQuery, useQueryClient } from "react-query";
 
-export function useLogin() {
+import { login } from "../api/auth";
 
-    const createUser = useCallback(async (email: string, password: string) => {
-        try {
-            const response = await fetch("/auth/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
 
-                body: JSON.stringify({ email, password }),
-            });
-            console.log('response', response)
-            const user = await response.json();
-            return user;
-        } catch (error) {
-            console.error("Failed to create user:", error);
-            return null;
-        }
-    }, []);
+export function login(email: string, password: string) {
 
+    const { data: user, isLoading: isLoadingAssistant } = useQuery(
+        ["email", "password"],
+        () => login(email as string, password as string),
+        {
+            enabled: !!email && !!password,
+        },
+    );
 
     return {
-        createUser,
+        user,
+        isLoading: isLoadingAssistant,
     }
 }

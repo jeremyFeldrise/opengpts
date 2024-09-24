@@ -32,7 +32,7 @@ class ThreadPostRequest(BaseModel):
 @router.get("/")
 async def list_threads(user: AuthedUser) -> List[Thread]:
     """List all threads for the current user."""
-    return await storage.list_threads(user["user_id"])
+    return await storage.list_threads(user["project_id"])
 
 
 @router.get("/{tid}/state")
@@ -44,11 +44,11 @@ async def get_thread_state(
     thread = await storage.get_thread(user["user_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
-    assistant = await storage.get_assistant(user["user_id"], thread["assistant_id"])
+    assistant = await storage.get_assistant(user["project_id"], thread["assistant_id"])
     if not assistant:
         raise HTTPException(status_code=400, detail="Thread has no assistant")
     return await storage.get_thread_state(
-        user_id=user["user_id"],
+        user_id=user["project_id"],
         thread_id=tid,
         assistant=assistant,
     )
@@ -61,16 +61,16 @@ async def add_thread_state(
     payload: ThreadPostRequest,
 ):
     """Add state to a thread."""
-    thread = await storage.get_thread(user["user_id"], tid)
+    thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
-    assistant = await storage.get_assistant(user["user_id"], thread["assistant_id"])
+    assistant = await storage.get_assistant(user["project_id"], thread["assistant_id"])
     if not assistant:
         raise HTTPException(status_code=400, detail="Thread has no assistant")
     return await storage.update_thread_state(
         payload.config or {"configurable": {"thread_id": tid}},
         payload.values,
-        user_id=user["user_id"],
+        user_id=user["project_id"],
         assistant=assistant,
     )
 
@@ -81,14 +81,14 @@ async def get_thread_history(
     tid: ThreadID,
 ):
     """Get all past states for a thread."""
-    thread = await storage.get_thread(user["user_id"], tid)
+    thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
-    assistant = await storage.get_assistant(user["user_id"], thread["assistant_id"])
+    assistant = await storage.get_assistant(user["project_id"], thread["assistant_id"])
     if not assistant:
         raise HTTPException(status_code=400, detail="Thread has no assistant")
     return await storage.get_thread_history(
-        user_id=user["user_id"],
+        user_id=user["project_id"],
         thread_id=tid,
         assistant=assistant,
     )

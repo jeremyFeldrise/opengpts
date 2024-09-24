@@ -2,7 +2,14 @@ import { Chat } from "../types";
 
 export async function getThread(threadId: string): Promise<Chat | null> {
   try {
-    const response = await fetch(`/threads/${threadId}`);
+    const response = await fetch(`/threads/${threadId}`, {
+      headers:
+      {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer " + ${localStorage.getItem("token")}`,
+      }
+    }
+    );
     if (!response.ok) {
       return null;
     }

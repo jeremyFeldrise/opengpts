@@ -4,7 +4,14 @@ export async function getAssistant(
   assistantId: string,
 ): Promise<Config | null> {
   try {
-    const response = await fetch(`/assistants/${assistantId}`);
+    const response = await fetch(`/assistants/${assistantId}`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer " + ${localStorage.getItem("token")}`,
+        },
+      }
+    );
     if (!response.ok) {
       return null;
     }
@@ -17,7 +24,14 @@ export async function getAssistant(
 
 export async function getAssistants(): Promise<Config[] | null> {
   try {
-    const response = await fetch(`/assistants/`);
+    const response = await fetch(`/assistants/`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer " + ${localStorage.getItem("token")}`,
+        }
+      }
+    );
     if (!response.ok) {
       return null;
     }

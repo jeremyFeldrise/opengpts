@@ -65,7 +65,7 @@ async def create_run(
     background_tasks: BackgroundTasks,
 ):
     """Create a run."""
-    input_, config = await _run_input_and_config(payload, user["user_id"])
+    input_, config = await _run_input_and_config(payload, user["project_id"])
     background_tasks.add_task(agent.ainvoke, input_, config)
     return {"status": "ok"}  # TODO add a run id
 
@@ -76,7 +76,7 @@ async def stream_run(
     user: AuthedUser,
 ):
     """Create a run."""
-    input_, config = await _run_input_and_config(payload, user["user_id"])
+    input_, config = await _run_input_and_config(payload, user["project_id"])
 
     return EventSourceResponse(to_sse(astream_state(agent, input_, config)))
 

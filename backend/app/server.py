@@ -6,6 +6,7 @@ import structlog
 from fastapi import FastAPI, Form, UploadFile
 from fastapi.exceptions import HTTPException
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 
 import app.storage as storage
 from app.api import router as api_router
@@ -16,7 +17,7 @@ from app.upload import convert_ingestion_input_to_blob, ingest_runnable
 logger = structlog.get_logger(__name__)
 
 app = FastAPI(title="OpenGPTs API", lifespan=lifespan)
-
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_credentials=True, allow_methods=["*"], allow_headers=["*"])
 
 # Get root of app, used to point to directory containing static files
 ROOT = Path(__file__).parent.parent

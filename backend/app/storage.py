@@ -215,22 +215,35 @@ async def get_projects(user_id: str) -> List[dict]:
     async with get_pg_pool().acquire() as conn:
         return await conn.fetch("SELECT * FROM project WHERE user_id = $1", user_id)
 
-async def create_project(user_id: str, project_id: str, *, name: str, config: dict) -> dict:
+async def create_project(user_id: str, name: str) -> dict:
     """Create a new project."""
     async with get_pg_pool().acquire() as conn:
-        await conn.execute(
-            "INSERT INTO project (user_id, name, config) VALUES ($1, $2, $3, $4)",
+        project = await conn.execute(
+            "INSERT INTO project (user_id, name) VALUES ($1, $2)",
             user_id,
             name,
-            config,
         )
+
         return {
-            "project_id": project_id,
+            "project_id": "Test",
             "user_id": user_id,
             "name": name,
-            "config": config,
         }
-    
+
+async def list_projects(user_id: str) -> List[dict]:
+    """List all projects for the current user."""
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetch("SELECT * FROM project WHERE user_id = $1", user_id)
+
+async def get_project(user_id: str, project_id: str) -> Optional[dict]:
+    """Get a project by ID."""
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow(
+            "SELECT * FROM project WHERE project_id = $1 AND user_id = $2",
+            project_id,
+            user_id,
+        )
+
 async def delete_project(user_id: str, project_id: str) -> None:
     """Delete a project by ID."""
     async with get_pg_pool().acquire() as conn:
@@ -249,16 +262,20 @@ async def get_user(email: str, password: str) -> User:
                 return dict(user)
 
         return None
+async def get_user_by_id(user_id: str) -> User:
+    """Returns the user."""
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow('SELECT * FROM "user" WHERE user_id = $1', user_id)
 
 async def create_user(email: str, password: str) -> User:
     """Create a new user."""
     bytes = password.encode("utf-8")
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(bytes, salt)
-    print(hashed)
-    print(email)
+
     async with get_pg_pool().acquire() as conn:
         user = await conn.fetchrow(
             'INSERT INTO "user" (email, password) VALUES ($1, $2) RETURNING *', email, hashed.decode("utf-8")
         )
         return user
+    

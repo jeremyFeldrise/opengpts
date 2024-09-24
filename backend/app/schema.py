@@ -21,10 +21,7 @@ class Project(TypedDict):
     """The ID of the user that owns the project."""
     name: str
     """The name of the project."""
-    updated_at: datetime
-    """The last time the project was updated."""
-    metadata: Optional[dict]
-    """The metadata of the project."""
+
 
 class Assistant(TypedDict):
     """Assistant model."""
