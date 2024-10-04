@@ -8,7 +8,7 @@ export async function getAssistant(
       {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer " + ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       }
     );
@@ -28,7 +28,7 @@ export async function getAssistants(): Promise<Config[] | null> {
       {
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer " + ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         }
       }
     );

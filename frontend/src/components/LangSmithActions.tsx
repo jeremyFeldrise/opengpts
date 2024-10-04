@@ -22,40 +22,41 @@ export function LangSmithActions(props: { runId: string }) {
       }),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
     });
     setState({ score, inflight: false });
   };
   return (
-    <div className="flex mt-2 gap-2 flex-row">
+    <div className="flex flex-row gap-2 mt-2">
       <button
         type="button"
-        className="rounded-full p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        className="p-1 text-gray-900 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         onClick={() => sendFeedback(1)}
       >
         {state?.score === 1 ? (
           state?.inflight ? (
-            <EllipsisHorizontalIcon className="h-5 w-5" aria-hidden="true" />
+            <EllipsisHorizontalIcon className="w-5 h-5" aria-hidden="true" />
           ) : (
-            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+            <CheckIcon className="w-5 h-5" aria-hidden="true" />
           )
         ) : (
-          <HandThumbUpIcon className="h-5 w-5" aria-hidden="true" />
+          <HandThumbUpIcon className="w-5 h-5" aria-hidden="true" />
         )}
       </button>
       <button
         type="button"
-        className="rounded-full p-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+        className="p-1 text-gray-900 rounded-full shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
         onClick={() => sendFeedback(0)}
       >
         {state?.score === 0 ? (
           state?.inflight ? (
-            <EllipsisHorizontalIcon className="h-5 w-5" aria-hidden="true" />
+            <EllipsisHorizontalIcon className="w-5 h-5" aria-hidden="true" />
           ) : (
-            <CheckIcon className="h-5 w-5" aria-hidden="true" />
+            <CheckIcon className="w-5 h-5" aria-hidden="true" />
           )
         ) : (
-          <HandThumbDownIcon className="h-5 w-5" aria-hidden="true" />
+          <HandThumbDownIcon className="w-5 h-5" aria-hidden="true" />
         )}
       </button>
     </div>

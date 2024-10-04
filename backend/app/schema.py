@@ -13,6 +13,8 @@ class User(TypedDict):
     """The time the user was created."""
     projects: list[str]
     """The projects the user has access to."""
+    project_id: str
+    """The ID of the project."""
 
 class Project(TypedDict):
     project_id: str
@@ -28,7 +30,7 @@ class Assistant(TypedDict):
 
     assistant_id: str
     """The ID of the assistant."""
-    user_id: str
+    project_id: str
     """The ID of the user that owns the assistant."""
     name: str
     """The name of the assistant."""

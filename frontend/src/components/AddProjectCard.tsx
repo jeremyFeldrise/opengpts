@@ -5,14 +5,29 @@ import { Card, CardContent, CardHeader, CardTitle } from "./card"
 import { Button } from "./button"
 import { Input } from "./input"
 import { Label } from "./label"
+import { addProject } from '../api/projects'
+import { useMutation } from 'react-query'
 
-export default function AddProjectCard() {
+export default function AddProjectCard(refetch: any) {
     const [isAdding, setIsAdding] = useState(false)
+    const mutation = useMutation({
+        mutationFn: ({ name, description }: { name: string, description: string }) => addProject(name, description),
+        onSuccess: () => {
+            setIsAdding(false)
+            refetch.props()
+        }
+    })
+
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        // Handle form submission here
-        // You would typically make an API call to add the new project
+        mutation.mutate({
+            name: (event.currentTarget.elements.namedItem('name') as HTMLInputElement).value,
+            description: (event.currentTarget.elements.namedItem('description') as HTMLInputElement).value
+        })
+
+
+
         setIsAdding(false)
     }
 

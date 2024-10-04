@@ -79,7 +79,7 @@ export function useConfigList(): ConfigListProps {
           headers: {
             "Content-Type": "application/json",
             Accept: "application/json",
-            Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmE2MmUyMzAtM2E4Zi00NmQ3LWEyMTItNWE4M2QyYjI1NDUzIiwiYWxnIjoiSFMyNTYiLCJpc3MiOiJlcHNpbW8iLCJhdWQiOiJlcHNpbW8iLCJleHAiOjE3MjY4NDAyOTl9.PrNYIdfz3n4lK2it4kC8opaoLuajotOTJ9seJ-Dd4eU'
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         },
       );
@@ -97,6 +97,9 @@ export function useConfigList(): ConfigListProps {
         await fetch(`/ingest`, {
           method: "POST",
           body: formData,
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         });
       }
       setConfigs({ ...savedConfig, mine: true });
@@ -111,7 +114,7 @@ export function useConfigList(): ConfigListProps {
         method: "DELETE",
         headers: {
           Accept: "application/json",
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiZmE2MmUyMzAtM2E4Zi00NmQ3LWEyMTItNWE4M2QyYjI1NDUzIiwiYWxnIjoiSFMyNTYiLCJpc3MiOiJlcHNpbW8iLCJhdWQiOiJlcHNpbW8iLCJleHAiOjE3MjY4NDAyOTl9.PrNYIdfz3n4lK2it4kC8opaoLuajotOTJ9seJ-Dd4eU'
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setConfigs((configs || []).filter((c) => c.assistant_id !== assistantId));

@@ -36,6 +36,7 @@ export function useChatList(): ChatListProps {
       const chats = await fetch("/threads/", {
         headers: {
           Accept: "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       }).then((r) => r.json());
       setChats(chats);
@@ -51,6 +52,7 @@ export function useChatList(): ChatListProps {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
     });
     const saved = await response.json();
@@ -66,6 +68,7 @@ export function useChatList(): ChatListProps {
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       });
       const saved = await response.json();
@@ -81,6 +84,7 @@ export function useChatList(): ChatListProps {
         method: "DELETE",
         headers: {
           Accept: "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       });
       setChats((chats || []).filter((c: Chat) => c.thread_id !== thread_id));

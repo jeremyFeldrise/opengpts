@@ -32,6 +32,8 @@ class ThreadPostRequest(BaseModel):
 @router.get("/")
 async def list_threads(user: AuthedUser) -> List[Thread]:
     """List all threads for the current user."""
+    print("User ", user)
+
     return await storage.list_threads(user["project_id"])
 
 
@@ -41,7 +43,7 @@ async def get_thread_state(
     tid: ThreadID,
 ):
     """Get state for a thread."""
-    thread = await storage.get_thread(user["user_id"], tid)
+    thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
     assistant = await storage.get_assistant(user["project_id"], thread["assistant_id"])
@@ -61,6 +63,7 @@ async def add_thread_state(
     payload: ThreadPostRequest,
 ):
     """Add state to a thread."""
+    print("User ", user)
     thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
@@ -100,7 +103,7 @@ async def get_thread(
     tid: ThreadID,
 ) -> Thread:
     """Get a thread by ID."""
-    thread = await storage.get_thread(user["user_id"], tid)
+    thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")
     return thread
@@ -113,7 +116,7 @@ async def create_thread(
 ) -> Thread:
     """Create a thread."""
     return await storage.put_thread(
-        user["user_id"],
+        user["project_id"],
         str(uuid4()),
         assistant_id=thread_put_request.assistant_id,
         name=thread_put_request.name,
@@ -128,7 +131,7 @@ async def upsert_thread(
 ) -> Thread:
     """Update a thread."""
     return await storage.put_thread(
-        user["user_id"],
+        user["project_id"],
         tid,
         assistant_id=thread_put_request.assistant_id,
         name=thread_put_request.name,
@@ -141,5 +144,5 @@ async def delete_thread(
     tid: ThreadID,
 ):
     """Delete a thread by ID."""
-    await storage.delete_thread(user["user_id"], tid)
+    await storage.delete_thread(user["project_id"], tid)
     return {"status": "ok"}

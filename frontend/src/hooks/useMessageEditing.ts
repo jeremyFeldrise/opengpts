@@ -15,7 +15,10 @@ export function useMessageEditing(
     if (!threadId) return;
     fetch(`/threads/${threadId}/state`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+
       body: JSON.stringify({ values: Object.values(editing) }),
     })
       .then((res) => {

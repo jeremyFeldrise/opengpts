@@ -5,6 +5,7 @@ import { useQuery } from 'react-query'
 import { Card, CardContent, CardHeader, CardTitle } from "./card"
 import { getProjects, selectProject } from '../api/projects'
 import { useNavigate } from 'react-router-dom'
+import AddProjectCard from './AddProjectCard'
 
 interface Project {
     project_id: string
@@ -15,7 +16,7 @@ interface Project {
 
 
 export default function ProjectList() {
-    const { data: projects, isLoading, isError } = useQuery<Project[]>('projects', getProjects)
+    const { data: projects, isLoading, isError, refetch } = useQuery<Project[]>('projects', getProjects)
     const navigate = useNavigate();
 
     async function chooseProject(projectId: string) {
@@ -32,6 +33,7 @@ export default function ProjectList() {
 
     return (
         <>
+            <AddProjectCard props={refetch} />
             {projects?.map((project) => (
                 <Card key={project.project_id} onClick={() => chooseProject(project.project_id)}>
                     <CardHeader>

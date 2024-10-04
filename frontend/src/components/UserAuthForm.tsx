@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { Button } from "./button"
 import { Input } from "./input"
@@ -12,10 +12,18 @@ import { useNavigate } from "react-router-dom";
 
 
 
+
 export default function LoginForm() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     if (!localStorage.getItem('token') || localStorage.getItem('token') !== 'undefined') {
+    //         console.log('Token', localStorage.getItem('token'))
+    //         navigate('/project')
+    //     }
+    // })
 
     const { data, isLoading, refetch } = useQuery({
         queryKey: ['loginStatus', username, password],
@@ -32,7 +40,7 @@ export default function LoginForm() {
     }
 
     if (localStorage.getItem('token') && localStorage.getItem('token') !== 'undefined') {
-        navigate('/projects')
+        navigate('/project')
     }
 
     if (isLoading) {

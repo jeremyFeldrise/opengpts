@@ -31,7 +31,6 @@ class JWTAuthBase(AuthHandler):
     async def __call__(self, request: Request) -> User:
         http_bearer = await HTTPBearer()(request)
         token = http_bearer.credentials
-
         try:
             payload = self.decode_token(token, self.get_decode_key(token))
         except jwt.PyJWTError as e:
@@ -39,6 +38,15 @@ class JWTAuthBase(AuthHandler):
 
 
         user = await storage.get_user_by_id(payload["user_id"])
+        print("Payload ", payload)
+        #Check if payload has project_id
+        if ("project_id" in payload):
+            print("I'm IN !")
+            user = dict(user)
+            user["project_id"] = payload["project_id"]
+            #Convert user back to asyncpg record
+            user = User(**user)
+        print("User", user)
         return user
 
     @abstractmethod
@@ -54,7 +62,6 @@ class JWTAuthLocal(JWTAuthBase):
     """Auth handler that uses a hardcoded decode key from env."""
     print("JWTAuthLocal")
     def decode_token(self, token: str, decode_key: str) -> dict:
-        print("token", token)
         decode =  jwt.decode(
             token,
             decode_key,
@@ -62,9 +69,9 @@ class JWTAuthLocal(JWTAuthBase):
             audience=settings.jwt_local.aud,
             algorithms=[settings.jwt_local.alg],
             options={"require": ["exp", "iss", "aud", "user_id"]},
+            
         )
-        print("decoded")
-        print("decode", decode)
+
         return decode
 
     def get_decode_key(self, token: str) -> str:
@@ -119,7 +126,10 @@ def get_auth_handler() -> AuthHandler:
 async def auth_user(
     request: Request, auth_handler: AuthHandler = Depends(get_auth_handler)
 ):
-    return await auth_handler(request)
+    hello = await auth_handler(request)
+
+    print("Hello : ", hello)
+    return hello
 
 
 AuthedUser = Annotated[User, Depends(auth_user)]

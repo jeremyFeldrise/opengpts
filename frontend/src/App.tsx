@@ -47,6 +47,9 @@ function App(props: { edit?: boolean }) {
         );
         await fetch(`/ingest`, {
           method: "POST",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
           body: formData,
         });
       }
@@ -116,14 +119,20 @@ function App(props: { edit?: boolean }) {
     [navigate],
   );
 
+  // console.log("token", localStorage.getItem("token"));
+  // if (!localStorage.getItem("token") || localStorage.getItem("token") == null) {
+  //   console.log("No token found, redirecting to login");
+  //   navigate("/login");
+  // }
+
   return (
     <Layout
       subtitle={
         assistantConfig ? (
-          <span className="inline-flex gap-1 items-center">
+          <span className="inline-flex items-center gap-1">
             {assistantConfig.name}
             <InformationCircleIcon
-              className="h-5 w-5 cursor-pointer text-indigo-600"
+              className="w-5 h-5 text-indigo-600 cursor-pointer"
               onClick={() => {
                 selectConfig(assistantConfig.assistant_id);
               }}

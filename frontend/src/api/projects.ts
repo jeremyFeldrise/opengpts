@@ -18,6 +18,7 @@ export async function getProjects() {
 }
 
 export async function selectProject(id: string) {
+    console.log('id', id)
     try {
         const response = await fetch(`/projects/${id}`, {
             headers: {
@@ -34,5 +35,22 @@ export async function selectProject(id: string) {
     } catch (error) {
         console.error("Failed to fetch project:", error);
         return null;
+    }
+}
+
+export async function addProject(name: string, description: string) {
+    console.log("Payload", JSON.stringify({ name, description }))
+    try {
+        const response = await fetch(`/projects/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ name, description }),
+        });
+    }
+    catch (error) {
+        console.error("Failed to add project:", error);
     }
 }

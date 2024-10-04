@@ -39,7 +39,7 @@ export function Layout(props: {
               leaveFrom="translate-x-0"
               leaveTo="-translate-x-full"
             >
-              <Dialog.Panel className="relative mr-16 flex w-full max-w-xs flex-1">
+              <Dialog.Panel className="relative flex flex-1 w-full max-w-xs mr-16">
                 <Transition.Child
                   as={Fragment}
                   enter="ease-in-out duration-300"
@@ -49,7 +49,7 @@ export function Layout(props: {
                   leaveFrom="opacity-100"
                   leaveTo="opacity-0"
                 >
-                  <div className="absolute left-full top-0 flex w-16 justify-center pt-5">
+                  <div className="absolute top-0 flex justify-center w-16 pt-5 left-full">
                     <button
                       type="button"
                       className="-m-2.5 p-2.5"
@@ -57,16 +57,16 @@ export function Layout(props: {
                     >
                       <span className="sr-only">Close sidebar</span>
                       <XMarkIcon
-                        className="h-6 w-6 text-white"
+                        className="w-6 h-6 text-white"
                         aria-hidden="true"
                       />
                     </button>
                   </div>
                 </Transition.Child>
                 {/* Sidebar component, swap this element with another sidebar if you like */}
-                <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 py-4">
-                  <nav className="flex flex-1 flex-col">
-                    <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <div className="flex flex-col px-6 py-4 overflow-y-auto bg-white grow gap-y-5">
+                  <nav className="flex flex-col flex-1">
+                    <ul role="list" className="flex flex-col flex-1 gap-y-7">
                       <li>{props.sidebar}</li>
                     </ul>
                   </nav>
@@ -80,23 +80,23 @@ export function Layout(props: {
       {/* Static sidebar for desktop */}
       <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
-        <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 py-4">
-          <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+        <div className="flex flex-col px-6 py-4 overflow-y-auto bg-white border-r border-gray-200 grow gap-y-5">
+          <nav className="flex flex-col flex-1">
+            <ul role="list" className="flex flex-col flex-1 gap-y-7">
               <li>{props.sidebar}</li>
             </ul>
           </nav>
         </div>
       </div>
 
-      <div className="fixed left-0 right-0 top-0 z-40 flex items-center gap-x-6 bg-white px-4 py-4 shadow-sm sm:px-6">
+      <div className="fixed top-0 left-0 right-0 z-40 flex items-center px-4 py-4 bg-white shadow-sm gap-x-6 sm:px-6">
         <button
           type="button"
           className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
           onClick={() => props.setSidebarOpen(true)}
         >
           <span className="sr-only">Open sidebar</span>
-          <Bars3Icon className="h-6 w-6" aria-hidden="true" />
+          <Bars3Icon className="w-6 h-6" aria-hidden="true" />
         </button>
         <div className="flex-1 text-sm font-semibold leading-6 text-gray-900 lg:pl-72">
           {props.subtitle ? (
@@ -107,14 +107,11 @@ export function Layout(props: {
             "OpenGPTs"
           )}
         </div>
-        <div className="inline-flex items-center rounded-md bg-pink-100 px-2 py-1 text-xs font-medium text-pink-700">
-          Research Preview: this is unauthenticated and all data can be found.
-          Do not use with sensitive data
-        </div>
+
       </div>
 
       <main className="pt-20 lg:pl-72 flex flex-col min-h-[calc(100%-56px)]">
-        <div className="px-4 sm:px-6 lg:px-8 flex-1">{props.children}</div>
+        <div className="flex-1 px-4 sm:px-6 lg:px-8">{props.children}</div>
       </main>
     </>
   );

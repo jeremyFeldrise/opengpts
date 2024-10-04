@@ -1,10 +1,11 @@
-import { PlusIcon, EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { PlusIcon, EllipsisVerticalIcon, BackwardIcon, BackspaceIcon, ArrowDownLeftIcon, ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
 import { useState, useEffect } from "react";
 
 import { ChatListProps } from "../hooks/useChatList";
 import { cn } from "../utils/cn";
 import { useThreadAndAssistant } from "../hooks/useThreadAndAssistant.ts";
 import { ConfigListProps } from "../hooks/useConfigList.ts";
+import { useNavigate } from "react-router-dom";
 
 export function ChatList(props: {
   chats: ChatListProps["chats"];
@@ -18,6 +19,8 @@ export function ChatList(props: {
   // State for tracking which chat's menu is visible
   const [visibleMenu, setVisibleMenu] = useState<string | null>(null);
 
+  const navigate = useNavigate();
+
   // Event listener to close the menu when clicking outside of it
   useEffect(() => {
     const closeMenu = () => setVisibleMenu(null);
@@ -27,6 +30,22 @@ export function ChatList(props: {
 
   return (
     <>
+      <div
+        onClick={() => navigate("/project")}
+        className={cn(
+
+          "group flex gap-x-3 rounded-md -mx-2 p-2 leading-6 font-semibold cursor-pointer",
+        )}
+      >
+        <span
+          className={cn(
+            "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
+          )}
+        >
+          <ArrowLeftCircleIcon className="w-4 h-4" />
+        </span>
+        <span className="truncate">Back to projects</span>
+      </div>
       <div
         onClick={() => props.enterChat(null)}
         className={cn(
@@ -44,7 +63,7 @@ export function ChatList(props: {
             "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
           )}
         >
-          <PlusIcon className="h-4 w-4" />
+          <PlusIcon className="w-4 h-4" />
         </span>
         <span className="truncate">New Chat</span>
       </div>
@@ -66,15 +85,15 @@ export function ChatList(props: {
             "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border text-[0.625rem] font-medium bg-white",
           )}
         >
-          <PlusIcon className="h-4 w-4" />
+          <PlusIcon className="w-4 h-4" />
         </span>
         <span className="truncate">New Bot</span>
       </div>
 
-      <div className="text-xs font-semibold leading-6 text-gray-400 mt-4">
+      <div className="mt-4 text-xs font-semibold leading-6 text-gray-400">
         Your chats
       </div>
-      <ul role="list" className="-mx-2 mt-2 space-y-1">
+      <ul role="list" className="mt-2 -mx-2 space-y-1">
         {props.chats?.map((chat) => (
           <li
             key={chat.thread_id}
@@ -102,8 +121,8 @@ export function ChatList(props: {
                 {chat.name?.[0] ?? " "}
               </span>
               <div className="flex flex-col truncate">
-                <span className="truncate flex-grow min-w-0">{chat.name}</span>
-                <span className="truncate flex-grow min-w-0 text-xs text-gray-400">
+                <span className="flex-grow min-w-0 truncate">{chat.name}</span>
+                <span className="flex-grow min-w-0 text-xs text-gray-400 truncate">
                   {
                     props.configs?.find(
                       (config) => config.assistant_id === chat.assistant_id,
@@ -122,11 +141,11 @@ export function ChatList(props: {
               }}
               className="p-1 rounded-full hover:bg-gray-200"
             >
-              <EllipsisVerticalIcon className="h-5 w-5" />
+              <EllipsisVerticalIcon className="w-5 h-5" />
             </button>
             {/* Menu Dropdown */}
             {visibleMenu === chat.thread_id && (
-              <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+              <div className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div
                   className="py-1"
                   role="menu"
@@ -135,7 +154,7 @@ export function ChatList(props: {
                 >
                   <a
                     href="#"
-                    className="text-gray-700 block px-4 py-2 text-sm hover:bg-gray-100"
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                     role="menuitem"
                     onClick={(event) => {
                       event.preventDefault();
@@ -155,10 +174,10 @@ export function ChatList(props: {
             )}
           </li>
         )) ?? (
-          <li className="leading-6 p-2 animate-pulse font-black text-gray-400 text-lg">
-            ...
-          </li>
-        )}
+            <li className="p-2 text-lg font-black leading-6 text-gray-400 animate-pulse">
+              ...
+            </li>
+          )}
       </ul>
     </>
   );

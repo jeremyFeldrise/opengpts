@@ -36,7 +36,10 @@ export function useStreamState(): StreamStateProps {
       await fetchEventSource("/runs/stream", {
         signal: controller.signal,
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        },
         body: JSON.stringify({ input, thread_id, config }),
         openWhenHidden: true,
         onmessage(msg) {

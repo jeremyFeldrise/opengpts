@@ -11,19 +11,19 @@ from app.lifespan import get_pg_pool
 from app.schema import Assistant, Thread, User
 
 
-async def list_assistants(user_id: str) -> List[Assistant]:
+async def list_assistants(project_id: str) -> List[Assistant]:
     """List all assistants for the current user."""
     async with get_pg_pool().acquire() as conn:
-        return await conn.fetch("SELECT * FROM assistant WHERE user_id = $1", user_id)
+        return await conn.fetch("SELECT * FROM assistant WHERE project_id = $1", project_id)
 
 
-async def get_assistant(user_id: str, assistant_id: str) -> Optional[Assistant]:
+async def get_assistant(project_id: str, assistant_id: str) -> Optional[Assistant]:
     """Get an assistant by ID."""
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow(
-            "SELECT * FROM assistant WHERE assistant_id = $1 AND (user_id = $2 OR public IS true)",
+            "SELECT * FROM assistant WHERE assistant_id = $1 AND (project_id = $2 OR public IS true)",
             assistant_id,
-            user_id,
+            project_id,
         )
 
 
@@ -34,7 +34,7 @@ async def list_public_assistants() -> List[Assistant]:
 
 
 async def put_assistant(
-    user_id: str, assistant_id: str, *, name: str, config: dict, public: bool = False
+    project_id: str, assistant_id: str, *, name: str, config: dict, public: bool = False
 ) -> Assistant:
     """Modify an assistant.
 
@@ -53,16 +53,16 @@ async def put_assistant(
         async with conn.transaction():
             await conn.execute(
                 (
-                    "INSERT INTO assistant (assistant_id, user_id, name, config, updated_at, public) VALUES ($1, $2, $3, $4, $5, $6) "
+                    "INSERT INTO assistant (assistant_id, project_id, name, config, updated_at, public) VALUES ($1, $2, $3, $4, $5, $6) "
                     "ON CONFLICT (assistant_id) DO UPDATE SET "
-                    "user_id = EXCLUDED.user_id, "
+                    "project_id = EXCLUDED.project_id, "
                     "name = EXCLUDED.name, "
                     "config = EXCLUDED.config, "
                     "updated_at = EXCLUDED.updated_at, "
                     "public = EXCLUDED.public;"
                 ),
                 assistant_id,
-                user_id,
+                project_id,
                 name,
                 config,
                 updated_at,
@@ -70,7 +70,7 @@ async def put_assistant(
             )
     return {
         "assistant_id": assistant_id,
-        "user_id": user_id,
+        "project_id": project_id,
         "name": name,
         "config": config,
         "updated_at": updated_at,
@@ -78,33 +78,33 @@ async def put_assistant(
     }
 
 
-async def delete_assistant(user_id: str, assistant_id: str) -> None:
+async def delete_assistant(project_id: str, assistant_id: str) -> None:
     """Delete an assistant by ID."""
     async with get_pg_pool().acquire() as conn:
         await conn.execute(
-            "DELETE FROM assistant WHERE assistant_id = $1 AND user_id = $2",
+            "DELETE FROM assistant WHERE assistant_id = $1 AND project_id = $2",
             assistant_id,
-            user_id,
+            project_id,
         )
 
 
-async def list_threads(user_id: str) -> List[Thread]:
+async def list_threads(project_id: str) -> List[Thread]:
     """List all threads for the current user."""
     async with get_pg_pool().acquire() as conn:
-        return await conn.fetch("SELECT * FROM thread WHERE user_id = $1", user_id)
+        return await conn.fetch("SELECT * FROM thread WHERE project_id = $1", project_id)
 
 
-async def get_thread(user_id: str, thread_id: str) -> Optional[Thread]:
+async def get_thread(project_id: str, thread_id: str) -> Optional[Thread]:
     """Get a thread by ID."""
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow(
-            "SELECT * FROM thread WHERE thread_id = $1 AND user_id = $2",
+            "SELECT * FROM thread WHERE thread_id = $1 AND project_id = $2",
             thread_id,
-            user_id,
+            project_id,
         )
 
 
-async def get_thread_state(*, user_id: str, thread_id: str, assistant: Assistant):
+async def get_thread_state(*, project_id: str, thread_id: str, assistant: Assistant):
     """Get state for a thread."""
     state = await agent.aget_state(
         {
@@ -141,7 +141,7 @@ async def update_thread_state(
     )
 
 
-async def get_thread_history(*, user_id: str, thread_id: str, assistant: Assistant):
+async def get_thread_history(*, project_id: str, thread_id: str, assistant: Assistant):
     """Get the history of a thread."""
     return [
         {
@@ -163,11 +163,11 @@ async def get_thread_history(*, user_id: str, thread_id: str, assistant: Assista
 
 
 async def put_thread(
-    user_id: str, thread_id: str, *, assistant_id: str, name: str
+    project_id: str, thread_id: str, *, assistant_id: str, name: str
 ) -> Thread:
     """Modify a thread."""
     updated_at = datetime.now(timezone.utc)
-    assistant = await get_assistant(user_id, assistant_id)
+    assistant = await get_assistant(project_id, assistant_id)
     metadata = (
         {"assistant_type": assistant["config"]["configurable"]["type"]}
         if assistant
@@ -176,16 +176,16 @@ async def put_thread(
     async with get_pg_pool().acquire() as conn:
         await conn.execute(
             (
-                "INSERT INTO thread (thread_id, user_id, assistant_id, name, updated_at, metadata) VALUES ($1, $2, $3, $4, $5, $6) "
+                "INSERT INTO thread (thread_id, project_id, assistant_id, name, updated_at, metadata) VALUES ($1, $2, $3, $4, $5, $6) "
                 "ON CONFLICT (thread_id) DO UPDATE SET "
-                "user_id = EXCLUDED.user_id,"
+                "project_id = EXCLUDED.project_id,"
                 "assistant_id = EXCLUDED.assistant_id, "
                 "name = EXCLUDED.name, "
                 "updated_at = EXCLUDED.updated_at, "
                 "metadata = EXCLUDED.metadata;"
             ),
             thread_id,
-            user_id,
+            project_id,
             assistant_id,
             name,
             updated_at,
@@ -193,7 +193,7 @@ async def put_thread(
         )
         return {
             "thread_id": thread_id,
-            "user_id": user_id,
+            "project_id": project_id,
             "assistant_id": assistant_id,
             "name": name,
             "updated_at": updated_at,
@@ -201,13 +201,13 @@ async def put_thread(
         }
 
 
-async def delete_thread(user_id: str, thread_id: str):
+async def delete_thread(project_id: str, thread_id: str):
     """Delete a thread by ID."""
     async with get_pg_pool().acquire() as conn:
         await conn.execute(
             "DELETE FROM thread WHERE thread_id = $1 AND user_id = $2",
             thread_id,
-            user_id,
+            project_id,
         )
 
 async def get_projects(user_id: str) -> List[dict]:
@@ -215,19 +215,21 @@ async def get_projects(user_id: str) -> List[dict]:
     async with get_pg_pool().acquire() as conn:
         return await conn.fetch("SELECT * FROM project WHERE user_id = $1", user_id)
 
-async def create_project(user_id: str, name: str) -> dict:
+async def create_project(user_id: str, name: str, description: str) -> dict:
     """Create a new project."""
     async with get_pg_pool().acquire() as conn:
         project = await conn.execute(
-            "INSERT INTO project (user_id, name) VALUES ($1, $2)",
+            "INSERT INTO project (user_id, name, description) VALUES ($1, $2, $3)",
             user_id,
             name,
+            description,
         )
-
+        print("Project", project)  
         return {
             "project_id": "Test",
             "user_id": user_id,
             "name": name,
+            "description": description,
         }
 
 async def list_projects(user_id: str) -> List[dict]:
