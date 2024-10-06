@@ -33,7 +33,7 @@ export function useChatList(): ChatListProps {
 
   useEffect(() => {
     async function fetchChats() {
-      const chats = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/`, {
+      const chats = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads`, {
         headers: {
           Accept: "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -46,7 +46,7 @@ export function useChatList(): ChatListProps {
   }, []);
 
   const createChat = useCallback(async (name: string, assistant_id: string) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads`, {
       method: "POST",
       body: JSON.stringify({ assistant_id, name }),
       headers: {
