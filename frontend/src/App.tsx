@@ -45,7 +45,7 @@ function App(props: { edit?: boolean }) {
           "config",
           JSON.stringify({ configurable: { thread_id } }),
         );
-        await fetch(`https://api.epsimoai.net/ingest`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/ingest/`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

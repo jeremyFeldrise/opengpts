@@ -13,7 +13,7 @@ export function useMessageEditing(
   }, []);
   const commitEdits = useCallback(async () => {
     if (!threadId) return;
-    fetch(`https://api.epsimoai.net/threads/${threadId}/state`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${threadId}/state/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json", "Authorization": `Bearer ${localStorage.getItem("token")}`

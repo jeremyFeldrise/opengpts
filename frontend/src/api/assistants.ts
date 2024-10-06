@@ -4,7 +4,7 @@ export async function getAssistant(
   assistantId: string,
 ): Promise<Config | null> {
   try {
-    const response = await fetch(`https://api.epsimoai.net/assistants/${assistantId}`,
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}/`,
       {
         headers: {
           "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export async function getAssistant(
 
 export async function getAssistants(): Promise<Config[] | null> {
   try {
-    const response = await fetch(`https://api.epsimoai.net/assistants/`,
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/`,
       {
         headers: {
           "Content-Type": "application/json",

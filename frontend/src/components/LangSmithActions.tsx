@@ -13,7 +13,7 @@ export function LangSmithActions(props: { runId: string }) {
   } | null>(null);
   const sendFeedback = async (score: number) => {
     setState({ score, inflight: true });
-    await fetch(`https://api.epsimoai.net/runs/feedback`, {
+    await fetch(`${import.meta.env.VITE_BACKEND_URL}/runs/feedback/`, {
       method: "POST",
       body: JSON.stringify({
         run_id: props.runId,
