@@ -45,7 +45,7 @@ function App(props: { edit?: boolean }) {
           "config",
           JSON.stringify({ configurable: { thread_id } }),
         );
-        await fetch(`/ingest`, {
+        await fetch(`${process.env.VITE_BACKEND_URL}//ingest`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
