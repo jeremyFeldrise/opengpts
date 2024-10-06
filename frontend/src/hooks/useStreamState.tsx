@@ -33,7 +33,7 @@ export function useStreamState(): StreamStateProps {
       setController(controller);
       setCurrent({ status: "inflight", messages: input || [] });
 
-      await fetchEventSource("/runs/stream", {
+      await fetchEventSource(`${import.meta.env.VITE_BACKEND_URL}/runs/stream/`, {
         signal: controller.signal,
         method: "POST",
         headers: {
