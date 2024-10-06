@@ -94,7 +94,7 @@ export function useConfigList(): ConfigListProps {
           "config",
           JSON.stringify({ configurable: { assistant_id } }),
         );
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/ingest`, {
+        await fetch(`https://api.epsimoai.net/ingest`, {
           method: "POST",
           body: formData,
           headers: {
@@ -110,7 +110,7 @@ export function useConfigList(): ConfigListProps {
 
   const deleteConfig = useCallback(
     async (assistantId: string): Promise<void> => {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}`, {
+      await fetch(`https://api.epsimoai.net/assistants/${assistantId}`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",
