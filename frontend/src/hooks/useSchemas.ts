@@ -36,7 +36,7 @@ export function useSchemas() {
 
   useEffect(() => {
     async function save() {
-      const configSchema = await fetch("/runs/config_schema")
+      const configSchema = await fetch(`${import.meta.env.VITE_BACKEND_URL}/runs/config_schem`)
         .then((r) => r.json())
         .then(simplifySchema);
       setSchemas({
