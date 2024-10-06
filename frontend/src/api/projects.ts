@@ -1,7 +1,7 @@
 export async function getProjects() {
     try {
 
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}//projects/`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -20,7 +20,7 @@ export async function getProjects() {
 export async function selectProject(id: string) {
     console.log('id', id)
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}//projects/${id}`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${localStorage.getItem("token")}`,
@@ -41,7 +41,7 @@ export async function selectProject(id: string) {
 export async function addProject(name: string, description: string) {
     console.log("Payload", JSON.stringify({ name, description }))
     try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}//projects/`, {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
