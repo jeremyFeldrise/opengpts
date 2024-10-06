@@ -4,7 +4,7 @@ export async function getAssistant(
   assistantId: string,
 ): Promise<Config | null> {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}/`,
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}`,
       {
         headers: {
           "Content-Type": "application/json",

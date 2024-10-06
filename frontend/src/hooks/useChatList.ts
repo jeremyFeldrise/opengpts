@@ -62,7 +62,7 @@ export function useChatList(): ChatListProps {
 
   const updateChat = useCallback(
     async (thread_id: string, name: string, assistant_id: string | null) => {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${thread_id}/`, {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${thread_id}`, {
         method: "PUT",
         body: JSON.stringify({ assistant_id, name }),
         headers: {
@@ -80,7 +80,7 @@ export function useChatList(): ChatListProps {
 
   const deleteChat = useCallback(
     async (thread_id: string) => {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${thread_id}/`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${thread_id}`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",

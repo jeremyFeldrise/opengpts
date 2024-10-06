@@ -110,7 +110,7 @@ export function useConfigList(): ConfigListProps {
 
   const deleteConfig = useCallback(
     async (assistantId: string): Promise<void> => {
-      await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}/`, {
+      await fetch(`${import.meta.env.VITE_BACKEND_URL}/assistants/${assistantId}`, {
         method: "DELETE",
         headers: {
           Accept: "application/json",

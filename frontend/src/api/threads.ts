@@ -2,7 +2,7 @@ import { Chat } from "../types";
 
 export async function getThread(threadId: string): Promise<Chat | null> {
   try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${threadId}/`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${threadId}`, {
       headers:
       {
         "Content-Type": "application/json",
