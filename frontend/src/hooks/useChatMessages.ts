@@ -6,6 +6,7 @@ async function getState(threadId: string) {
   const { values, next } = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/${threadId}/state`, {
     headers: {
       Accept: "application/json",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
   }).then((r) => (r.ok ? r.json() : Promise.reject(r.statusText)));
   return { values, next };
