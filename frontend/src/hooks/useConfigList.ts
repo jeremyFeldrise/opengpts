@@ -70,7 +70,7 @@ export function useConfigList(): ConfigListProps {
       isPublic: boolean,
       assistantId?: string,
     ): Promise<string> => {
-      const confResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}${assistantId ? `/assistants/${assistantId}` : "/assistants"}`,
+      const confResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}${assistantId ? `/assistants/${assistantId}` : "/assistants/"}`,
         {
           method: assistantId ? "PUT" : "POST",
           body: JSON.stringify({ name, config, public: isPublic }),
@@ -93,7 +93,7 @@ export function useConfigList(): ConfigListProps {
           "config",
           JSON.stringify({ configurable: { assistant_id } }),
         );
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}/ingest/`, {
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}/ingest`, {
           method: "POST",
           body: formData,
           headers: {

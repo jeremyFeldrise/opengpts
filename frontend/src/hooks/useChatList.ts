@@ -46,7 +46,7 @@ export function useChatList(): ChatListProps {
   }, []);
 
   const createChat = useCallback(async (name: string, assistant_id: string) => {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads`, {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/`, {
       method: "POST",
       body: JSON.stringify({ assistant_id, name }),
       headers: {

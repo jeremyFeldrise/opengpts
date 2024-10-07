@@ -12,7 +12,7 @@ import app.storage as storage
 
 router = APIRouter()
 
-@router.post("/login/")
+@router.post("/login")
 async def login(request: Request) -> dict:
     """Login with a user ID."""
     request = await request.json()

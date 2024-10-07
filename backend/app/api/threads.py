@@ -109,7 +109,7 @@ async def get_thread(
     return thread
 
 
-@router.post("")
+@router.post("/")
 async def create_thread(
     user: AuthedUser,
     thread_put_request: ThreadPutRequest,

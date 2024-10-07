@@ -58,7 +58,7 @@ async def _run_input_and_config(payload: CreateRunPayload, user_id: str):
     return payload.input, config
 
 
-@router.post("")
+@router.post("/")
 async def create_run(
     payload: CreateRunPayload,
     user: AuthedUser,
