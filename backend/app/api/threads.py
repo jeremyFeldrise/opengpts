@@ -50,7 +50,7 @@ async def get_thread_state(
     if not assistant:
         raise HTTPException(status_code=400, detail="Thread has no assistant")
     return await storage.get_thread_state(
-        user_id=user["project_id"],
+        project_id=user["project_id"],
         thread_id=tid,
         assistant=assistant,
     )
