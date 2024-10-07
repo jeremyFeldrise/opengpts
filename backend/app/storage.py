@@ -206,7 +206,7 @@ async def delete_thread(project_id: str, thread_id: str):
     """Delete a thread by ID."""
     async with get_pg_pool().acquire() as conn:
         await conn.execute(
-            "DELETE FROM thread WHERE thread_id = $1 AND user_id = $2",
+            "DELETE FROM thread WHERE thread_id = $1 AND project_id = $2",
             thread_id,
             project_id,
         )
