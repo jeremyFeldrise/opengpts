@@ -45,7 +45,7 @@ class Assistant(TypedDict):
 class Thread(TypedDict):
     thread_id: str
     """The ID of the thread."""
-    user_id: str
+    project_id: str
     """The ID of the user that owns the thread."""
     assistant_id: Optional[str]
     """The assistant that was used in conjunction with this thread."""
