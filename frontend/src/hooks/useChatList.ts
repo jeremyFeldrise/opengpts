@@ -33,7 +33,7 @@ export function useChatList(): ChatListProps {
 
   useEffect(() => {
     async function fetchChats() {
-      const chats = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads`, {
+      const chats = await fetch(`${import.meta.env.VITE_BACKEND_URL}/threads/`, {
         headers: {
           Accept: "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
