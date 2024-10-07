@@ -46,7 +46,7 @@ async def get_assistant(
     return assistant
 
 
-@router.post("")
+@router.post("/")
 async def create_assistant(
     user: AuthedUser,
     payload: AssistantPayload,
