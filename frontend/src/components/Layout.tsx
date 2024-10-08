@@ -4,6 +4,12 @@ import { Bars3Icon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon, BellIcon, User
 import { Button } from "./button";
 import { useNavigate } from "react-router-dom";
 import { Logo } from "./Logo";
+import {
+  Dialog as DialogComponent,
+  DialogTrigger,
+} from "./dialog"
+
+import EditAPIKeysModal from "./EditAPIKeysModal";
 
 interface LayoutProps {
   sidebarOpen: boolean;
@@ -13,11 +19,18 @@ interface LayoutProps {
   subtitle?: React.ReactNode;
 }
 
+
+
 export function Layout(props: LayoutProps) {
   const [sidebarWidth, setSidebarWidth] = useState(288);
   const [isResizing, setIsResizing] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [open, setOpen] = useState(false)
+
+
   const navigate = useNavigate();
+
+
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isResizing) return;
@@ -28,6 +41,7 @@ export function Layout(props: LayoutProps) {
   const handleMouseUp = useCallback(() => {
     setIsResizing(false);
   }, []);
+
 
   useEffect(() => {
     document.addEventListener('mousemove', handleMouseMove);
@@ -175,13 +189,20 @@ export function Layout(props: LayoutProps) {
               </button>
 
               <div className="flex items-center gap-x-4 lg:gap-x-6">
-                <button
-                  type="button"
-                  className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
-                >
-                  <span className="sr-only">View profile</span>
-                  <UserCircleIcon className="w-8 h-8" aria-hidden="true" />
-                </button>
+                <DialogComponent open={open} onOpenChange={setOpen}>
+                  <DialogTrigger asChild>
+                    <button
+                      type="button"
+                      className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
+                    >
+                      <span className="sr-only">View profile</span>
+                      <UserCircleIcon className="w-8 h-8" aria-hidden="true" />
+                    </button>
+                  </DialogTrigger>
+                  <EditAPIKeysModal open={open} setOpen={setOpen}></EditAPIKeysModal>
+
+                </DialogComponent>
+
                 <Button onClick={logOut}>
                   Logout
                 </Button>
