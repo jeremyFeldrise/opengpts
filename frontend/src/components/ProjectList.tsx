@@ -2,10 +2,12 @@
 
 import { useQuery } from 'react-query'
 
-import { Card, CardContent, CardHeader, CardTitle } from "./card"
-import { getProjects, selectProject } from '../api/projects'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "./card"
+import { getProjects, selectProject, deleteProject } from '../api/projects'
 import { useNavigate } from 'react-router-dom'
 import AddProjectCard from './AddProjectCard'
+import { Button } from './button'
+import { Trash } from 'lucide-react'
 
 interface Project {
     project_id: string
@@ -31,6 +33,10 @@ export default function ProjectList() {
         return <ErrorCard />
     }
 
+    async function handleDelete(projectId: string) {
+        await deleteProject(projectId);
+    }
+    console.log('Projects', projects)
     return (
         <>
             <AddProjectCard props={refetch} />
@@ -39,9 +45,23 @@ export default function ProjectList() {
                     <CardHeader>
                         <CardTitle>{project.name}</CardTitle>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent >
                         <p>{project.description}</p>
                     </CardContent>
+                    <CardFooter>
+                        <Button
+                            variant="outline"
+                            onClick={async (e) => {
+                                console.log('Delete project', project.project_id)
+                                e.stopPropagation();
+                                await handleDelete(project.project_id);
+                                refetch();
+                            }}
+                        >
+                            <Trash size={16} />
+                            Delete
+                        </Button>
+                    </CardFooter>
                 </Card>
             ))}
         </>

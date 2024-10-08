@@ -18,7 +18,6 @@ export async function getProjects() {
 }
 
 export async function selectProject(id: string) {
-    console.log('id', id)
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
             headers: {
@@ -30,7 +29,6 @@ export async function selectProject(id: string) {
             return null;
         }
         const user = await response.json();
-        console.log('User', user)
         localStorage.setItem("token", user.jwt_token);
     } catch (error) {
         console.error("Failed to fetch project:", error);
@@ -39,7 +37,6 @@ export async function selectProject(id: string) {
 }
 
 export async function addProject(name: string, description: string) {
-    console.log("Payload", JSON.stringify({ name, description }))
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/`, {
             method: "POST",
@@ -52,5 +49,20 @@ export async function addProject(name: string, description: string) {
     }
     catch (error) {
         console.error("Failed to add project:", error);
+    }
+}
+
+export async function deleteProject(id: string) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            }
+        });
+    }
+    catch (error) {
+        console.error("Failed to delete project:", error);
     }
 }

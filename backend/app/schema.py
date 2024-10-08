@@ -23,6 +23,8 @@ class Project(TypedDict):
     """The ID of the user that owns the project."""
     name: str
     """The name of the project."""
+    description: str
+    """The description of the project."""
 
 
 class Assistant(TypedDict):

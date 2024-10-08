@@ -2,7 +2,6 @@
 
 
 import ProjectList from './ProjectList'
-import AddProjectCard from './AddProjectCard'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -12,7 +11,6 @@ export default function Project() {
 
     useEffect(() => {
         if (!localStorage.getItem('token') || localStorage.getItem('token') == 'undefined') {
-            console.log('Token', localStorage.getItem('token'))
             navigate('/login')
         }
     }, [navigate])

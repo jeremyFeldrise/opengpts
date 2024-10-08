@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Chat } from "./components/Chat";
 import { ChatList } from "./components/ChatList";
@@ -27,6 +27,12 @@ function App(props: { edit?: boolean }) {
   const { configSchema, configDefaults } = useSchemas();
 
   const { currentChat, assistantConfig, isLoading } = useThreadAndAssistant();
+
+  useEffect(() => {
+    if (localStorage.getItem("token") === null) {
+      navigate("/login");
+    }
+  });
 
   const startTurn = useCallback(
     async (
@@ -119,11 +125,7 @@ function App(props: { edit?: boolean }) {
     [navigate],
   );
 
-  // console.log("token", localStorage.getItem("token"));
-  // if (!localStorage.getItem("token") || localStorage.getItem("token") == null) {
-  //   console.log("No token found, redirecting to login");
-  //   navigate("/login");
-  // }
+
 
   return (
     <Layout

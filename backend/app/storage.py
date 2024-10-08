@@ -251,6 +251,10 @@ async def delete_project(user_id: str, project_id: str) -> None:
     """Delete a project by ID."""
     async with get_pg_pool().acquire() as conn:
         await conn.execute(
+            "DELETE FROM assistant WHERE project_id = $1",
+            project_id,
+        )
+        await conn.execute(
             "DELETE FROM project WHERE project_id = $1 AND user_id = $2",
             project_id,
             user_id,
