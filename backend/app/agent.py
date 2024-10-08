@@ -2,6 +2,8 @@ import pickle
 from enum import Enum
 from typing import Any, Dict, Mapping, Optional, Sequence, Union
 
+import app.storage as storage
+
 from langchain_core.messages import AnyMessage
 from langchain_core.runnables import (
     ConfigurableField,
@@ -273,6 +275,7 @@ class ConfigurableRetrieval(RunnableBinding):
         *,
         llm_type: LLMType = LLMType.GPT_35_TURBO,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
+        user_id: Optional[str] = None,
         assistant_id: Optional[str] = None,
         thread_id: Optional[str] = None,
         kwargs: Optional[Mapping[str, Any]] = None,
@@ -281,6 +284,8 @@ class ConfigurableRetrieval(RunnableBinding):
     ) -> None:
         others.pop("bound", None)
         retriever = get_retriever(assistant_id, thread_id)
+        # chatbot_configuration = storage.get_chatbot_configuration(user_id)
+        # print("ChatBot Configuration : ", chatbot_configuration)
         if llm_type == LLMType.GPT_35_TURBO:
             llm = get_openai_llm()
         elif llm_type == LLMType.GPT_4:

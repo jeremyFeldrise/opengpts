@@ -56,3 +56,16 @@ class Thread(TypedDict):
     updated_at: datetime
     """The last time the thread was updated."""
     metadata: Optional[dict]
+
+class ChatbotConfiguration(TypedDict):
+    """Chatbot configuration model."""
+
+    openai_api_key: Optional[str]
+    """The OpenAI API key."""
+    anthropic_api_key: Optional[str]
+    """The Anthropic API key."""
+    ydc_api_key: Optional[str]
+    """The YDC API key."""
+    tavili_api_key: Optional[str]
+    """The Tavili API key."""
+    

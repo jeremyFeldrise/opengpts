@@ -5,6 +5,7 @@ from app.api.runs import router as runs_router
 from app.api.threads import router as threads_router
 from app.api.authentication import router as authentication_router
 from app.api.projects import router as projects_router
+from app.api.chatbot_configuration import router as chatbot_configuration_router
 
 router = APIRouter()
 
@@ -37,4 +38,9 @@ router.include_router(
     threads_router,
     prefix="/threads",
     tags=["threads"],
+)
+router.include_router(
+    chatbot_configuration_router,
+    prefix="/chatbot_configuration",
+    tags=["chatbot_configuration"],
 )

@@ -1,9 +1,9 @@
 import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon, BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
-import { Logo } from "./Logo";
 import { Button } from "./button";
 import { useNavigate } from "react-router-dom";
+import { Logo } from "./Logo";
 
 interface LayoutProps {
   sidebarOpen: boolean;

@@ -11,11 +11,19 @@ from langchain_community.chat_models.ollama import ChatOllama
 from langchain_google_vertexai import ChatVertexAI
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 
+import app.storage as storage
+
+
 logger = structlog.get_logger(__name__)
 
 
 @lru_cache(maxsize=4)
-def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False):
+def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False, user_id: str = None):
+    chatbot_config = None
+    if user_id:
+        chatbot_config = storage.get_user_by_id(user_id)
+    if chatbot_config:
+        print("chatbot_config", chatbot_config)
     proxy_url = os.getenv("PROXY_URL")
     http_client = None
     if proxy_url:

@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnableConfig
 
 from app.agent import agent
 from app.lifespan import get_pg_pool
-from app.schema import Assistant, Thread, User
+from app.schema import Assistant, Thread, User, ChatbotConfiguration
 
 
 async def list_assistants(project_id: str) -> List[Assistant]:
@@ -286,3 +286,43 @@ async def create_user(email: str, password: str) -> User:
         )
         return user
     
+async def create_chatbot_configuration(user_id: str, openai_api_key, anthropic_api_key, ydc_api_key, tavili_api_key) -> ChatbotConfiguration:
+    """Create a chatbot configuration."""
+    async with get_pg_pool().acquire() as conn:
+        chatbot_configuration = await conn.fetchrow(
+            "INSERT INTO chatbot_configuration (user_id, openai_api_key,anthropic_api_key, ydc_api_key, tavili_api_key) VALUES ($1, $2, $3, $4, $5)"
+                "ON CONFLICT (user_id) DO UPDATE SET "
+                "openai_api_key = EXCLUDED.openai_api_key,"
+                "anthropic_api_key = EXCLUDED.anthropic_api_key, "
+                "ydc_api_key = EXCLUDED.ydc_api_key, "
+                "tavili_api_key = EXCLUDED.tavili_api_key;",
+            user_id,
+            openai_api_key,
+            anthropic_api_key,
+            ydc_api_key,
+            tavili_api_key,
+        )
+        return {
+            "user_id": user_id,
+            "openai_api_key": openai_api_key,
+            "anthropic_api_key": anthropic_api_key,
+            "ydc_api_key": ydc_api_key,
+            "tavili_api_key": tavili_api_key
+        }
+
+    
+async def get_chatbot_configuration(user_id: str) -> ChatbotConfiguration:
+    """Get a chatbot configuration by ID."""
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow(
+            "SELECT * FROM chatbot_configuration WHERE user_id = $1",
+            user_id,
+        )
+    
+async def delete_chatbot_configuration(user_id: id):
+    """Delete a chatbot configuration by ID."""
+    async with get_pg_pool().acquire() as conn:
+        await conn.execute(
+            "DELETE FROM chatbot_configuration WHERE user_id = $1",
+            user_id,
+        )
