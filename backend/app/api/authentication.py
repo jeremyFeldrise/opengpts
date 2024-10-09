@@ -19,7 +19,6 @@ async def login(request: Request) -> dict:
     print("Logging in")
     print(request)
     user = await storage.get_user(request["email"], request["password"])
-    print("User", user)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     key = os.environ["JWT_DECODE_KEY_B64"]

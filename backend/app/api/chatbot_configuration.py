@@ -27,8 +27,6 @@ async def create_chatbot_configuration(
     payload: ChatbotConfigurationPayload,
 ) -> ChatbotConfiguration:
     """Create a chatbot configuration."""
-    print("Creating chatbot configuration")
-    print(payload)
     response =  await storage.create_chatbot_configuration(
         user["user_id"],
         openai_api_key=payload.openai_api_key,
@@ -36,7 +34,6 @@ async def create_chatbot_configuration(
         ydc_api_key=payload.ydc_api_key,
         tavili_api_key=payload.tavili_api_key,
     )
-    print("Response", response)
     return response
 
 @router.delete("/")

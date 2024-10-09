@@ -225,7 +225,6 @@ async def create_project(user_id: str, name: str, description: str) -> dict:
             name,
             description,
         )
-        print("Project", project)  
         return {
             "project_id": "Test",
             "user_id": user_id,

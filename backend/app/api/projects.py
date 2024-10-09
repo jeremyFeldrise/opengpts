@@ -19,7 +19,6 @@ router = APIRouter()
 async def list_projects(user: AuthedUser) -> List[Project]:
     """List all projects."""
     project = await storage.list_projects(user["user_id"])
-    print("Projects", project)
     return project
 
 @router.post("/")
@@ -36,11 +35,9 @@ async def get_project(user: AuthedUser, project_id: str) -> dict:
     """Get a project by ID."""
     project = await storage.get_project(user["user_id"], project_id)
     key = os.environ["JWT_DECODE_KEY_B64"]
-    print("User", user)
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     jwt_token = jwt.encode(key = key, payload={"user_id": user["user_id"], "project_id": project_id, "alg":auth_settings.jwt_local.alg, "iss": auth_settings.jwt_local.iss, "aud": auth_settings.jwt_local.aud, "exp": datetime.now(timezone.utc) + timedelta(days=1),},)
-    print("Project JWT", jwt_token)
     return {"jwt_token": jwt_token}
 
 @router.delete("/{project_id}")

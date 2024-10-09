@@ -20,9 +20,10 @@ logger = structlog.get_logger(__name__)
 @lru_cache(maxsize=4)
 def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False, user_id: str = None):
     chatbot_config = None
+    print("Getting openai llm")
+    print("user_id", user_id)
     if user_id:
-        chatbot_config = storage.get_user_by_id(user_id)
-    if chatbot_config:
+        chatbot_config = storage.list_chatbot_configurations(user_id)
         print("chatbot_config", chatbot_config)
     proxy_url = os.getenv("PROXY_URL")
     http_client = None
@@ -67,6 +68,7 @@ def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False, user_id: s
 
 @lru_cache(maxsize=2)
 def get_anthropic_llm(bedrock: bool = False):
+    print("Getting anthropic llm")
     if bedrock:
         client = boto3.client(
             "bedrock-runtime",
@@ -86,6 +88,7 @@ def get_anthropic_llm(bedrock: bool = False):
 
 @lru_cache(maxsize=1)
 def get_google_llm():
+    print("Getting google llm")
     return ChatVertexAI(
         model_name="gemini-pro", convert_system_message_to_human=True, streaming=True
     )

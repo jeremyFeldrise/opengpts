@@ -32,7 +32,6 @@ class ThreadPostRequest(BaseModel):
 @router.get("/")
 async def list_threads(user: AuthedUser) -> List[Thread]:
     """List all threads for the current user."""
-    print("User ", user)
 
     return await storage.list_threads(user["project_id"])
 
@@ -63,7 +62,6 @@ async def add_thread_state(
     payload: ThreadPostRequest,
 ):
     """Add state to a thread."""
-    print("User ", user)
     thread = await storage.get_thread(user["project_id"], tid)
     if not thread:
         raise HTTPException(status_code=404, detail="Thread not found")

@@ -2,7 +2,7 @@ import pickle
 from enum import Enum
 from typing import Any, Dict, Mapping, Optional, Sequence, Union
 
-import app.storage as storage
+
 
 from langchain_core.messages import AnyMessage
 from langchain_core.runnables import (
@@ -24,6 +24,7 @@ from app.llms import (
     get_ollama_llm,
     get_openai_llm,
 )
+
 from app.retrieval import get_retrieval_executor
 from app.tools import (
     RETRIEVAL_DESCRIPTION,
@@ -84,6 +85,7 @@ def get_agent_executor(
     agent: AgentType,
     system_message: str,
     interrupt_before_action: bool,
+    user_id: str
 ):
     if agent == AgentType.GPT_35_TURBO:
         llm = get_openai_llm()
@@ -139,7 +141,6 @@ class ConfigurableAgent(RunnableBinding):
     assistant_id: Optional[str] = None
     thread_id: Optional[str] = None
     user_id: Optional[str] = None
-
     def __init__(
         self,
         *,
@@ -148,6 +149,7 @@ class ConfigurableAgent(RunnableBinding):
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         assistant_id: Optional[str] = None,
         thread_id: Optional[str] = None,
+        user_id: Optional[str] = None,
         retrieval_description: str = RETRIEVAL_DESCRIPTION,
         interrupt_before_action: bool = False,
         kwargs: Optional[Mapping[str, Any]] = None,
@@ -173,9 +175,10 @@ class ConfigurableAgent(RunnableBinding):
                 else:
                     _tools.append(_returned_tools)
         _agent = get_agent_executor(
-            _tools, agent, system_message, interrupt_before_action
+            _tools, agent, system_message, interrupt_before_action, user_id
         )
         agent_executor = _agent.with_config({"recursion_limit": 50})
+        # print("Agent Executor : ", agent_executor)
         super().__init__(
             tools=tools,
             agent=agent,
@@ -202,23 +205,24 @@ class LLMType(str, Enum):
 def get_chatbot(
     llm_type: LLMType,
     system_message: str,
+    user_id: str,
 ):
     if llm_type == LLMType.GPT_35_TURBO:
-        llm = get_openai_llm()
+        llm = get_openai_llm(user_id=user_id)
     elif llm_type == LLMType.GPT_4:
-        llm = get_openai_llm(gpt_4=True)
+        llm = get_openai_llm(gpt_4=True, user_id=user_id)
     elif llm_type == LLMType.AZURE_OPENAI:
-        llm = get_openai_llm(azure=True)
+        llm = get_openai_llm(azure=True, user_id=user_id)
     elif llm_type == LLMType.CLAUDE2:
-        llm = get_anthropic_llm()
+        llm = get_anthropic_llm(user_id=user_id)
     elif llm_type == LLMType.BEDROCK_CLAUDE2:
-        llm = get_anthropic_llm(bedrock=True)
+        llm = get_anthropic_llm(bedrock=True, user_id=user_id)
     elif llm_type == LLMType.GEMINI:
-        llm = get_google_llm()
+        llm = get_google_llm(user_id=user_id)
     elif llm_type == LLMType.MIXTRAL:
-        llm = get_mixtral_fireworks()
+        llm = get_mixtral_fireworks(user_id=user_id)
     elif llm_type == LLMType.OLLAMA:
-        llm = get_ollama_llm()
+        llm = get_ollama_llm(user_id=user_id)
     else:
         raise ValueError("Unexpected llm type")
     return get_chatbot_executor(llm, system_message, CHECKPOINTER)
@@ -227,7 +231,7 @@ def get_chatbot(
 class ConfigurableChatBot(RunnableBinding):
     llm: LLMType
     system_message: str = DEFAULT_SYSTEM_MESSAGE
-    user_id: Optional[str] = None
+    user_id: str = None
 
     def __init__(
         self,
@@ -236,17 +240,19 @@ class ConfigurableChatBot(RunnableBinding):
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         kwargs: Optional[Mapping[str, Any]] = None,
         config: Optional[Mapping[str, Any]] = None,
+        user_id: Optional[str] = None,
         **others: Any,
     ) -> None:
         others.pop("bound", None)
-
-        chatbot = get_chatbot(llm, system_message)
+        print("user ID : ", user_id)
+        chatbot = get_chatbot(llm, system_message, user_id)
         super().__init__(
             llm=llm,
             system_message=system_message,
             bound=chatbot,
             kwargs=kwargs or {},
             config=config or {},
+            user_id=user_id
         )
 
 
@@ -255,6 +261,7 @@ chatbot = (
     .configurable_fields(
         llm=ConfigurableField(id="llm_type", name="LLM Type"),
         system_message=ConfigurableField(id="system_message", name="Instructions"),
+        user_id=ConfigurableField(id="user_id", name="User ID", is_shared=True),
     )
     .with_types(
         input_type=Messages,
@@ -284,26 +291,24 @@ class ConfigurableRetrieval(RunnableBinding):
     ) -> None:
         others.pop("bound", None)
         retriever = get_retriever(assistant_id, thread_id)
-        # chatbot_configuration = storage.get_chatbot_configuration(user_id)
-        # print("ChatBot Configuration : ", chatbot_configuration)
         if llm_type == LLMType.GPT_35_TURBO:
-            llm = get_openai_llm()
+            llm = get_openai_llm(user_id=user_id)
         elif llm_type == LLMType.GPT_4:
-            llm = get_openai_llm(model="gpt-4-turbo")
+            llm = get_openai_llm(model="gpt-4-turbo", user_id=user_id)
         elif llm_type == LLMType.GPT_4O:
-            llm = get_openai_llm(model="gpt-4o")
+            llm = get_openai_llm(model="gpt-4o", user_id=user_id)
         elif llm_type == LLMType.AZURE_OPENAI:
-            llm = get_openai_llm(azure=True)
+            llm = get_openai_llm(azure=True, user_id=user_id)
         elif llm_type == LLMType.CLAUDE2:
-            llm = get_anthropic_llm()
+            llm = get_anthropic_llm(user_id=user_id)
         elif llm_type == LLMType.BEDROCK_CLAUDE2:
-            llm = get_anthropic_llm(bedrock=True)
+            llm = get_anthropic_llm(bedrock=True, user_id=user_id)
         elif llm_type == LLMType.GEMINI:
-            llm = get_google_llm()
+            llm = get_google_llm(user_id=user_id)
         elif llm_type == LLMType.MIXTRAL:
-            llm = get_mixtral_fireworks()
+            llm = get_mixtral_fireworks(user_id=user_id)
         elif llm_type == LLMType.OLLAMA:
-            llm = get_ollama_llm()
+            llm = get_ollama_llm(user_id=user_id)
         else:
             raise ValueError("Unexpected llm type")
         chatbot = get_retrieval_executor(llm, retriever, system_message, CHECKPOINTER)
@@ -313,6 +318,7 @@ class ConfigurableRetrieval(RunnableBinding):
             bound=chatbot,
             kwargs=kwargs or {},
             config=config or {},
+            user_id=user_id,
         )
 
 
@@ -341,6 +347,7 @@ agent: Pregel = (
         retrieval_description=RETRIEVAL_DESCRIPTION,
         assistant_id=None,
         thread_id=None,
+        user_id=str
     )
     .configurable_fields(
         agent=ConfigurableField(id="agent_type", name="Agent Type"),
@@ -352,6 +359,9 @@ agent: Pregel = (
         ),
         assistant_id=ConfigurableField(
             id="assistant_id", name="Assistant ID", is_shared=True
+        ),
+        user_id = ConfigurableField(
+            id="user_id", name="User ID", is_shared=True
         ),
         thread_id=ConfigurableField(id="thread_id", name="Thread ID", is_shared=True),
         tools=ConfigurableField(id="tools", name="Tools"),

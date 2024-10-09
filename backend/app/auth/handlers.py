@@ -38,15 +38,12 @@ class JWTAuthBase(AuthHandler):
 
 
         user = await storage.get_user_by_id(payload["user_id"])
-        print("Payload ", payload)
         #Check if payload has project_id
         if ("project_id" in payload):
-            print("I'm IN !")
             user = dict(user)
             user["project_id"] = payload["project_id"]
             #Convert user back to asyncpg record
             user = User(**user)
-        print("User", user)
         return user
 
     @abstractmethod
@@ -60,7 +57,6 @@ class JWTAuthBase(AuthHandler):
 
 class JWTAuthLocal(JWTAuthBase):
     """Auth handler that uses a hardcoded decode key from env."""
-    print("JWTAuthLocal")
     def decode_token(self, token: str, decode_key: str) -> dict:
         decode =  jwt.decode(
             token,
@@ -128,7 +124,6 @@ async def auth_user(
 ):
     hello = await auth_handler(request)
 
-    print("Hello : ", hello)
     return hello
 
 
