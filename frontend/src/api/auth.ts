@@ -6,7 +6,10 @@ export async function loginUser(email: string, password: string) {
                 "Content-Type": "application/json",
 
             },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({
+                email: email,
+                password: password
+            }),
         });
         const user = await response.json();
         localStorage.setItem("token", user.jwt_token);
