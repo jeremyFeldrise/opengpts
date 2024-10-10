@@ -1,4 +1,6 @@
 export async function loginUser(email: string, password: string) {
+            console.log("email : " + email);
+            console.log("password : " + password);
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, {
             method: "POST",

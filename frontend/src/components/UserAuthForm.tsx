@@ -58,13 +58,13 @@ export default function LoginForm() {
                             <form className="space-y-4">
                                 <div className="space-y-2">
                                     <Label htmlFor="email">Email</Label>
-                                    <Input id="email" placeholder="Enter your email" type="email" required value={email}
+                                    <Input id="email" placeholder="Enter your email" name="email" type="email" required value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                     />
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="password">Password</Label>
-                                    <Input id="password" placeholder="Enter your password" type="password" required value={password}
+                                    <Input id="password" placeholder="Enter your password" name="password" type="password" required value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                     />
                                 </div>
