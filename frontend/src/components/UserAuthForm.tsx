@@ -24,9 +24,11 @@ export default function LoginForm() {
         queryFn: () => loginUser(email, password),
         enabled: false,
         onSuccess: (data) => {
-            if (data?.token) {
-                localStorage.setItem('token', data.token)
+            if (data?.jwt_token) {
+                localStorage.setItem('token', data.jwt_token)
                 setIsLoggedIn(true)
+                console.log('Logged in successfully!')
+
             }
         },
     })
@@ -86,7 +88,7 @@ export default function LoginForm() {
             <Header />
 
             {/* Login Form */}
-            <div className="flex-grow flex items-center justify-center p-4">
+            <div className="flex items-center justify-center flex-grow p-4">
                 <Card className="w-full max-w-4xl m-auto overflow-hidden shadow-xl rounded-xl">
                     <div className="flex flex-col md:flex-row">
                         <div className="flex-1 p-8">

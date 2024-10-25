@@ -38,15 +38,12 @@ class JWTAuthBase(AuthHandler):
 
 
         user = await storage.get_user_by_id(payload["user_id"])
-        print("Payload ", payload)
         #Check if payload has project_id
         if ("project_id" in payload):
-            print("I'm IN !")
             user = dict(user)
             user["project_id"] = payload["project_id"]
             #Convert user back to asyncpg record
             user = User(**user)
-        print("User", user)
         return user
 
     @abstractmethod
@@ -128,7 +125,6 @@ async def auth_user(
 ):
     hello = await auth_handler(request)
 
-    print("Hello : ", hello)
     return hello
 
 

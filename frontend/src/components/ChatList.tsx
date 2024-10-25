@@ -145,7 +145,7 @@ export function ChatList(props: {
             </button>
             {/* Menu Dropdown */}
             {visibleMenu === chat.thread_id && (
-              <div className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="relative right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div
                   className="py-1"
                   role="menu"

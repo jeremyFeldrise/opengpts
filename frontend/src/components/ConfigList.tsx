@@ -36,13 +36,25 @@ function ConfigItem(props: {
             <span className="font-medium text-black truncate">
               {props.config.name}
             </span>
-            <Link
-              className="ml-2 text-gray-500 transition-colors duration-200 hover:text-black"
-              to={`/assistant/${props.config.assistant_id}/edit`}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <PencilSquareIcon className="w-4 h-4" />
-            </Link>
+            <div className="flex">
+
+              <Link
+                className="ml-2 text-gray-500 transition-colors duration-200 hover:text-black"
+                to={`/assistant/${props.config.assistant_id}/edit`}
+                onClick={(event) => event.stopPropagation()}
+              >
+                <PencilSquareIcon className="w-4 h-4" />
+              </Link>
+              <button className="ml-2 text-gray-500 transition-colors duration-200 hover:text-black">
+                <TrashIcon
+                  className="w-4 h-4 text-gray-500 transition-colors duration-200 hover:text-black"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    props.deleteConfig(props.config.assistant_id);
+                  }}
+                />
+              </button>
+            </div>
           </div>
           <div className="mt-1 text-xs text-gray-500">
             {props.config.name}

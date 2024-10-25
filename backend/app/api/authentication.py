@@ -32,6 +32,7 @@ async def login(request: Request) -> dict:
 @router.post("/signup", description="Create a new user.")
 async def signup(email : str = Form(...), password: str = Form(...)) -> dict:
     """Create a new user."""
+    print("Signing up")
     user = await storage.create_user(email, password)
     if not user:
         raise HTTPException(status_code=400, detail="User already exists.")
