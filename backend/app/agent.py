@@ -85,7 +85,6 @@ def get_agent_executor(
     agent: AgentType,
     system_message: str,
     interrupt_before_action: bool,
-    user_id: str
 ):
     if agent == AgentType.GPT_35_TURBO:
         llm = get_openai_llm()
@@ -175,7 +174,7 @@ class ConfigurableAgent(RunnableBinding):
                 else:
                     _tools.append(_returned_tools)
         _agent = get_agent_executor(
-            _tools, agent, system_message, interrupt_before_action, user_id
+            _tools, agent, system_message, interrupt_before_action
         )
         agent_executor = _agent.with_config({"recursion_limit": 50})
         # print("Agent Executor : ", agent_executor)
@@ -232,7 +231,7 @@ class ConfigurableChatBot(RunnableBinding):
     llm: LLMType
     system_message: str = DEFAULT_SYSTEM_MESSAGE
     user_id: str = None
-
+    openai_api_key: str = None
     def __init__(
         self,
         *,
@@ -244,7 +243,6 @@ class ConfigurableChatBot(RunnableBinding):
         **others: Any,
     ) -> None:
         others.pop("bound", None)
-        print("user ID : ", user_id)
         chatbot = get_chatbot(llm, system_message, user_id)
         super().__init__(
             llm=llm,
@@ -252,7 +250,8 @@ class ConfigurableChatBot(RunnableBinding):
             bound=chatbot,
             kwargs=kwargs or {},
             config=config or {},
-            user_id=user_id
+            user_id=user_id,
+            
         )
 
 
@@ -262,12 +261,15 @@ chatbot = (
         llm=ConfigurableField(id="llm_type", name="LLM Type"),
         system_message=ConfigurableField(id="system_message", name="Instructions"),
         user_id=ConfigurableField(id="user_id", name="User ID", is_shared=True),
+        openai_api_key=ConfigurableField(id="openai_api_key", name="Open AI API Key", is_shared=True),
     )
     .with_types(
         input_type=Messages,
         output_type=Sequence[AnyMessage],
     )
 )
+
+print("Chatbot : ", chatbot)
 
 
 class ConfigurableRetrieval(RunnableBinding):
@@ -347,7 +349,7 @@ agent: Pregel = (
         retrieval_description=RETRIEVAL_DESCRIPTION,
         assistant_id=None,
         thread_id=None,
-        user_id=str
+        openai_api_key=str
     )
     .configurable_fields(
         agent=ConfigurableField(id="agent_type", name="Agent Type"),
@@ -360,14 +362,15 @@ agent: Pregel = (
         assistant_id=ConfigurableField(
             id="assistant_id", name="Assistant ID", is_shared=True
         ),
-        user_id = ConfigurableField(
-            id="user_id", name="User ID", is_shared=True
-        ),
+        # openai_api_key = ConfigurableField(
+        #     id="openai_api_key", name="Open AI API Key"
+        # ),
         thread_id=ConfigurableField(id="thread_id", name="Thread ID", is_shared=True),
         tools=ConfigurableField(id="tools", name="Tools"),
         retrieval_description=ConfigurableField(
             id="retrieval_description", name="Retrieval Description"
         ),
+
     )
     .configurable_alternatives(
         ConfigurableField(id="type", name="Bot Type"),

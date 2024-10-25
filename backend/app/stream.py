@@ -71,11 +71,13 @@ async def to_sse(messages_stream: MessagesStream) -> AsyncIterator[dict]:
             # so after serializing into bytes, we decode into utf-8
             # to get a string.
             if isinstance(chunk, str):
+                print("Is Instance ")
                 yield {
                     "event": "metadata",
                     "data": orjson.dumps({"run_id": chunk}).decode(),
                 }
             else:
+                print("Print Chunk")
                 yield {
                     "event": "data",
                     "data": dumps(
