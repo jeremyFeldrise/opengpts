@@ -16,10 +16,7 @@ router = APIRouter()
 async def login(request: Request) -> dict:
     """Login with a user ID."""
     request = await request.json()
-    print("Logging in")
-    print(request)
     user = await storage.get_user(request["email"], request["password"])
-    print("User", user)
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     key = os.environ["JWT_DECODE_KEY_B64"]
@@ -32,7 +29,6 @@ async def login(request: Request) -> dict:
 @router.post("/signup", description="Create a new user.")
 async def signup(email : str = Form(...), password: str = Form(...)) -> dict:
     """Create a new user."""
-    print("Signing up")
     user = await storage.create_user(email, password)
     if not user:
         raise HTTPException(status_code=400, detail="User already exists.")

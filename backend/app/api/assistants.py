@@ -83,6 +83,5 @@ async def delete_assistant(
     aid: AssistantID,
 ):
     """Delete an assistant by ID."""
-    print("Deleting assistant", aid)
     await storage.delete_assistant(user["project_id"], aid)
     return {"status": "ok"}

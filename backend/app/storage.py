@@ -13,7 +13,6 @@ from app.schema import Assistant, Thread, User
 
 async def list_assistants(project_id: str) -> List[Assistant]:
     """List all assistants for the current user."""
-    print ("Project ID", project_id)
     async with get_pg_pool().acquire() as conn:
         return await conn.fetch("SELECT * FROM assistant WHERE project_id = $1", project_id)
 
@@ -225,7 +224,6 @@ async def create_project(user_id: str, name: str, description: str) -> dict:
             name,
             description,
         )
-        print("Project", project)  
         return {
             "project_id": "Test",
             "user_id": user_id,

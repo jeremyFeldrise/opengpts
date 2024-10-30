@@ -77,7 +77,8 @@ async def stream_run(
 ):
     """Create a run."""
     input_, config = await _run_input_and_config(payload, user["project_id"])
-
+    """Change the input type to a dict"""
+    input_ = {"messages": input_}
     return EventSourceResponse(to_sse(astream_state(agent, input_, config)))
 
 

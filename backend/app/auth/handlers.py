@@ -57,7 +57,6 @@ class JWTAuthBase(AuthHandler):
 
 class JWTAuthLocal(JWTAuthBase):
     """Auth handler that uses a hardcoded decode key from env."""
-    print("JWTAuthLocal")
     def decode_token(self, token: str, decode_key: str) -> dict:
         decode =  jwt.decode(
             token,
