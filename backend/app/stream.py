@@ -19,7 +19,9 @@ async def astream_state(
     """Stream messages from the runnable."""
     root_run_id: Optional[str] = None
     messages: dict[str, BaseMessage] = {}
-    
+    print("astream_state")
+    print(type(input))
+    print(input)
     async for event in app.astream_events(
         input, config, version="v1", stream_mode="values", exclude_tags=["nostream"]
     ):
@@ -83,7 +85,7 @@ async def to_sse(messages_stream: MessagesStream) -> AsyncIterator[dict]:
                         [message_chunk_to_message(msg) for msg in chunk]
                     ).decode(),
                 }
-    except Exception as e:
+    except Exception:
         logger.warn("error in stream", exc_info=True)
         yield {
             "event": "error",
