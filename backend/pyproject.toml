@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "app"}]
+packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.9.0,<3.12"
@@ -24,7 +24,7 @@ pydantic = "<2.0"
 langchain-openai = "^0.1.3"
 beautifulsoup4 = "^4.12.3"
 boto3 = "^1.34.28"
-duckduckgo-search = "^5.3.0"
+duckduckgo-search = "^6.3.3"
 arxiv = "^2.1.0"
 kay = "^0.1.2"
 xmltodict = "^0.13.0"
@@ -35,16 +35,19 @@ pdfminer-six = "^20231228"
 langchain-robocorp = "^0.0.8"
 fireworks-ai = "^0.11.2"
 httpx = { version = "0.25.2", extras = ["socks"] }
-unstructured = {extras = ["doc", "docx"], version = "^0.12.5"}
+unstructured = { extras = ["doc", "docx"], version = "^0.12.5" }
 pgvector = "^0.2.5"
 psycopg2-binary = "^2.9.9"
 asyncpg = "^0.29.0"
 langchain-core = "^0.1.44"
-pyjwt = {extras = ["crypto"], version = "^2.8.0"}
+pyjwt = { extras = ["crypto"], version = "^2.8.0" }
 langchain-anthropic = "^0.1.8"
 structlog = "^24.1.0"
 python-json-logger = "^2.0.7"
 bcrypt = "^4.2.0"
+googlesearch-python = "^1.2.5"
+langchain-groq = "0.1.5"
+
 
 [tool.poetry.group.dev.dependencies]
 uvicorn = "^0.23.2"
@@ -64,9 +67,7 @@ pytest-watch = "^4.2.0"
 pytest-timeout = "^2.2.0"
 
 [tool.coverage.run]
-omit = [
-    "tests/*",
-]
+omit = ["tests/*"]
 
 [tool.pytest.ini_options]
 # --strict-markers will raise errors on unknown marks.

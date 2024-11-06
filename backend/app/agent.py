@@ -21,6 +21,7 @@ from app.llms import (
     get_mixtral_fireworks,
     get_ollama_llm,
     get_openai_llm,
+    get_groq_llm,
 )
 from app.retrieval import get_retrieval_executor
 from app.tools import (
@@ -70,6 +71,7 @@ class AgentType(str, Enum):
     BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
+    GROQ = "GROQ"
 
 
 DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant."
@@ -123,7 +125,12 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-
+    elif agent == AgentType.GROQ:
+        print("GROQ")
+        llm = get_groq_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
     else:
         raise ValueError("Unexpected agent type")
 
