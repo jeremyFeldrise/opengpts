@@ -126,7 +126,6 @@ def get_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
     elif agent == AgentType.GROQ:
-        print("GROQ")
         llm = get_groq_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
@@ -162,6 +161,7 @@ class ConfigurableAgent(RunnableBinding):
         others.pop("bound", None)
         _tools = []
         for _tool in tools:
+            print("tool", _tool)
             if _tool["type"] == AvailableTools.RETRIEVAL:
                 if assistant_id is None or thread_id is None:
                     raise ValueError(

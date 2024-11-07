@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "Epsimo",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

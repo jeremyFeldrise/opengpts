@@ -1,0 +1,25 @@
+meta {
+  name: Run the thread
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{host}}/runs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "assistantd_id": "{{assistant_id}}",
+    "thread_id": "{{thread_id}}",
+    "input": {
+      "messages": []
+    }
+  }
+}

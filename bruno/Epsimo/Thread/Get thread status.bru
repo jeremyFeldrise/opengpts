@@ -1,0 +1,15 @@
+meta {
+  name: Get thread status
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/threads/{{thread_id}}/state
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}

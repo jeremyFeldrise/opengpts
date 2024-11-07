@@ -1,0 +1,27 @@
+meta {
+  name: Create an assistant
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/assistants
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "name": "Test Bruno 2",
+    "config": {"configurable": {
+            "type": "agent",
+        "type==agent/agent_type": "GPT 3.5 Turbo",
+        "type==agent/system_message": "You are a helpful assistant"
+    }},
+    "public": false
+  }
+}

@@ -1,0 +1,22 @@
+meta {
+  name: Create Project
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{host}}/projects
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "name": "Test",
+    "description": "Test"
+  }
+}

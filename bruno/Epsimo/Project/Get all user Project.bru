@@ -1,0 +1,15 @@
+meta {
+  name: Get all user Project
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/projects/
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMjk3YWQ3NWMtZWU0Ni00NGUyLTgyM2MtNmE3OTQ3Mjk0ZDg5IiwiYWxnIjoiSFMyNTYiLCJpc3MiOiJlcHNpbW8iLCJhdWQiOiJlcHNpbW8iLCJleHAiOjE3MzEwNzM2Mzd9.LCpzZ_kDziu4BjL1cOt8P_n4iAbdDWfrae4Skav-iXk
+}

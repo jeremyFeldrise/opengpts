@@ -1,0 +1,22 @@
+meta {
+  name: Create a thread
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/threads
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "name": "bruno test thread",
+    "assistant_id": "{{assistant_id}}"
+  }
+}
