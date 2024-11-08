@@ -21,7 +21,14 @@ from app.llms import (
     get_mixtral_fireworks,
     get_ollama_llm,
     get_openai_llm,
-    get_groq_llm,
+    get_groq70B_llm,
+    get_groq8B_llm,
+    get_claude_35_sonnet_llm,
+    get_claude_3_opus_llm,
+    get_claude_3_5_haiku_llm,
+    get_groq_llama_70B_versatile_llm,
+    get_groq_llama_90B_llm,
+    get_groq_whisper_llm,
 )
 from app.retrieval import get_retrieval_executor
 from app.tools import (
@@ -63,15 +70,22 @@ Tool = Union[
 
 
 class AgentType(str, Enum):
-    GPT_35_TURBO = "GPT 3.5 Turbo"
-    GPT_4 = "GPT 4 Turbo"
+    # GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
-    AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
-    CLAUDE2 = "Claude 2"
-    BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
+    GPT_4O_mini = "GPT 4o1 Mini"
+    # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
+    CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
+    CLAUDE35_SONNET = "Claude 3.5 (Sonnet)"
+    CLAUDE3_OPUS = "Claude 3 (Opus)"
+    # BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
+    MIXTRAL = "Mixtral"
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
-    GROQ = "GROQ"
+    GROQ70B = "GROQ (llama3-70b-8192)"
+    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
+    GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
+    # GROQ_WHISPER = "GROQ Whisper Large v3"
+    GROQ8B = "GROQ (llama3-8b-8192)"
 
 
 DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant."
@@ -85,34 +99,63 @@ def get_agent_executor(
     system_message: str,
     interrupt_before_action: bool,
 ):
-    if agent == AgentType.GPT_35_TURBO:
-        llm = get_openai_llm()
+    # if agent == AgentType.GPT_35_TURBO:
+    #     llm = get_openai_llm()
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
+    if agent == AgentType.GPT_4O:
+        llm = get_openai_llm(model="gpt-4o1")
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.GPT_4:
-        llm = get_openai_llm(model="gpt-4-turbo")
+    elif agent == AgentType.GPT_4O_mini:
+        llm = get_openai_llm(model="gpt-4o-mini")
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.GPT_4O:
-        llm = get_openai_llm(model="gpt-4o")
+    # elif agent == AgentType.AZURE_OPENAI:
+    #     llm = get_openai_llm(azure=True)
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
+    elif agent == AgentType.CLAUDE35_HAIKU:
+        llm = get_claude_3_5_haiku_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.AZURE_OPENAI:
-        llm = get_openai_llm(azure=True)
+    elif agent == AgentType.CLAUDE35_SONNET:
+        llm = get_claude_35_sonnet_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.CLAUDE2:
-        llm = get_anthropic_llm()
+    elif agent == AgentType.CLAUDE3_OPUS:
+        llm = get_claude_3_opus_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.BEDROCK_CLAUDE2:
-        llm = get_anthropic_llm(bedrock=True)
-        return get_xml_agent_executor(
+    # elif agent == AgentType.BEDROCK_CLAUDE2:
+    #     llm = get_anthropic_llm(bedrock=True)
+    #     return get_xml_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
+    elif agent == AgentType.GROQ70B_VERSATILE:
+        llm = get_groq_llama_70B_versatile_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    elif agent == AgentType.GROQ90B:
+        llm = get_groq_llama_90B_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    # elif agent == AgentType.GROQ_WHISPER:
+    #     llm = get_groq_whisper_llm()
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER)
+    elif agent == AgentType.MIXTRAL:
+        llm = get_mixtral_fireworks()
+        return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
     elif agent == AgentType.GEMINI:
@@ -125,8 +168,13 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.GROQ:
-        llm = get_groq_llm()
+    elif agent == AgentType.GROQ70B:
+        llm = get_groq70B_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    elif agent == AgentType.GROQ8B:
+        llm = get_groq8B_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
@@ -148,7 +196,7 @@ class ConfigurableAgent(RunnableBinding):
         self,
         *,
         tools: Sequence[Tool],
-        agent: AgentType = AgentType.GPT_35_TURBO,
+        agent: AgentType = AgentType.GPT_4O,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         assistant_id: Optional[str] = None,
         thread_id: Optional[str] = None,
@@ -193,37 +241,62 @@ class ConfigurableAgent(RunnableBinding):
 
 
 class LLMType(str, Enum):
-    GPT_35_TURBO = "GPT 3.5 Turbo"
-    GPT_4 = "GPT 4 Turbo"
+# GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
-    AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
-    CLAUDE2 = "Claude 2"
-    BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
-    GEMINI = "GEMINI"
+    GPT_4O_mini = "GPT 4o1 Mini"
+    # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
+    CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
+    CLAUDE35_SONNET = "Claude 3.5 (Sonnet)"
+    CLAUDE3_OPUS = "Claude 3 (Opus)"
+    # BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
     MIXTRAL = "Mixtral"
+    GEMINI = "GEMINI"
     OLLAMA = "Ollama"
+    GROQ70B = "GROQ (llama3-70b-8192)"
+    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
+    GROQ90B= "GROQ (llama3.2-90b-text-preview) Text Preview"
+    # GROQ_WHISPER = "GROQ Whisper Large v3"
+    GROQ8B = "GROQ (llama3-8b-8192)"
 
 
 def get_chatbot(
     llm_type: LLMType,
     system_message: str,
 ):
-    if llm_type == LLMType.GPT_35_TURBO:
+    # if llm_type == LLMType.GPT_35_TURBO:
+    #     llm = get_openai_llm()
+ 
+    if llm_type == LLMType.GPT_4O:
         llm = get_openai_llm()
-    elif llm_type == LLMType.GPT_4:
-        llm = get_openai_llm(gpt_4=True)
-    elif llm_type == LLMType.AZURE_OPENAI:
-        llm = get_openai_llm(azure=True)
-    elif llm_type == LLMType.CLAUDE2:
-        llm = get_anthropic_llm()
-    elif llm_type == LLMType.BEDROCK_CLAUDE2:
-        llm = get_anthropic_llm(bedrock=True)
+    elif llm_type == LLMType.GPT_4O_mini:
+        llm = get_openai_llm({"model": "gpt-4o-mini"})
+    # elif llm_type == LLMType.AZURE_OPENAI:
+    #     llm = get_openai_llm(azure=True)
+    elif llm_type == LLMType.CLAUDE35_HAIKU:
+        llm = get_claude_3_5_haiku_llm()
+    elif llm_type == LLMType.CLAUDE35_SONNET:
+        llm = get_claude_35_sonnet_llm()
+    elif llm_type == LLMType.CLAUDE35_OPUS:
+        llm = get_claude_3_opus_llm()
+    # elif llm_type == LLMType.BEDROCK_CLAUDE2:
+    #     llm = get_anthropic_llm(bedrock=True)
     elif llm_type == LLMType.GEMINI:
         llm = get_google_llm()
     elif llm_type == LLMType.MIXTRAL:
         llm = get_mixtral_fireworks()
     elif llm_type == LLMType.OLLAMA:
         llm = get_ollama_llm()
+    elif llm_type == LLMType.GROQ70B:
+        llm = get_groq70B_llm()
+    elif llm_type == LLMType.GROQ8B:
+        llm= get_groq8B_llm()
+    elif llm_type == LLMType.GROQ70B_VERSATILE:
+        llm = get_groq_llama_70B_versatile_llm()
+    elif llm_type == LLMType.GROQ90B:
+        llm = get_groq_llama_90B_llm()
+    # elif llm_type == LLMType.GROQ_WHISPER:
+    #     llm = get_groq_whisper_llm()
+    
     else:
         raise ValueError("Unexpected llm type")
     return get_chatbot_executor(llm, system_message, CHECKPOINTER)
@@ -237,7 +310,7 @@ class ConfigurableChatBot(RunnableBinding):
     def __init__(
         self,
         *,
-        llm: LLMType = LLMType.GPT_35_TURBO,
+        llm: LLMType = LLMType.GPT_4O,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         kwargs: Optional[Mapping[str, Any]] = None,
         config: Optional[Mapping[str, Any]] = None,
@@ -245,6 +318,7 @@ class ConfigurableChatBot(RunnableBinding):
     ) -> None:
         others.pop("bound", None)
 
+        print("Chatbot", llm, system_message)
         chatbot = get_chatbot(llm, system_message)
         super().__init__(
             llm=llm,
@@ -256,7 +330,7 @@ class ConfigurableChatBot(RunnableBinding):
 
 
 chatbot = (
-    ConfigurableChatBot(llm=LLMType.GPT_35_TURBO, checkpoint=CHECKPOINTER)
+    ConfigurableChatBot(llm=LLMType.GPT_4O, checkpoint=CHECKPOINTER)
     .configurable_fields(
         llm=ConfigurableField(id="llm_type", name="LLM Type"),
         system_message=ConfigurableField(id="system_message", name="Instructions"),
@@ -278,7 +352,7 @@ class ConfigurableRetrieval(RunnableBinding):
     def __init__(
         self,
         *,
-        llm_type: LLMType = LLMType.GPT_35_TURBO,
+        llm_type: LLMType = LLMType.GPT_4O,
         system_message: str = DEFAULT_SYSTEM_MESSAGE,
         assistant_id: Optional[str] = None,
         thread_id: Optional[str] = None,
@@ -288,14 +362,14 @@ class ConfigurableRetrieval(RunnableBinding):
     ) -> None:
         others.pop("bound", None)
         retriever = get_retriever(assistant_id, thread_id)
-        if llm_type == LLMType.GPT_35_TURBO:
-            llm = get_openai_llm()
-        elif llm_type == LLMType.GPT_4:
-            llm = get_openai_llm(model="gpt-4-turbo")
-        elif llm_type == LLMType.GPT_4O:
+        # if llm_type == LLMType.GPT_35_TURBO:
+        #     llm = get_openai_llm()
+        if llm_type == LLMType.GPT_4O:
             llm = get_openai_llm(model="gpt-4o")
-        elif llm_type == LLMType.AZURE_OPENAI:
-            llm = get_openai_llm(azure=True)
+        elif llm_type == LLMType.GPT_4O_mini:
+            llm = get_openai_llm(model="gpt-4o-mini")
+        # elif llm_type == LLMType.AZURE_OPENAI:
+        #     llm = get_openai_llm(azure=True)
         elif llm_type == LLMType.CLAUDE2:
             llm = get_anthropic_llm()
         elif llm_type == LLMType.BEDROCK_CLAUDE2:
@@ -306,6 +380,23 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_mixtral_fireworks()
         elif llm_type == LLMType.OLLAMA:
             llm = get_ollama_llm()
+        elif llm_type == LLMType.GROQ70B:
+            llm = get_groq70B_llm()
+        elif llm_type == LLMType.GROQ8B:
+            llm = get_groq8B_llm()
+        elif llm_type == LLMType.GROQ70B_VERSATILE:
+            llm = get_groq_llama_70B_versatile_llm()
+        elif llm_type == LLMType.GROQ90B:
+            llm = get_groq_llama_90B_llm()
+        # elif llm_type == LLMType.GROQ_WHISPER:
+        #     llm = get_groq_whisper_llm()
+        elif llm_type == LLMType.CLAUDE35_HAIKU:
+            llm = get_claude_3_5_haiku_llm()
+        elif llm_type == LLMType.CLAUDE35_SONNET:
+            llm = get_claude_35_sonnet_llm()
+        elif llm_type == LLMType.CLAUDE3_OPUS:
+            llm = get_claude_3_opus_llm()
+        
         else:
             raise ValueError("Unexpected llm type")
         chatbot = get_retrieval_executor(llm, retriever, system_message, CHECKPOINTER)
@@ -319,7 +410,7 @@ class ConfigurableRetrieval(RunnableBinding):
 
 
 chat_retrieval = (
-    ConfigurableRetrieval(llm_type=LLMType.GPT_35_TURBO, checkpoint=CHECKPOINTER)
+    ConfigurableRetrieval(llm_type=LLMType.GPT_4O, checkpoint=CHECKPOINTER)
     .configurable_fields(
         llm_type=ConfigurableField(id="llm_type", name="LLM Type"),
         system_message=ConfigurableField(id="system_message", name="Instructions"),
@@ -337,7 +428,7 @@ chat_retrieval = (
 
 agent: Pregel = (
     ConfigurableAgent(
-        agent=AgentType.GPT_35_TURBO,
+        agent=AgentType.GPT_4O,
         tools=[],
         system_message=DEFAULT_SYSTEM_MESSAGE,
         retrieval_description=RETRIEVAL_DESCRIPTION,

@@ -1,0 +1,27 @@
+meta {
+  name: Stream
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{host}}/runs/stream
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "thread_id": "{{thread_id}}",
+      "input" : [
+      {
+        "content" : "Ceci est un test. Parle moi des chats",
+        "type" : "human"
+      }
+    ]
+  }
+}

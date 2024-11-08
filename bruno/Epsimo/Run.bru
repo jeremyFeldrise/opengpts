@@ -1,0 +1,28 @@
+meta {
+  name: Run
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/runs
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{loggedToken}}
+}
+
+body:json {
+  {
+    "assistant_id": "{{assistant_id}}",
+    "thread_id": "{{thread_id}}",
+      "input": {
+          "messages": [{
+              "content": "whats my name? respond in spanish",
+              "type": "human"
+          }]
+      }
+  }
+}

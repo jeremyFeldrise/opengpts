@@ -16,7 +16,7 @@ logger = structlog.get_logger(__name__)
 
 
 @lru_cache(maxsize=4)
-def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False):
+def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
     proxy_url = os.getenv("PROXY_URL")
     http_client = None
     if proxy_url:
@@ -58,6 +58,7 @@ def get_openai_llm(model: str = "gpt-3.5-turbo", azure: bool = False):
     return llm
 
 
+
 @lru_cache(maxsize=2)
 def get_anthropic_llm(bedrock: bool = False):
     if bedrock:
@@ -70,12 +71,34 @@ def get_anthropic_llm(bedrock: bool = False):
         model = BedrockChat(model_id="anthropic.claude-v2", client=client)
     else:
         model = ChatAnthropic(
-            model_name="claude-3-haiku-20240307",
+            model_name="claude-3-5-sonnet-20241022",
             max_tokens_to_sample=2000,
             temperature=0,
         )
     return model
 
+@lru_cache(maxsize=1)
+def get_claude_35_sonnet_llm():
+    return ChatAnthropic(
+        model_name="claude-3-5-sonnet-latest",
+        max_tokens_to_sample=2000,
+        temperature=0,
+    )
+
+@lru_cache(maxsize=1)
+def get_claude_3_opus_llm():
+    return ChatAnthropic(
+        model_name="claude-3-opus-latest",
+        max_tokens_to_sample=2000,
+        temperature=0,
+    )
+@lru_cache(maxsize=1)
+def get_claude_3_5_haiku_llm():
+    return ChatAnthropic(
+        model_name="claude-3-5-haiku-latest",
+        max_tokens_to_sample=2000,
+        temperature=0,
+    )
 
 @lru_cache(maxsize=1)
 def get_google_llm():
@@ -101,5 +124,21 @@ def get_ollama_llm():
     return ChatOllama(model=model_name, base_url=ollama_base_url)
 
 @lru_cache(maxsize=1)
-def get_groq_llm():
+def get_groq70B_llm():
     return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama3-70b-8192")
+
+@lru_cache(maxsize=1)
+def get_groq8B_llm():
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama3-8b-8192")
+
+@lru_cache(maxsize=1)
+def get_groq_llama_70B_versatile_llm():
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name=" llama-3.1-70b-versatile")
+
+@lru_cache(maxsize=1)
+def get_groq_llama_90B_llm():
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.2-90b-text-preview")
+
+@lru_cache(maxsize=1)
+def get_groq_whisper_llm():
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="whisper-large-v3")
