@@ -133,7 +133,7 @@ def get_groq8B_llm():
 
 @lru_cache(maxsize=1)
 def get_groq_llama_70B_versatile_llm():
-    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name=" llama-3.1-70b-versatile")
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.1-70b-versatile")
 
 @lru_cache(maxsize=1)
 def get_groq_llama_90B_llm():
