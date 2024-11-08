@@ -106,7 +106,7 @@ def get_agent_executor(
     #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
     #     )
     if agent == AgentType.GPT_4O:
-        llm = get_openai_llm(model="gpt-4o1")
+        llm = get_openai_llm(model="gpt-4o")
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )

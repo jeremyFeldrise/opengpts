@@ -103,7 +103,7 @@ def get_claude_3_5_haiku_llm():
 @lru_cache(maxsize=1)
 def get_google_llm():
     return ChatVertexAI(
-        model_name="gemini-pro", convert_system_message_to_human=True, streaming=True
+        model_name="gemini-1.5-flash", convert_system_message_to_human=True, streaming=True
     )
 
 
