@@ -20,7 +20,7 @@ async def login(request: Request) -> dict:
     if user is None:
         raise HTTPException(status_code=404, detail="User not found.")
     key = os.environ["JWT_DECODE_KEY_B64"]
-    jwt_token = jwt.encode(key = key, payload={"user_id": user["user_id"], "alg": auth_settings.jwt_local.alg ,"iss": auth_settings.jwt_local.iss, "aud": auth_settings.jwt_local.aud, "exp": datetime.now(timezone.utc) + timedelta(days=1),},)
+    jwt_token = jwt.encode(key = key, payload={"user_id": user["user_id"], "alg": auth_settings.jwt_local.alg ,"iss": auth_settings.jwt_local.iss, "aud": auth_settings.jwt_local.aud, "exp": datetime.now(timezone.utc) + timedelta(days=30),},)
     return {"jwt_token": jwt_token}
     # return jwt.encode(payload={"sub": user["user_id"],            "iss": auth_settings.jwt_local.iss,
     #         "aud": auth_settings.jwt_local.aud,
