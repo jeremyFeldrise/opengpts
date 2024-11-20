@@ -285,7 +285,7 @@ def get_chatbot(
         llm = get_claude_3_5_haiku_llm()
     elif llm_type == LLMType.CLAUDE35_SONNET:
         llm = get_claude_35_sonnet_llm()
-    elif llm_type == LLMType.CLAUDE35_OPUS:
+    elif llm_type == LLMType.CLAUDE3_OPUS:
         llm = get_claude_3_opus_llm()
     # elif llm_type == LLMType.BEDROCK_CLAUDE2:
     #     llm = get_anthropic_llm(bedrock=True)
