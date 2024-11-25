@@ -15,6 +15,10 @@ class User(TypedDict):
     """The projects the user has access to."""
     project_id: str
     """The ID of the project."""
+    thread_counter: int
+    """The number of threads the user has."""
+    thread_max: int
+    """The maximum number of threads the user can have."""
 
 class Project(TypedDict):
     project_id: str

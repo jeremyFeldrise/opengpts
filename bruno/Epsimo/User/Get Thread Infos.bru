@@ -1,0 +1,15 @@
+meta {
+  name: Get Thread Infos
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/user/threads
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

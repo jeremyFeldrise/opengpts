@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS "user" (
     email VARCHAR(255) UNIQUE,
     password VARCHAR(255),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
+    thread_counter INT DEFAULT 0,
+    max_thread_counter INT DEFAULT 100
 );
 
 CREATE TABLE IF NOT EXISTS "project" (
