@@ -14,7 +14,8 @@ import { FileUploadDropzone } from "./FileUpload";
 import { DROPZONE_CONFIG, TYPES } from "../constants";
 import { Tool, ToolConfig, ToolSchema } from "../utils/formTypes";
 import { useToolsSchemas } from "../hooks/useToolsSchemas";
-import { marked } from "marked";
+import { marked, use } from "marked";
+import { getAgentPrice } from "../hooks/useAgentPrice";
 
 function Types(props: {
   field: SchemaField;
@@ -239,6 +240,8 @@ function ToolSelectionField(props: {
     return <div className="text-gray-500">Loading...</div>;
   }
 
+
+
   return (
     <div className="space-y-4">
       <label className="block text-sm font-medium text-gray-700">Tools</label>
@@ -347,6 +350,8 @@ export function Config(props: {
   const [files, setFiles] = useState<File[]>([]);
   const dropzone = useDropzone(DROPZONE_CONFIG);
   const [isPublic, setPublic] = useState(props.config?.public ?? false);
+  const { price, isLoading, refetchPrice } = getAgentPrice(values?.configurable?.["type==agent/agent_type"] as string);
+  console.log("Price", price);
 
   useEffect(() => {
     if (!values) return;
@@ -355,6 +360,7 @@ export function Config(props: {
     setSelectedTools((oldTools) =>
       oldTools !== tools ? [...tools] : oldTools,
     );
+    refetchPrice();
   }, [values]);
 
   const handleAddTool = (tool: Tool) => {
@@ -419,7 +425,6 @@ export function Config(props: {
       )}
     </>
   );
-
   return (
     <form
       className={cn("space-y-8", props.className)}
@@ -569,6 +574,15 @@ export function Config(props: {
             );
           }
         })}
+        <div className="flex flex-row ">Thread price :
+          {
+            isLoading ? (
+              <div>Loading...</div>
+            ) : (
+              <div> {price?.price} Credits</div>
+            )
+          }
+        </div>
       </div>
     </form>
   );

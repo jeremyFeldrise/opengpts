@@ -18,5 +18,4 @@ router = APIRouter()
 @router.get("/threads")
 async def list_threads(user: AuthedUser) -> List[Thread]:
     """List all threads."""
-    print("User: ", user)
     return {user["thread_counter"], user["thread_max"]}

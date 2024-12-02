@@ -215,7 +215,6 @@ class ConfigurableAgent(RunnableBinding):
         others.pop("bound", None)
         _tools = []
         for _tool in tools:
-            print("tool", _tool)
             if _tool["type"] == AvailableTools.RETRIEVAL:
                 if assistant_id is None or thread_id is None:
                     raise ValueError(
@@ -327,7 +326,6 @@ class ConfigurableChatBot(RunnableBinding):
     ) -> None:
         others.pop("bound", None)
 
-        print("Chatbot", llm, system_message)
         chatbot = get_chatbot(llm, system_message)
         super().__init__(
             llm=llm,

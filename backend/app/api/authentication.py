@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException, Path, Form, Request
 import jwt
 from datetime import datetime, timedelta, timezone
 import os
+from app.auth.handlers import AuthedUser
+
 
 from app.auth.settings import (
     settings as auth_settings,
@@ -33,3 +35,9 @@ async def signup(email : str = Form(...), password: str = Form(...)) -> dict:
     if not user:
         raise HTTPException(status_code=400, detail="User already exists.")
     return user
+
+@router.get("/thread-info")
+async def thread_info(user: AuthedUser) -> dict:
+    """Get information about a thread."""
+    threads_info = await storage.get_thread_info(user["user_id"])
+    return {"thread_counter": threads_info[0]["thread_counter"], "thread_max": threads_info[0]["max_thread_counter"]}

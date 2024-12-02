@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnableConfig
 
 from app.agent import agent
 from app.lifespan import get_pg_pool
-from app.schema import Assistant, Thread, User
+from app.schema import Assistant, Thread, User, ThreadInfo
 
 
 async def list_assistants(project_id: str) -> List[Assistant]:
@@ -87,6 +87,21 @@ async def delete_assistant(project_id: str, assistant_id: str) -> None:
             project_id,
         )
 
+async def increment_thread_count(user_id: str, assistant_id: str) -> None:
+    """Increment the thread count."""
+    async with get_pg_pool().acquire() as conn:
+        assistant = await conn.fetchrow(
+            'SELECT * FROM assistant WHERE assistant_id = $1', assistant_id
+        )
+        print("assistant Type", assistant["config"]["configurable"]["type==agent/agent_type"])
+        if assistant is not None:
+            agent_token_price = await conn.fetchrow('SELECT * FROM assistant_token_price WHERE agent_type = $1', assistant["config"]["configurable"]["type==agent/agent_type"])
+            print("agent_token_price", agent_token_price)
+            await conn.execute(
+            'UPDATE "user" SET thread_counter = thread_counter +  $1 WHERE user_id = $2',
+            agent_token_price["price"],
+            user_id,
+        )
 
 async def list_threads(project_id: str) -> List[Thread]:
     """List all threads for the current user."""
@@ -284,3 +299,10 @@ async def create_user(email: str, password: str) -> User:
         )
         return user
     
+async def get_thread_info(user_id: str) -> ThreadInfo:
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetch('SELECT * FROM "user" WHERE user_id = $1', user_id)
+    
+async def get_agent_price(agent_name: str) -> dict:
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow('SELECT * FROM assistant_token_price WHERE agent_type = $1', agent_name)

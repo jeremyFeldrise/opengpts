@@ -49,9 +49,17 @@ export function Header() {
             <span className="sr-only">View profile</span>
             <UserCircleIcon className="w-8 h-8" aria-hidden="true" />
           </button>
-          <Button onClick={logOut}>
-            Logout
-          </Button>
+
+          {
+            localStorage.getItem("token") !== null && (
+              <Button onClick={logOut}>
+                Logout
+              </Button>
+            )
+          }
+
+
+
         </div>
       </div>
     </header>

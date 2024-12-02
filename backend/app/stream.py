@@ -19,9 +19,7 @@ async def astream_state(
     """Stream messages from the runnable."""
     root_run_id: Optional[str] = None
     messages: dict[str, BaseMessage] = {}
-    print("astream_state")
-    print(type(input))
-    print(input)
+
     async for event in app.astream_events(
         input, config, version="v1", stream_mode="values", exclude_tags=["nostream"]
     ):

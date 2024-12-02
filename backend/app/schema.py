@@ -60,3 +60,9 @@ class Thread(TypedDict):
     updated_at: datetime
     """The last time the thread was updated."""
     metadata: Optional[dict]
+
+class ThreadInfo(TypedDict):
+    thread_counter: int
+    """The number of threads the user has."""
+    thread_max_counter: int
+    """The maximum number of threads the user can have."""

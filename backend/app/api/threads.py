@@ -113,6 +113,10 @@ async def create_thread(
     thread_put_request: ThreadPutRequest,
 ) -> Thread:
     """Create a thread."""
+    threads_info = await storage.get_thread_info(user["user_id"])
+    if threads_info[0]["thread_counter"] >= threads_info[0]["max_thread_counter"]:
+        raise HTTPException(status_code=400, detail="Thread limit reached.")
+    await storage.increment_thread_count(user["user_id"], thread_put_request.assistant_id)
     return await storage.put_thread(
         user["project_id"],
         str(uuid4()),
@@ -144,3 +148,4 @@ async def delete_thread(
     """Delete a thread by ID."""
     await storage.delete_thread(user["project_id"], tid)
     return {"status": "ok"}
+

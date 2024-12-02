@@ -1,0 +1,25 @@
+meta {
+  name: Get Agent Price
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/price/agent-price?agent_name=Claude 3.5 (Haiku)
+  body: json
+  auth: bearer
+}
+
+query {
+  agent_name: Claude 3.5 (Haiku)
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "agent_name": "Claude 3.5 (Haiku)"
+  }
+}

@@ -4,6 +4,8 @@ import { Bars3Icon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon, BellIcon, User
 import { Logo } from "./Logo";
 import { Button } from "./button";
 import { useNavigate } from "react-router-dom";
+import { getThreadInfo } from "../api/auth";
+import { useQuery } from "react-query";
 
 interface LayoutProps {
   sidebarOpen: boolean;
@@ -46,6 +48,14 @@ export function Layout(props: LayoutProps) {
     localStorage.removeItem("token");
     navigate("/login");
   };
+
+  const { data: threadInfo, isLoading: isLoadingThreadInfo } = useQuery('threadInfo', getThreadInfo, {
+    refetchInterval: 5000,
+  });
+
+  if (isLoadingThreadInfo) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -113,6 +123,15 @@ export function Layout(props: LayoutProps) {
                 <span className="sr-only">View profile</span>
                 <UserCircleIcon className="w-8 h-8" aria-hidden="true" />
               </button>
+              <div className="flex items-end gap-1">
+                <div className="text-sm font-semibold text-gray-900">
+                  {threadInfo?.thread_counter}
+                </div>
+                <div >/</div>
+                <div className="text-sm font-normal text-gray-400">
+                  {threadInfo?.thread_max} Credits
+                </div>
+              </div>
               <Button onClick={logOut}>
                 Logout
               </Button>

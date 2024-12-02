@@ -6,6 +6,7 @@ from app.api.threads import router as threads_router
 from app.api.authentication import router as authentication_router
 from app.api.projects import router as projects_router
 from app.api.user import router as users_router
+from app.api.price import router as price_router
 
 router = APIRouter()
 
@@ -43,4 +44,9 @@ router.include_router(
     users_router,
     prefix="/user",
     tags=["user"],
+)
+router.include_router(
+    price_router,
+    prefix="/price",
+    tags=["price"],
 )
