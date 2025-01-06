@@ -85,8 +85,8 @@ class AgentType(str, Enum):
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
-    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
-    GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
+    GROQ70B_VERSATILE = "GROQ (llama3.3-70b-versatile) Versatile"
+    # GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
 
@@ -269,7 +269,7 @@ class LLMType(str, Enum):
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
-    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
+    GROQ70B_VERSATILE = "GROQ (llama3.3-70b-8192) Versatile"
     GROQ90B= "GROQ (llama3.2-90b-text-preview) Text Preview"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
@@ -314,8 +314,8 @@ def get_chatbot(
         llm= get_groq8B_llm()
     elif llm_type == LLMType.GROQ70B_VERSATILE:
         llm = get_groq_llama_70B_versatile_llm()
-    elif llm_type == LLMType.GROQ90B:
-        llm = get_groq_llama_90B_llm()
+    # elif llm_type == LLMType.GROQ90B:
+    #     llm = get_groq_llama_90B_llm()
     # elif llm_type == LLMType.GROQ_WHISPER:
     #     llm = get_groq_whisper_llm()
     
@@ -408,8 +408,8 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_groq8B_llm()
         elif llm_type == LLMType.GROQ70B_VERSATILE:
             llm = get_groq_llama_70B_versatile_llm()
-        elif llm_type == LLMType.GROQ90B:
-            llm = get_groq_llama_90B_llm()
+        # elif llm_type == LLMType.GROQ90B:
+        #     llm = get_groq_llama_90B_llm()
         # elif llm_type == LLMType.GROQ_WHISPER:
         #     llm = get_groq_whisper_llm()
         elif llm_type == LLMType.CLAUDE35_HAIKU:
