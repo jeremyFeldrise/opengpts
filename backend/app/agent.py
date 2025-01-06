@@ -157,11 +157,11 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.GROQ90B:
-        llm = get_groq_llama_90B_llm()
-        return get_tools_agent_executor(
-            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
-        )
+    # elif agent == AgentType.GROQ90B:
+    #     llm = get_groq_llama_90B_llm()
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
     # elif agent == AgentType.GROQ_WHISPER:
     #     llm = get_groq_whisper_llm()
     #     return get_tools_agent_executor(
