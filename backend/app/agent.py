@@ -108,7 +108,7 @@ def get_agent_executor(
     #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
     #     )
     if agent == AgentType.GPT_4O:
-        llm = get_openai_llm(model="chatgpt-4o-latest")
+        llm = get_openai_llm(model="gpt-4o")
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
@@ -283,7 +283,7 @@ def get_chatbot(
     #     llm = get_openai_llm()
  
     if llm_type == LLMType.GPT_4O:
-        llm = get_openai_llm()
+        llm = get_openai_llm({"model": "gpt-4o"})
     elif llm_type == LLMType.GPT_4O_mini:
         llm = get_openai_llm({"model": "gpt-4o-mini"})
     # elif llm_type == LLMType.GPT_O1:
