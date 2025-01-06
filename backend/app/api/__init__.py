@@ -7,6 +7,7 @@ from app.api.authentication import router as authentication_router
 from app.api.projects import router as projects_router
 from app.api.user import router as users_router
 from app.api.price import router as price_router
+from app.api.checkout import router as checkout_router
 
 router = APIRouter()
 
@@ -49,4 +50,9 @@ router.include_router(
     price_router,
     prefix="/price",
     tags=["price"],
+)
+router.include_router(
+    checkout_router,
+    prefix="/checkout",
+    tags=["checkout"],
 )

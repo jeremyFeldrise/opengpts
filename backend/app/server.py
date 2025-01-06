@@ -14,6 +14,8 @@ from app.auth.handlers import AuthedUser
 from app.lifespan import lifespan
 from app.upload import convert_ingestion_input_to_blob, ingest_runnable
 
+import stripe
+
 logger = structlog.get_logger(__name__)
 app = FastAPI(title="OpenGPTs API", lifespan=lifespan)
 app.add_middleware(

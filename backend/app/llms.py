@@ -33,6 +33,7 @@ def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
                 http_client=http_client,
                 model=openai_model,
                 temperature=0,
+                
             )
         except Exception as e:
             logger.error(
