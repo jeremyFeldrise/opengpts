@@ -73,6 +73,8 @@ class AgentType(str, Enum):
     # GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
     GPT_4O_mini = "GPT 4o Mini"
+    GPT_4O1 = "GPT 4o1"
+    GPT_4O1_mini = "GPT 4o1 Mini"
     # GPT_4O1_mini = "GPT 4o1 Mini"
     # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
     CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
@@ -115,11 +117,16 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    # elif agent == AgentType.GPT_4O1_mini:
-    #     llm = get_openai_llm(model="o1-mini")
-    #     return get_tools_agent_executor(
-    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
-    #     )
+    elif agent == AgentType.GPT_4O1:
+        llm = get_openai_llm(model="o1-2024-12-17")
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    elif agent == AgentType.GPT_4O1_mini:
+        llm = get_openai_llm(model="o1-mini")
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
     # elif agent == AgentType.AZURE_OPENAI:
     #     llm = get_openai_llm(azure=True)
     #     return get_tools_agent_executor(
@@ -250,6 +257,8 @@ class LLMType(str, Enum):
 # GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
     GPT_4O_mini = "GPT 4o mini"
+    GPT_4O1_mini = "GPT 4o1 Mini"
+    GPT_4O1 = "GPT 4o1"
     # GPT_4O1_mini = "GPT 4o Mini"
     # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
     CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
@@ -277,6 +286,10 @@ def get_chatbot(
         llm = get_openai_llm()
     elif llm_type == LLMType.GPT_4O_mini:
         llm = get_openai_llm({"model": "gpt-4o-mini"})
+    elif llm_type == LLMType.GPT_4O1:
+        llm = get_openai_llm({"model": "o1-2024-12-17"})
+    elif llm_type == LLMType.GPT_4O1_mini:
+        llm = get_openai_llm({"model": "gpt-4o1-mini"})
     # elif llm_type == LLMType.GPT_4O_mini:
     #     llm = get_openai_llm({"model": "gpt-4o-mini"})
     # elif llm_type == LLMType.AZURE_OPENAI:
@@ -377,6 +390,10 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_openai_llm(model="gpt-4o")
         elif llm_type == LLMType.GPT_4O_mini:
             llm = get_openai_llm(model="gpt-4o-mini")
+        elif llm_type == LLMType.GPT_4O1:
+            llm = get_openai_llm(model="o1-2024-12-17")
+        elif llm_type == LLMType.GPT_4O1_mini:
+            llm = get_openai_llm(model="gpt-4o1-mini")
         # elif llm_type == LLMType.AZURE_OPENAI:
         #     llm = get_openai_llm(azure=True)
         elif llm_type == LLMType.CLAUDE2:
