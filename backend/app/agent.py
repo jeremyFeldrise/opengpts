@@ -122,11 +122,11 @@ def get_agent_executor(
     #     return get_tools_agent_executor(
     #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
     #     )
-    elif agent == AgentType.GPT_O1_mini:
-        llm = get_openai_llm(model="o1-mini")
-        return get_tools_agent_executor(
-            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
-        )
+    # elif agent == AgentType.GPT_O1_mini:
+    #     llm = get_openai_llm(model="o1-mini")
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
     # elif agent == AgentType.AZURE_OPENAI:
     #     llm = get_openai_llm(azure=True)
     #     return get_tools_agent_executor(
