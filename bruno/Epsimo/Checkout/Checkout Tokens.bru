@@ -1,0 +1,15 @@
+meta {
+  name: Checkout Tokens
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/checkout/create-checkout-session
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}

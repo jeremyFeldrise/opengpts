@@ -32,7 +32,7 @@ ROOT = Path(__file__).parent.parent
 
 
 app.include_router(api_router)
-
+print("Server started")
 
 @app.post("/ingest", description="Upload files to the given assistant.")
 async def ingest_files(

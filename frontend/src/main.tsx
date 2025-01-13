@@ -8,6 +8,8 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { NotFound } from "./components/NotFound.tsx";
 import Login from "./components/Login.tsx";
 import Project from "./components/Project.tsx";
+import ProductDisplay from "./components/ProductDisplay.tsx";
+import PaymentStatus from "./components/PaymentStatus.tsx";
 
 function getCookie(name: string) {
   const cookie = document.cookie
@@ -42,10 +44,13 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <Route path='/project' element={<Project></Project>} />
           <Route path='/app' element={<App></App>} />
           <Route path="/thread/:chatId" element={<App />} />
+          <Route path="/product-display" element={<ProductDisplay />} />
           <Route
             path="/assistant/:assistantId/edit"
             element={<App edit={true} />}
           />
+          <Route path="payment/:status" element={<PaymentStatus />} />
+          {/* <Route path="payment" element={<PaymentStatus />} /> */}
           <Route path="/assistant/:assistantId" element={<App />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

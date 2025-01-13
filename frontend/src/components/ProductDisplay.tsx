@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Coins } from 'lucide-react'
 import { Button } from "./button"
 import { Input } from "./input"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./card"
 import { Label } from "./label"
 import { Slider } from "./slider"
 
@@ -39,10 +39,25 @@ export default function DigitalTokenPurchase() {
         }
     }
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         // Here you would typically handle the purchase process
-        alert(`Purchase successful! You bought ${tokenCount} tokens for $${totalPrice.toFixed(2)}`)
+        //
+        // Make a post request to the backend to purchase the tokens
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/checkout/create-checkout-session`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify({
+                quantity: tokenCount
+            })
+        })
+        const data = await response.json()
+        console.log(data)
+        window.location.href = data.url
     }
 
     return (

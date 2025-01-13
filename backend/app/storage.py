@@ -10,6 +10,7 @@ from app.agent import agent
 from app.lifespan import get_pg_pool
 from app.schema import Assistant, Thread, User, ThreadInfo
 
+import stripe
 
 async def list_assistants(project_id: str) -> List[Assistant]:
     """List all assistants for the current user."""
@@ -292,10 +293,11 @@ async def create_user(email: str, password: str) -> User:
     bytes = password.encode("utf-8")
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(bytes, salt)
+    stripe_client_id = stripe.Customer.create(email=email)
 
     async with get_pg_pool().acquire() as conn:
         user = await conn.fetchrow(
-            'INSERT INTO "user" (email, password) VALUES ($1, $2) RETURNING *', email, hashed.decode("utf-8")
+            'INSERT INTO "user" (email, password, stripe_client_id) VALUES ($1, $2, $3) RETURNING *', email, hashed.decode("utf-8"), stripe_client_id["id"]
         )
         return user
     
@@ -306,3 +308,11 @@ async def get_thread_info(user_id: str) -> ThreadInfo:
 async def get_agent_price(agent_name: str) -> dict:
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow('SELECT * FROM assistant_token_price WHERE agent_type = $1', agent_name)
+    
+async def increment_user_token_counter(stripe_customer_id : str, token_quantity : int) -> None:
+    async with get_pg_pool().acquire() as conn:
+        await conn.execute(
+            'UPDATE "user" SET max_thread_counter = max_thread_counter +  $1 WHERE stripe_client_id = $2',
+            token_quantity,
+            stripe_customer_id,
+        )

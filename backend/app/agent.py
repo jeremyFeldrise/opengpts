@@ -271,7 +271,6 @@ def get_chatbot(
 ):
     # if llm_type == LLMType.GPT_35_TURBO:
     #     llm = get_openai_llm()
- 
     if llm_type == LLMType.GPT_4O:
         llm = get_openai_llm()
     elif llm_type == LLMType.GPT_4O_mini:

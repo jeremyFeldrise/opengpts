@@ -115,7 +115,7 @@ export function Layout(props: LayoutProps) {
               <BellIcon className="w-6 h-6" aria-hidden="true" />
             </button>
 
-            <div className="flex items-center gap-x-4 lg:gap-x-6">
+            <div className="flex items-center gap-5 gap-x-4 lg:gap-x-6">
               <button
                 type="button"
                 className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
@@ -130,6 +130,10 @@ export function Layout(props: LayoutProps) {
                 <div >/</div>
                 <div className="text-sm font-normal text-gray-400">
                   {threadInfo?.thread_max} Credits
+                </div>
+                <div className="flex items-center gap-2">
+                  {/* Add a button to go to the page product display */}
+                  <button className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" onClick={() => window.location.href = "/product-display"}>Buy</button>
                 </div>
               </div>
               <Button onClick={logOut}>
