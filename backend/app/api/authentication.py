@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, Path, Form, Request
 import jwt
 from datetime import datetime, timedelta, timezone
 import os
+from fastapi_sso.sso.google import GoogleSSO
 
 from app.auth.settings import (
     settings as auth_settings,
@@ -11,6 +12,8 @@ import app.storage as storage
 
 
 router = APIRouter()
+
+google_sso = GoogleSSO(os.environ["GOOGLE_OAUTH_CLIENT_ID"], os.environ["GOOGLE_OAUTH_SECRET_ID"], "http://localhost:3000/google/callback")
 
 @router.post("/login")
 async def login(request: Request) -> dict:
@@ -32,4 +35,16 @@ async def signup(email : str = Form(...), password: str = Form(...)) -> dict:
     user = await storage.create_user(email, password)
     if not user:
         raise HTTPException(status_code=400, detail="User already exists.")
+    return user
+
+@router.get("/google/login")
+async def google_login():
+    async with google_sso:
+        return await google_sso.get_login_redirect()
+
+@router.get("/google/callback")
+async def google_callback(request: Request):
+    async with google_sso:
+        user = await google_sso.verify_and_process(request)
+    print("User", user)
     return user
