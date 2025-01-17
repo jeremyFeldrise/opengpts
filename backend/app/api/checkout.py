@@ -18,14 +18,14 @@ router = APIRouter()
 @router.post("/create-checkout-session")
 async def checkout(user: AuthedUser, request: Request):
     data = await request.json()
-    print("Customer id", user)
-    print(data)
+    if (user["stripe_client_id"] is None):
+        user = await storage.update_user_stripe_id(user)
     try:
         checkout_session = stripe.checkout.Session.create(
             line_items=[
                 {
                     # Provide the exact Price ID (for example, pr_1234) of the product you want to sell
-                    'price': 'price_1QckXARpo8husWNl0Rs1O5Sc',
+                    'price': os.environ["STRIPE_TOKEN_PRICE"],
                     'quantity': data['quantity'],
                 },
             ],
@@ -38,6 +38,8 @@ async def checkout(user: AuthedUser, request: Request):
     except Exception as e:
         return str(e)
     return checkout_session
+
+
 @router.post("/webhook")
 async def payment_webhook(request: Request):
     print("Webhook")

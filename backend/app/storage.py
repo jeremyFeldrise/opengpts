@@ -324,3 +324,11 @@ async def increment_user_token_counter(stripe_customer_id : str, token_quantity 
             token_quantity,
             stripe_customer_id,
         )
+
+async def update_user_stripe_id(user: User) -> User:
+    async with get_pg_pool().acquire() as conn:
+        stripe_client_id = stripe.Customer.create(email=user.email)
+
+        return await conn.fetchrow(
+            'UPDATE "user" SET stripe_client_id = $1 WHERE user_id = $2 RETURNING *', stripe_client_id, user["user_id"]
+        )

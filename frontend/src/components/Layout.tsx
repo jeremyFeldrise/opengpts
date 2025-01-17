@@ -3,7 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon, ChevronLeftIcon, ChevronRightIcon, BellIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Logo } from "./Logo";
 import { Button } from "./button";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getThreadInfo } from "../api/auth";
 import { useQuery } from "react-query";
 
@@ -112,7 +112,8 @@ export function Layout(props: LayoutProps) {
               className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">View notifications</span>
-              <BellIcon className="w-6 h-6" aria-hidden="true" />
+              <Link to="https://epsimoai.com/product/" >FAQ</Link>
+
             </button>
 
             <div className="flex items-center gap-5 gap-x-4 lg:gap-x-6">
@@ -121,7 +122,6 @@ export function Layout(props: LayoutProps) {
                 className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
               >
                 <span className="sr-only">View profile</span>
-                <UserCircleIcon className="w-8 h-8" aria-hidden="true" />
               </button>
               <div className="flex items-end gap-1">
                 <div className="text-sm font-semibold text-gray-900">
