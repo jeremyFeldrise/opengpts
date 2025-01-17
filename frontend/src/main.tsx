@@ -8,6 +8,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { NotFound } from "./components/NotFound.tsx";
 import Login from "./components/Login.tsx";
 import Project from "./components/Project.tsx";
+import AuthCallback from "./components/AuthCallback.tsx";
 
 function getCookie(name: string) {
   const cookie = document.cookie
@@ -48,6 +49,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           />
           <Route path="/assistant/:assistantId" element={<App />} />
           <Route path="*" element={<NotFound />} />
+          <Route path="/auth-callback" element={<AuthCallback />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

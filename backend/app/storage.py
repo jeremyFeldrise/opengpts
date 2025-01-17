@@ -258,29 +258,37 @@ async def delete_project(user_id: str, project_id: str) -> None:
             user_id,
         )   
 
-async def get_user(email: str, password: str) -> User:
+async def get_user(email: str, password: str, provider: str) -> User:
     """Returns the user."""
     async with get_pg_pool().acquire() as conn:
-        user = await conn.fetchrow('SELECT * FROM "user" WHERE email = $1', email)
+        user = await conn.fetchrow('SELECT * FROM "user" WHERE email = $1 AND provider = $2', email, provider)
         if user is not None:
             if bcrypt.checkpw(password.encode("utf-8"), user["password"].encode("utf-8")):
                 return dict(user)
-
         return None
+    
+async def get_user_by_email_and_provider(email: str, provider: str) -> User:
+    """Returns the user."""
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow('SELECT * FROM "user" WHERE email = $1 AND provider = $2', email, provider)
+
 async def get_user_by_id(user_id: str) -> User:
     """Returns the user."""
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow('SELECT * FROM "user" WHERE user_id = $1', user_id)
 
-async def create_user(email: str, password: str) -> User:
+async def create_user(email: str, password: str, provider: str) -> User:
     """Create a new user."""
-    bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(bytes, salt)
-
+    hashed_password = None
+    if password is not None:
+        bytes = password.encode("utf-8")
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(bytes, salt)
+        hashed_password = hashed.decode("utf-8")
+    
     async with get_pg_pool().acquire() as conn:
         user = await conn.fetchrow(
-            'INSERT INTO "user" (email, password) VALUES ($1, $2) RETURNING *', email, hashed.decode("utf-8")
+            'INSERT INTO "user" (email, password, provider) VALUES ($1, $2, $3) RETURNING *', email, hashed_password, provider
         )
         return user
     
