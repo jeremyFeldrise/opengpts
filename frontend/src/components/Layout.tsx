@@ -123,7 +123,7 @@ export function Layout(props: LayoutProps) {
               >
                 <span className="sr-only">View profile</span>
               </button>
-              <div className="flex items-end gap-1">
+              <div className="flex items-center gap-2">
                 <div className="text-sm font-semibold text-gray-900">
                   {threadInfo?.thread_counter}
                 </div>
