@@ -134,11 +134,11 @@ def get_groq8B_llm():
 
 @lru_cache(maxsize=1)
 def get_groq_llama_70B_versatile_llm():
-    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.1-70b-versatile")
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.3-70b-versatile")
 
 @lru_cache(maxsize=1)
 def get_groq_llama_90B_llm():
-    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.2-90b-text-preview")
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="llama-3.-90b-text-preview")
 
 @lru_cache(maxsize=1)
 def get_groq_whisper_llm():

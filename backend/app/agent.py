@@ -73,6 +73,8 @@ class AgentType(str, Enum):
     # GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
     GPT_4O_mini = "GPT 4o Mini"
+    # GPT_O1 = "GPT o1"
+    # GPT_O1_mini = "GPT o1 Mini"
     # GPT_4O1_mini = "GPT 4o1 Mini"
     # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
     CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
@@ -83,8 +85,8 @@ class AgentType(str, Enum):
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
-    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
-    GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
+    GROQ70B_VERSATILE = "GROQ (llama3.3-70b-versatile) Versatile"
+    # GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
 
@@ -115,7 +117,12 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    # elif agent == AgentType.GPT_4O1_mini:
+    # elif agent == AgentType.GPT_O1:
+    #     llm = get_openai_llm(model="o1-preview")
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
+    # elif agent == AgentType.GPT_O1_mini:
     #     llm = get_openai_llm(model="o1-mini")
     #     return get_tools_agent_executor(
     #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
@@ -150,11 +157,11 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
-    elif agent == AgentType.GROQ90B:
-        llm = get_groq_llama_90B_llm()
-        return get_tools_agent_executor(
-            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
-        )
+    # elif agent == AgentType.GROQ90B:
+    #     llm = get_groq_llama_90B_llm()
+    #     return get_tools_agent_executor(
+    #         tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+    #     )
     # elif agent == AgentType.GROQ_WHISPER:
     #     llm = get_groq_whisper_llm()
     #     return get_tools_agent_executor(
@@ -249,6 +256,8 @@ class LLMType(str, Enum):
 # GPT_35_TURBO = "GPT 3.5 Turbo"
     GPT_4O = "GPT 4o"
     GPT_4O_mini = "GPT 4o mini"
+    # GPT_O1_mini = "GPT o1 Mini"
+    # GPT_O1 = "GPT o1"
     # GPT_4O1_mini = "GPT 4o Mini"
     # AZURE_OPENAI = "GPT 4 (Azure OpenAI)"
     CLAUDE35_HAIKU = "Claude 3.5 (Haiku)"
@@ -259,7 +268,7 @@ class LLMType(str, Enum):
     GEMINI = "GEMINI"
     OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
-    GROQ70B_VERSATILE = "GROQ (llama3.1-70b-8192) Versatile"
+    GROQ70B_VERSATILE = "GROQ (llama3.3-70b-8192) Versatile"
     GROQ90B= "GROQ (llama3.2-90b-text-preview) Text Preview"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
@@ -275,6 +284,10 @@ def get_chatbot(
         llm = get_openai_llm()
     elif llm_type == LLMType.GPT_4O_mini:
         llm = get_openai_llm({"model": "gpt-4o-mini"})
+    # elif llm_type == LLMType.GPT_O1:
+    #     llm = get_openai_llm({"model": "o1-preview"})
+    # elif llm_type == LLMType.GPT_O1_mini:
+    #     llm = get_openai_llm({"model": "o1-mini"})
     # elif llm_type == LLMType.GPT_4O_mini:
     #     llm = get_openai_llm({"model": "gpt-4o-mini"})
     # elif llm_type == LLMType.AZURE_OPENAI:
@@ -299,8 +312,8 @@ def get_chatbot(
         llm= get_groq8B_llm()
     elif llm_type == LLMType.GROQ70B_VERSATILE:
         llm = get_groq_llama_70B_versatile_llm()
-    elif llm_type == LLMType.GROQ90B:
-        llm = get_groq_llama_90B_llm()
+    # elif llm_type == LLMType.GROQ90B:
+    #     llm = get_groq_llama_90B_llm()
     # elif llm_type == LLMType.GROQ_WHISPER:
     #     llm = get_groq_whisper_llm()
     
@@ -374,12 +387,12 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_openai_llm(model="gpt-4o")
         elif llm_type == LLMType.GPT_4O_mini:
             llm = get_openai_llm(model="gpt-4o-mini")
+        # elif llm_type == LLMType.GPT_O1:
+        #     llm = get_openai_llm(model="o1-preview")
+        # elif llm_type == LLMType.GPT_O1_mini:
+        #     llm = get_openai_llm(model="o1-mini")
         # elif llm_type == LLMType.AZURE_OPENAI:
         #     llm = get_openai_llm(azure=True)
-        elif llm_type == LLMType.CLAUDE2:
-            llm = get_anthropic_llm()
-        elif llm_type == LLMType.BEDROCK_CLAUDE2:
-            llm = get_anthropic_llm(bedrock=True)
         elif llm_type == LLMType.GEMINI:
             llm = get_google_llm()
         elif llm_type == LLMType.MIXTRAL:
@@ -392,8 +405,8 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_groq8B_llm()
         elif llm_type == LLMType.GROQ70B_VERSATILE:
             llm = get_groq_llama_70B_versatile_llm()
-        elif llm_type == LLMType.GROQ90B:
-            llm = get_groq_llama_90B_llm()
+        # elif llm_type == LLMType.GROQ90B:
+        #     llm = get_groq_llama_90B_llm()
         # elif llm_type == LLMType.GROQ_WHISPER:
         #     llm = get_groq_whisper_llm()
         elif llm_type == LLMType.CLAUDE35_HAIKU:

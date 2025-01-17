@@ -48,6 +48,7 @@ bcrypt = "^4.2.0"
 googlesearch-python = "^1.2.5"
 langchain-groq = "0.1.5"
 stripe = "^11.4.1"
+fastapi-sso = "^0.17.0"
 
 
 [tool.poetry.group.dev.dependencies]

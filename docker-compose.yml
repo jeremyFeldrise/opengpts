@@ -1,3 +1,47 @@
+# version: "3"
+
+# services:
+#   postgres-setup:
+#     image: migrate/migrate
+#     volumes:
+#       - ./backend/migrations:/migrations
+#     env_file:
+#       - .env
+#     command: [ "-path", "/migrations", "-database", "postgres://$POSTGRES_USER:$POSTGRES_PASSWORD@postgres:$POSTGRES_PORT/$POSTGRES_DB?sslmode=require", "up" ]
+#   backend:
+#     container_name: opengpts-backend
+#     build:
+#       context: backend
+#     ports:
+#       - "8000:8000" # Backend is accessible on localhost:8100
+#     depends_on:
+#       postgres-setup:
+#         condition: service_completed_successfully
+#     env_file:
+#       - .env
+#     volumes:
+#       - ./backend:/backend
+#     environment:
+#       POSTGRES_HOST: "127.0.0.1"
+#       AUTH_TYPE: "jwt_local"
+#     command:
+#       - --reload
+#   frontend:
+#     container_name: opengpts-frontend
+#     build:
+#       context: frontend
+#     depends_on:
+#       backend:
+#         condition: service_healthy
+#     volumes:
+#       - ./frontend/src:/frontend/src
+#     ports:
+#       - "5173:5173" # Frontend is accessible on localhost:5173
+#     environment:
+#       VITE_BACKEND_URL: "localhost:8000"
+
+version: "3"
+
 services:
   postgres:
     image: pgvector/pgvector:pg16
@@ -38,5 +82,6 @@ services:
       - ./backend:/backend
     environment:
       POSTGRES_HOST: "postgres"
+      AUTH_TYPE: "jwt_local"
     command:
       - --reload

@@ -7,6 +7,8 @@ CREATE TABLE IF NOT EXISTS "user" (
     thread_counter INT DEFAULT 0,
     max_thread_counter INT DEFAULT 100
 
+    provider VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT (CURRENT_TIMESTAMP AT TIME ZONE 'UTC')
 );
 
 CREATE TABLE IF NOT EXISTS "project" (
