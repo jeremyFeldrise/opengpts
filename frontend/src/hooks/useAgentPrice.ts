@@ -6,7 +6,7 @@ export function getAgentPrice(agentName: string) {
         "agentPrice",
 
         async () => {
-            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/price/agent-price?agent_name=${agentName}`,
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/price/agent?agent_name=${agentName}`,
                 {
                     headers: {
                         Accept: "application/json",

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Coins } from 'lucide-react'
 import { Button } from "./button"
 import { Input } from "./input"
@@ -11,9 +11,27 @@ import { Slider } from "./slider"
 export default function DigitalTokenPurchase() {
     const [tokenCount, setTokenCount] = useState(100)
     const [error, setError] = useState('')
+    const [tokenPrice, setTokenPrice] = useState(0.1)
 
-    const tokenPrice = 0.1 // Price per token in dollars
     const totalPrice = tokenCount * tokenPrice
+
+    //get the token price from the backend
+    useEffect(() => {
+        async function fetchTokenPrice() {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/price/token`, {
+                headers: {
+                    Accept: "application/json",
+                }
+            }
+            );
+
+            const data = await response.json();
+            console.log("Data", data)
+            setTokenPrice(data.unit_amount / 100)
+        };
+        fetchTokenPrice();
+    }
+        , []);
 
     const handleTokenChange = (value: number[]) => {
         const newValue = value[0]
