@@ -31,8 +31,8 @@ async def checkout(user: AuthedUser, request: Request):
             ],
             client_reference_id=user["stripe_client_id"],
             mode='payment',
-            success_url='http://localhost:5173/payment/success',
-            cancel_url='http://localhost:5173/payment/canceled',
+            success_url= os.environ["FRONTEND_URL"] + '/payment/success',
+            cancel_url= os.environ["FRONTEND_URL"] + '/payment/canceled',
             automatic_tax={'enabled': True},
         )
     except Exception as e:
@@ -40,6 +40,7 @@ async def checkout(user: AuthedUser, request: Request):
     return checkout_session
 @router.post("/webhook")
 async def payment_webhook(request: Request):
+    print("Webhook")
     payload = await request.body()
     sig_header = request.headers['Stripe-Signature']
     event = None

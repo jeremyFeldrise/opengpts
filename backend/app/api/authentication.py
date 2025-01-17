@@ -16,7 +16,7 @@ import app.storage as storage
 
 router = APIRouter()
 
-google_sso = GoogleSSO(os.environ["GOOGLE_OAUTH_CLIENT_ID"], os.environ["GOOGLE_OAUTH_SECRET_ID"], "http://localhost:8100/auth/google/callback")
+google_sso = GoogleSSO(os.environ["GOOGLE_OAUTH_CLIENT_ID"], os.environ["GOOGLE_OAUTH_SECRET_ID"], os.environ["BACKEND_URL"] + "/auth/google/callback")
 
 @router.post("/login")
 async def login(request: Request) -> dict:
@@ -57,10 +57,10 @@ async def google_callback(request: Request):
             db_user = await storage.create_user(user.email, None, "google")
             key = os.environ["JWT_DECODE_KEY_B64"]
             jwt_token = jwt.encode(key = key, payload={"user_id": db_user["user_id"], "alg": auth_settings.jwt_local.alg ,"iss": auth_settings.jwt_local.iss, "aud": auth_settings.jwt_local.aud, "exp": datetime.now(timezone.utc) + timedelta(days=30),},)
-            return RedirectResponse(url=f"http://localhost:5173/auth-callback?jwt_token={jwt_token}")
+            return RedirectResponse(url=os.environ["FRONTEND_URL"] + f"/auth-callback?jwt_token={jwt_token}")
         key = os.environ["JWT_DECODE_KEY_B64"]
         jwt_token = jwt.encode(key = key, payload={"user_id": db_user["user_id"], "alg": auth_settings.jwt_local.alg ,"iss": auth_settings.jwt_local.iss, "aud": auth_settings.jwt_local.aud, "exp": datetime.now(timezone.utc) + timedelta(days=30),},)
-        return RedirectResponse(url=f"http://localhost:5173/auth-callback?jwt_token={jwt_token}")
+        return RedirectResponse(url=os.environ["FRONTEND_URL"] + f"/auth-callback?jwt_token={jwt_token}")
 
 @router.get("/thread-info")
 async def thread_info(user: AuthedUser) -> dict:

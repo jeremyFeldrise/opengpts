@@ -288,19 +288,27 @@ async def get_user_by_id(user_id: str) -> User:
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow('SELECT * FROM "user" WHERE user_id = $1', user_id)
 
-async def create_user(email: str, password: str) -> User:
+async def create_user(email: str, password: str, provider: str) -> User:
     """Create a new user."""
-    bytes = password.encode("utf-8")
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(bytes, salt)
+
+    password_encoded = ""
+    if password is not None:
+        bytes = password.encode("utf-8")
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(bytes, salt)
+        password_encoded = hashed.decode("utf-8")
     stripe_client_id = stripe.Customer.create(email=email)
 
     async with get_pg_pool().acquire() as conn:
         user = await conn.fetchrow(
-            'INSERT INTO "user" (email, password, stripe_client_id) VALUES ($1, $2, $3) RETURNING *', email, hashed.decode("utf-8"), stripe_client_id["id"]
+            'INSERT INTO "user" (email, password, stripe_client_id, provider) VALUES ($1, $2, $3, $4) RETURNING *', email, password_encoded, stripe_client_id["id"], provider
         )
         return user
     
+async def get_user_by_email_and_provider(email: str, provider: str) -> User:
+    async with get_pg_pool().acquire() as conn:
+        return await conn.fetchrow('SELECT * FROM "user" WHERE email = $1 AND provider = $2', email, provider)
+
 async def get_thread_info(user_id: str) -> ThreadInfo:
     async with get_pg_pool().acquire() as conn:
         return await conn.fetch('SELECT * FROM "user" WHERE user_id = $1', user_id)

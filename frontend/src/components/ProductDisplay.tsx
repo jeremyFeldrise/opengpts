@@ -35,7 +35,7 @@ export default function DigitalTokenPurchase() {
 
     const handleTokenChange = (value: number[]) => {
         const newValue = value[0]
-        if (newValue >= 100 && newValue <= 1000) {
+        if (newValue >= 10 && newValue <= 1000) {
             setTokenCount(newValue)
             setError('')
         } else {
@@ -46,7 +46,7 @@ export default function DigitalTokenPurchase() {
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newValue = parseInt(e.target.value)
         if (!isNaN(newValue)) {
-            if (newValue >= 100 && newValue <= 1000) {
+            if (newValue >= 10 && newValue <= 1000) {
                 setTokenCount(newValue)
                 setError('')
             } else {
@@ -103,7 +103,7 @@ export default function DigitalTokenPurchase() {
                                     <Slider
                                         value={[tokenCount]}
                                         onValueChange={handleTokenChange}
-                                        min={100}
+                                        min={10}
                                         max={1000}
                                         step={1}
                                         className="flex-grow"
@@ -116,7 +116,7 @@ export default function DigitalTokenPurchase() {
                                 <span>{tokenCount}</span>
                             </div>
                             <div className="text-center">
-                                <p className="text-lg font-semibold">Total Price: ${totalPrice.toFixed(2)}</p>
+                                <p className="text-lg font-semibold">Total Price: {totalPrice.toFixed(2)} Euros</p>
                                 <p className="text-sm text-gray-500">({tokenPrice.toFixed(2)} per token)</p>
                             </div>
                         </div>

@@ -9,11 +9,11 @@ function AuthCallback() {
 
     let { search } = useLocation()
     let params = new URLSearchParams(search)
-    console.log(params.get('jwt_token'))
 
     useEffect(() => {
         if (params.get('jwt_token')) {
             localStorage.setItem('token', params.get('jwt_token'))
+
             setIsLoggedIn(true)
         }
     }, [params.get('jwt_token')])
