@@ -20,6 +20,8 @@ async def get_agent_price(user: AuthedUser, agent_name:str) -> dict:
     print("agent_name", agent_name)
     threads_info = await storage.get_agent_price(agent_name)
     print("threads_info", threads_info)
+    if not threads_info["price"]:
+        {"price": 1}
     return {"price": threads_info["price"]}
 
 @router.get("/token")

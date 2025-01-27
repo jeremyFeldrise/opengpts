@@ -29,6 +29,9 @@ from app.llms import (
     get_groq_llama_70B_versatile_llm,
     get_groq_llama_90B_llm,
     get_groq_whisper_llm,
+    get_groq_deepseek_llm,
+    get_deepseek_llm,
+    get_deepseek_reasoner_llm
 )
 from app.retrieval import get_retrieval_executor
 from app.tools import (
@@ -86,10 +89,12 @@ class AgentType(str, Enum):
     OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
     GROQ70B_VERSATILE = "GROQ (llama3.3-70b-versatile) Versatile"
+    GROQDEEPSEEK="GROQ (deepseek-r1-distill-llama-70b)"
     # GROQ90B = "GROQ (llama3.2-90b-text-preview) Text Preview"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
-
+    DEEPSEEK = "DeepSeek"
+    DEEPSEEK_REASONER = "DeepSeek Reasoner"
 
 DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant."
 
@@ -186,8 +191,23 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
+    elif agent == AgentType.GROQDEEPSEEK:
+        llm = get_groq_deepseek_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
     elif agent == AgentType.GROQ8B:
         llm = get_groq8B_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    elif agent == AgentType.DEEPSEEK:
+        llm = get_deepseek_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER
+        )
+    elif agent == AgentType.DEEPSEEK_REASONER:
+        llm = get_deepseek_reasoner_llm()
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
@@ -270,9 +290,11 @@ class LLMType(str, Enum):
     GROQ70B = "GROQ (llama3-70b-8192)"
     GROQ70B_VERSATILE = "GROQ (llama3.3-70b-8192) Versatile"
     GROQ90B= "GROQ (llama3.2-90b-text-preview) Text Preview"
+    GROQDEEPSEEK="GROQ (deepseek-r1-distill-llama-70b)"
     # GROQ_WHISPER = "GROQ Whisper Large v3"
     GROQ8B = "GROQ (llama3-8b-8192)"
-
+    DEEPSEEK = "DeepSeek"
+    DEEPSEEK_REASONER = "DeepSeek Reasoner"
 
 def get_chatbot(
     llm_type: LLMType,
@@ -310,13 +332,18 @@ def get_chatbot(
         llm = get_groq70B_llm()
     elif llm_type == LLMType.GROQ8B:
         llm= get_groq8B_llm()
+    elif llm_type == LLMType.GROQDEEPSEEK:
+        llm = get_groq_deepseek_llm()
     elif llm_type == LLMType.GROQ70B_VERSATILE:
         llm = get_groq_llama_70B_versatile_llm()
     # elif llm_type == LLMType.GROQ90B:
     #     llm = get_groq_llama_90B_llm()
     # elif llm_type == LLMType.GROQ_WHISPER:
     #     llm = get_groq_whisper_llm()
-    
+    elif llm_type == LLMType.DEEPSEEK:
+        llm = get_deepseek_llm()
+    elif llm_type == LLMType.DEEPSEEK_REASONER:
+        llm = get_deepseek_reasoner_llm()
     else:
         raise ValueError("Unexpected llm type")
     return get_chatbot_executor(llm, system_message, CHECKPOINTER)
@@ -415,7 +442,10 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_claude_35_sonnet_llm()
         elif llm_type == LLMType.CLAUDE3_OPUS:
             llm = get_claude_3_opus_llm()
-        
+        elif llm_type == LLMType.DEEPSEEK:
+            llm = get_deepseek_llm()
+        elif llm_type == LLMType.DEEPSEEK_REASONER:
+            llm = get_deepseek_reasoner_llm()
         else:
             raise ValueError("Unexpected llm type")
         chatbot = get_retrieval_executor(llm, retriever, system_message, CHECKPOINTER)

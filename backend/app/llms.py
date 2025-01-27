@@ -11,6 +11,8 @@ from langchain_community.chat_models.ollama import ChatOllama
 from langchain_google_vertexai import ChatVertexAI
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 from langchain_groq import ChatGroq
+from langchain_openai.chat_models.base import BaseChatOpenAI
+
 
 logger = structlog.get_logger(__name__)
 
@@ -143,3 +145,25 @@ def get_groq_llama_90B_llm():
 @lru_cache(maxsize=1)
 def get_groq_whisper_llm():
     return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="whisper-large-v3")
+
+@lru_cache(maxsize=1)
+def get_groq_deepseek_llm():
+    return ChatGroq(temperature=0, groq_api_key=os.environ.get("GROQ_API_KEY"), model_name="deepseek-r1-distill-llama-70b")
+
+@lru_cache(maxsize=1)
+def get_deepseek_llm():
+    return BaseChatOpenAI(
+    model='deepseek-chat', 
+    openai_api_key=os.environ.get("DEEPSEEK_API_KEY"), 
+    openai_api_base='https://api.deepseek.com/',
+    max_tokens=1024
+)
+
+@lru_cache(maxsize=1)
+def get_deepseek_reasoner_llm():
+    return BaseChatOpenAI(
+    model='deepseek-reasoner', 
+    openai_api_key=os.environ.get("DEEPSEEK_API_KEY"), 
+    openai_api_base='https://api.deepseek.com/',
+    max_tokens=1024
+)
