@@ -7,7 +7,7 @@ import { getProjects, selectProject, deleteProject } from '../api/projects'
 import { useNavigate } from 'react-router-dom'
 import AddProjectCard from './AddProjectCard'
 import { Button } from './button'
-import { Trash } from 'lucide-react'
+import { Trash, FolderOpen } from 'lucide-react'
 
 interface Project {
     project_id: string
@@ -48,7 +48,11 @@ export default function ProjectList() {
                     <CardContent >
                         <p>{project.description}</p>
                     </CardContent>
-                    <CardFooter>
+                    <CardFooter className='flex justify-end gap-2'>
+                        <Button onClick={() => chooseProject(project.project_id)} variant="outline">
+                            <FolderOpen size={16}></FolderOpen>
+                            Open
+                        </Button>
                         <Button
                             variant="outline"
                             onClick={async (e) => {
