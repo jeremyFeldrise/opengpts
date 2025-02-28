@@ -351,6 +351,8 @@ def get_chatbot(
         llm = get_deepseek_llm()
     elif llm_type == LLMType.DEEPSEEK_REASONER:
         llm = get_deepseek_reasoner_llm()
+    elif llm_type == LLMType.GROK2:
+        llm = get_grok_llm()
     else:
         raise ValueError("Unexpected llm type")
     return get_chatbot_executor(llm, system_message, CHECKPOINTER)
