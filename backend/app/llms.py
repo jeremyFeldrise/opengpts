@@ -35,7 +35,7 @@ def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
                 http_client=http_client,
                 model=openai_model,
                 temperature=0,
-                
+                max_tokens=4096,
             )
         except Exception as e:
             logger.error(
@@ -48,6 +48,7 @@ def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
                 azure_endpoint=os.environ["AZURE_OPENAI_API_BASE"],
                 openai_api_version=os.environ["AZURE_OPENAI_API_VERSION"],
                 openai_api_key=os.environ["AZURE_OPENAI_API_KEY"],
+                max_tokens=4096,
             )
     else:
         llm = AzureChatOpenAI(
@@ -57,6 +58,7 @@ def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
             azure_endpoint=os.environ["AZURE_OPENAI_API_BASE"],
             openai_api_version=os.environ["AZURE_OPENAI_API_VERSION"],
             openai_api_key=os.environ["AZURE_OPENAI_API_KEY"],
+            max_tokens=4096,
         )
     return llm
 
@@ -75,7 +77,7 @@ def get_anthropic_llm(bedrock: bool = False):
     else:
         model = ChatAnthropic(
             model_name="claude-3-7-sonnet-20250219",
-            max_tokens_to_sample=2000,
+            max_tokens_to_sample=4096,
             temperature=0,
         )
     return model
@@ -84,7 +86,7 @@ def get_anthropic_llm(bedrock: bool = False):
 def get_claude_35_sonnet_llm():
     return ChatAnthropic(
         model_name="claude-3-7-sonnet-20250219",
-        max_tokens_to_sample=2000,
+        max_tokens_to_sample=4096,
         temperature=0,
     )
 
@@ -92,21 +94,21 @@ def get_claude_35_sonnet_llm():
 def get_claude_3_opus_llm():
     return ChatAnthropic(
         model_name="claude-3-opus-latest",
-        max_tokens_to_sample=2000,
+        max_tokens_to_sample=4096,
         temperature=0,
     )
 @lru_cache(maxsize=1)
 def get_claude_3_5_haiku_llm():
     return ChatAnthropic(
         model_name="claude-3-5-haiku-latest",
-        max_tokens_to_sample=2000,
+        max_tokens_to_sample=4096,
         temperature=0,
     )
 
 @lru_cache(maxsize=1)
 def get_google_llm():
     return ChatVertexAI(
-        model_name="gemini-1.5-flash", convert_system_message_to_human=True, streaming=True
+        model_name="gemini-1.5-flash", convert_system_message_to_human=True, streaming=True, max_tokens=4096
     )
 
 
