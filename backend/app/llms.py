@@ -155,7 +155,7 @@ def get_deepseek_llm():
     model='deepseek-chat', 
     openai_api_key=os.environ.get("DEEPSEEK_API_KEY"), 
     openai_api_base='https://api.deepseek.com/',
-    max_tokens=1024
+    max_tokens=4096
 )
 
 @lru_cache(maxsize=1)
@@ -164,7 +164,7 @@ def get_deepseek_reasoner_llm():
     model='deepseek-reasoner', 
     openai_api_key=os.environ.get("DEEPSEEK_API_KEY"), 
     openai_api_base='https://api.deepseek.com/',
-    max_tokens=1024
+    max_tokens=4096
 )
 
 @lru_cache(maxsize=1)
@@ -174,5 +174,5 @@ def get_grok_llm():
     openai_api_key=os.environ
     .get("GROK_API_KEY"),
     openai_api_base='https://api.x.ai/v1',
-    max_tokens=1024
+    max_tokens=4096
 )
