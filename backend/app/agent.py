@@ -31,7 +31,8 @@ from app.llms import (
     get_groq_whisper_llm,
     get_groq_deepseek_llm,
     get_deepseek_llm,
-    get_deepseek_reasoner_llm
+    get_deepseek_reasoner_llm,
+    get_grok_llm
 )
 from app.retrieval import get_retrieval_executor
 from app.tools import (
@@ -95,6 +96,7 @@ class AgentType(str, Enum):
     GROQ8B = "GROQ (llama3-8b-8192)"
     DEEPSEEK = "DeepSeek"
     DEEPSEEK_REASONER = "DeepSeek Reasoner"
+    GROK2 = "GROK 2"
 
 DEFAULT_SYSTEM_MESSAGE = "You are a helpful assistant."
 
@@ -211,6 +213,10 @@ def get_agent_executor(
         return get_tools_agent_executor(
             tools, llm, system_message, interrupt_before_action, CHECKPOINTER
         )
+    elif agent == AgentType.GROK2:
+        llm = get_grok_llm()
+        return get_tools_agent_executor(
+            tools, llm, system_message, interrupt_before_action, CHECKPOINTER)
     else:
         raise ValueError("Unexpected agent type")
 
@@ -295,6 +301,7 @@ class LLMType(str, Enum):
     GROQ8B = "GROQ (llama3-8b-8192)"
     DEEPSEEK = "DeepSeek"
     DEEPSEEK_REASONER = "DeepSeek Reasoner"
+    GROK2= "GROK 2"
 
 def get_chatbot(
     llm_type: LLMType,
@@ -446,6 +453,8 @@ class ConfigurableRetrieval(RunnableBinding):
             llm = get_deepseek_llm()
         elif llm_type == LLMType.DEEPSEEK_REASONER:
             llm = get_deepseek_reasoner_llm()
+        elif llm_type == LLMType.GROK2:
+            llm = get_grok_llm()
         else:
             raise ValueError("Unexpected llm type")
         chatbot = get_retrieval_executor(llm, retriever, system_message, CHECKPOINTER)

@@ -35,7 +35,6 @@ def get_openai_llm(model: str = "gpt-4o", azure: bool = False):
                 http_client=http_client,
                 model=openai_model,
                 temperature=0,
-                
             )
         except Exception as e:
             logger.error(
@@ -165,5 +164,15 @@ def get_deepseek_reasoner_llm():
     model='deepseek-reasoner', 
     openai_api_key=os.environ.get("DEEPSEEK_API_KEY"), 
     openai_api_base='https://api.deepseek.com/',
+    max_tokens=1024
+)
+
+@lru_cache(maxsize=1)
+def get_grok_llm():
+    return BaseChatOpenAI(
+    model='grok-2-latest', 
+    openai_api_key=os.environ
+    .get("GROK_API_KEY"),
+    openai_api_base='https://api.x.ai/v1',
     max_tokens=1024
 )

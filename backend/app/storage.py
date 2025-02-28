@@ -98,6 +98,8 @@ async def increment_thread_count(user_id: str, assistant_id: str) -> None:
         if assistant is not None:
             agent_token_price = await conn.fetchrow('SELECT * FROM assistant_token_price WHERE agent_type = $1', assistant["config"]["configurable"]["type==agent/agent_type"])
             print("agent_token_price", agent_token_price)
+            if agent_token_price is None:
+                agent_token_price = {"price": 1}
             await conn.execute(
             'UPDATE "user" SET thread_counter = thread_counter +  $1 WHERE user_id = $2',
             agent_token_price["price"],
