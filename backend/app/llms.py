@@ -73,7 +73,7 @@ def get_anthropic_llm(bedrock: bool = False):
         model = BedrockChat(model_id="anthropic.claude-v2", client=client)
     else:
         model = ChatAnthropic(
-            model_name="claude-3-5-sonnet-20241022",
+            model_name="claude-3-7-sonnet-20250219",
             max_tokens_to_sample=2000,
             temperature=0,
         )
@@ -82,7 +82,7 @@ def get_anthropic_llm(bedrock: bool = False):
 @lru_cache(maxsize=1)
 def get_claude_35_sonnet_llm():
     return ChatAnthropic(
-        model_name="claude-3-5-sonnet-latest",
+        model_name="claude-3-7-sonnet-20250219",
         max_tokens_to_sample=2000,
         temperature=0,
     )
