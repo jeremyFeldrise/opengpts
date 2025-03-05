@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import AddProjectCard from './AddProjectCard'
 import { Button } from './button'
 import { Trash, FolderOpen } from 'lucide-react'
+import { useConfigList } from '../hooks/useConfigList'
 
 interface Project {
     project_id: string
@@ -19,11 +20,15 @@ interface Project {
 
 export default function ProjectList() {
     const { data: projects, isLoading, isError, refetch } = useQuery<Project[]>('projects', getProjects)
+    const { configs } = useConfigList();
+
     const navigate = useNavigate();
 
     async function chooseProject(projectId: string) {
         await selectProject(projectId);
-        navigate('/app')
+        const firstAssistant = configs?.[0]?.assistant_id ?? null;
+        navigate(firstAssistant ? `/assistant/${firstAssistant}` : "/app");
+        window.scrollTo({ top: 0 });
     }
     if (isLoading) {
         return <LoadingCard />
