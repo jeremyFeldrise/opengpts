@@ -17,7 +17,7 @@ export async function getProjects() {
     }
 }
 
-export async function selectProject(id: string) {
+export async function selectProject(id: string, projectName: string) {
     try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
             headers: {
@@ -30,6 +30,7 @@ export async function selectProject(id: string) {
         }
         const user = await response.json();
         localStorage.setItem("token", user.jwt_token);
+        localStorage.setItem("project_name", projectName);
     } catch (error) {
         console.error("Failed to fetch project:", error);
         return null;

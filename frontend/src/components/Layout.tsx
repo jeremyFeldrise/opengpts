@@ -105,6 +105,11 @@ export function Layout(props: LayoutProps) {
               ) : (
                 "EpsimoAI: Agent Platform"
               )}
+              {
+                localStorage.getItem("project_name") !== null && (
+                  <span className="font-normal"> - {localStorage.getItem("project_name")}</span>
+                )
+              }
             </div>
             <div className="flex-1" />
             <button

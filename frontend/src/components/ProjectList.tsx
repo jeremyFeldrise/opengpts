@@ -24,8 +24,8 @@ export default function ProjectList() {
 
     const navigate = useNavigate();
 
-    async function chooseProject(projectId: string) {
-        await selectProject(projectId);
+    async function chooseProject(projectId: string, projectName: string) {
+        await selectProject(projectId, projectName);
         const firstAssistant = configs?.[0]?.assistant_id ?? null;
         navigate(firstAssistant ? `/assistant/${firstAssistant}` : "/app");
         window.scrollTo({ top: 0 });
@@ -46,7 +46,7 @@ export default function ProjectList() {
         <>
             <AddProjectCard props={refetch} />
             {projects?.map((project) => (
-                <Card key={project.project_id} onClick={() => chooseProject(project.project_id)}>
+                <Card key={project.project_id} onClick={() => chooseProject(project.project_id, project.name)}>
                     <CardHeader>
                         <CardTitle>{project.name}</CardTitle>
                     </CardHeader>
@@ -54,7 +54,7 @@ export default function ProjectList() {
                         <p>{project.description}</p>
                     </CardContent>
                     <CardFooter className='flex justify-end gap-2'>
-                        <Button onClick={() => chooseProject(project.project_id)} variant="outline">
+                        <Button onClick={() => chooseProject(project.project_id, project.name)} variant="outline">
                             <FolderOpen size={16}></FolderOpen>
                             Open
                         </Button>
