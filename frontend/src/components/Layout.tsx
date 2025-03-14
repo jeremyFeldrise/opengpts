@@ -117,7 +117,7 @@ export function Layout(props: LayoutProps) {
               className="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
             >
               <span className="sr-only">View notifications</span>
-              <Link to="https://epsimoai.com/product/" >FAQ</Link>
+              <Link to="https://doc.epsimoai.com/guide/getting-started" >FAQ</Link>
 
             </button>
 
