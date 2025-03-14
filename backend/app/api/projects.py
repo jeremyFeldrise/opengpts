@@ -45,3 +45,14 @@ async def delete_project(user: AuthedUser, project_id: str) -> dict:
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
     return project
+
+@router.put("/{project_id}")
+async def update_project(user: AuthedUser, project_id: str, request: Request) -> Project:
+    """Update a project by ID."""
+    print("update_project")
+    request = await request.json()
+    print(request)
+    project = await storage.update_project(user["user_id"], project_id, request["name"], request["description"])
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+    return project

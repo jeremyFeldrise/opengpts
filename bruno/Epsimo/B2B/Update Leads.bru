@@ -1,0 +1,52 @@
+meta {
+  name: Update Leads
+  type: http
+  seq: 1
+}
+
+put {
+  url: http://localhost:3000/api/leads/{{leadID}}
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJraWQiOiJSNHVOUlhIV1dkSm51bkpLZjVcL21mbWJHKzRvbGt1amZvd25RNE5GQ1NnQT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiNGE4NTRkOC01MDAxLTcwZDgtZjU2MS04NmI5M2M4NzIxNGMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV84SEtOemNRanMiLCJjbGllbnRfaWQiOiI3ZTNnNnY2cnBlNWF2MTdwbDA0NjIwNWdlaCIsIm9yaWdpbl9qdGkiOiI2YjVjYThmZi1mZjg4LTQ5ODQtYjcyNS1jMzIxYTRjMjQxMzMiLCJldmVudF9pZCI6IjM1M2YwNDkzLTgwOWItNGI4Yi1iZTBkLWNlYTA1MTk4ZjZhMCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDEyNzA1NzcsImV4cCI6MTc0MTI3NDE3NywiaWF0IjoxNzQxMjcwNTc3LCJqdGkiOiIyMGE1NTI2ZC1hMWYzLTQ4NzAtOWM2MS05NWEyOTVmNTM5NDUiLCJ1c2VybmFtZSI6ImI0YTg1NGQ4LTUwMDEtNzBkOC1mNTYxLTg2YjkzYzg3MjE0YyJ9.hz9M5n_yRzfiCMtyMzOsl9-fztBnPdTyVTFT5DjlQNcWSaGFRE6XAuTxyCjJc1WWPbjkt2Cuy-ikxNVlmtF05gxW8mtjkoUiUKtXoRZGydgU01XLCBoRze75p6wU51sNNt0SHAMBUmsBs6FH8GqoonliW797TgDVzaycBZX4FctgcR9jW44FqFENNHD1t3BF7hfOyfPGkDmbs67uAkiTBiCj3HngQ2ecsG3A5fXUqOyPaI1GA1uJLuBosa_-_7TvciWIVBALgCePKHSj-zknt6ahaHIlpBzC-4d2HjUQlgva1b_pU5352f3lzN8OIWN83ReqGaHMMfGyXklHqdLf3A
+}
+
+body:json {
+  {
+    "data": {
+      "id": "fbdc71f2-bd9a-453f-a462-506049a6b967",
+      "lead_id": "0b210377-3005-4b8a-8c48-bea7d2a7901d",
+      "companyName": "Farnell Global",
+      "contactName": "Matthew McGuire",
+      "firstName": "Matthew\"",
+      "lastName": "McGuire",
+      "companyUrl": "",
+      "email": "mmcguire@premierfarnell.com",
+      "phoneNumber": "",
+      "status": "verified",
+      "notes": "",
+      "owner": "b4a854d8-5001-70d8-f561-86b93c87214c",
+      "linkedinUrl": "http://www.linkedin.com/in/matthew-mcguire-8636a280",
+      "headline": null,
+      "country": "United Kingdom",
+      "state": "England",
+      "city": "Castleford",
+      "estimatedNumEmployees": null,
+      "sanitizedPhoneNumber": null,
+      "seniority": "manager",
+      "industry": null,
+      "secondaryIndustries": null,
+      "industries": null,
+      "functions": null,
+      "departments": null,
+      "subdepartments": null,
+      "keywords": null,
+      "isLikelyToEngage": null,
+      "createdAt": "2025-03-03T09:02:25.541Z",
+      "updatedAt": "2025-03-03T09:02:25.541Z"
+    }
+  }
+}

@@ -10,7 +10,9 @@ export async function getProjects() {
         if (!response.ok) {
             return null;
         }
-        return (await response.json());
+        const projects = await response.json();
+        ;
+        return (projects);
     } catch (error) {
         console.error("Failed to fetch projects:", error);
         return null;
@@ -65,5 +67,21 @@ export async function deleteProject(id: string) {
     }
     catch (error) {
         console.error("Failed to delete project:", error);
+    }
+}
+
+export async function updateProject(id: string, name: string, description: string) {
+    try {
+        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/projects/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            },
+            body: JSON.stringify({ name, description }),
+        });
+    }
+    catch (error) {
+        console.error("Failed to update project:", error);
     }
 }

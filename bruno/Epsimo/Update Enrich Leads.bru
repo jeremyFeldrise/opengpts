@@ -1,0 +1,24 @@
+meta {
+  name: Update Enrich Leads
+  type: http
+  seq: 4
+}
+
+put {
+  url: https://tt-staging01.d1s7g54vbgmvb0.amplifyapp.com/api/enrich-leads/f8b04999-d836-42fc-8d96-6b599aaaac35
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJraWQiOiJSNHVOUlhIV1dkSm51bkpLZjVcL21mbWJHKzRvbGt1amZvd25RNE5GQ1NnQT0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJiNGE4NTRkOC01MDAxLTcwZDgtZjU2MS04NmI5M2M4NzIxNGMiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV84SEtOemNRanMiLCJjbGllbnRfaWQiOiI3ZTNnNnY2cnBlNWF2MTdwbDA0NjIwNWdlaCIsIm9yaWdpbl9qdGkiOiJlYTE4ODU5ZS1mYWU2LTQyMWEtYWRkZS01OGFjNDJlNDQyOTUiLCJldmVudF9pZCI6IjJkMGE0MmYzLWNkZWYtNGM3OS1iOTA0LWQ5Mjc0Yzg1MzhkOCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3NDEyNzQzMzYsImV4cCI6MTc0MTM1NTI4MSwiaWF0IjoxNzQxMzUxNjgxLCJqdGkiOiIyZGJjYTAwNC1lZGYyLTQ1MGMtOWEwNS1mZTQzNzQ5YWViMGUiLCJ1c2VybmFtZSI6ImI0YTg1NGQ4LTUwMDEtNzBkOC1mNTYxLTg2YjkzYzg3MjE0YyJ9.h2OlBtTzDyFtiuE2wZsYSS7A6QRbTMbj4YpOp4gjVDYP3g6iFAypjF-J0A2VwXc1XQQKDnjGpSg7yJiEN8xi0AMQoGo_VeVQMV37od5_QEdFWLWaJcw2PaeWFzc9B2Wt_ZT3tnCKytM4O6eBH2qSThMyh1NCtiYHXmw32Wwh_6VdrcYTZ15Bx46bNP2D4-YmYR3TpXM7qZ99lRAR2GJcZfzoH0dq2gk-zXh5E-7PrZsxduNeWYqVFu3FJjBKbmBe1kEOSOPZHE5SjIzlfMBoObecVXjK0tqGIuyDD0Wtu4FvQXRIQhKJHX9Q97Gd6iS39ZLvLNFTkJpGN_M5PkZJ6A
+}
+
+body:json {
+  {
+   "data":{
+      "id": "f8b04999-d836-42fc-8d96-6b599aaaac35",
+      "enrichment1": "\"{\\n  \\\"value_proposition\\\": \\\"Improve your online experience and get personalized ads\\\",\\n  \\\"industry\\\": \\\"Media & Communications\\\",\\n  \\\"target_audience\\\": \\\"consumers\\\",\\n  \\\"market\\\": \\\"B2C\\\"\\n}\""
+    }
+  }
+}

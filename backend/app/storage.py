@@ -252,16 +252,30 @@ async def create_project(user_id: str, name: str, description: str) -> dict:
 async def list_projects(user_id: str) -> List[dict]:
     """List all projects for the current user."""
     async with get_pg_pool().acquire() as conn:
-        return await conn.fetch("SELECT * FROM project WHERE user_id = $1", user_id)
+        return await conn.fetch("SELECT * FROM project WHERE user_id = $1 ORDER BY name", user_id)
+        
 
 async def get_project(user_id: str, project_id: str) -> Optional[dict]:
     """Get a project by ID."""
     async with get_pg_pool().acquire() as conn:
         return await conn.fetchrow(
+            
             "SELECT * FROM project WHERE project_id = $1 AND user_id = $2",
             project_id,
             user_id,
         )
+
+async def update_project(user_id: str, project_id: str, name: str, description: str) -> dict:
+    """Update a project by ID."""
+    async with get_pg_pool().acquire() as conn:
+        project = await conn.fetchrow(
+            "UPDATE project SET name = $1, description = $2 WHERE project_id = $3 AND user_id = $4 RETURNING *",
+            name,
+            description,
+            project_id,
+            user_id,
+        )
+        return project
 
 async def delete_project(user_id: str, project_id: str) -> None:
     """Delete a project by ID."""

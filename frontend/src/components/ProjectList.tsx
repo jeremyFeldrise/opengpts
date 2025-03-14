@@ -9,6 +9,7 @@ import AddProjectCard from './AddProjectCard'
 import { Button } from './button'
 import { Trash, FolderOpen } from 'lucide-react'
 import { useConfigList } from '../hooks/useConfigList'
+import ProjectCard from './ProjectCard'
 
 interface Project {
     project_id: string
@@ -41,37 +42,11 @@ export default function ProjectList() {
     async function handleDelete(projectId: string) {
         await deleteProject(projectId);
     }
-    console.log('Projects', projects)
     return (
         <>
             <AddProjectCard props={refetch} />
             {projects?.map((project) => (
-                <Card key={project.project_id} onClick={() => chooseProject(project.project_id, project.name)}>
-                    <CardHeader>
-                        <CardTitle>{project.name}</CardTitle>
-                    </CardHeader>
-                    <CardContent >
-                        <p>{project.description}</p>
-                    </CardContent>
-                    <CardFooter className='flex justify-end gap-2'>
-                        <Button onClick={() => chooseProject(project.project_id, project.name)} variant="outline">
-                            <FolderOpen size={16}></FolderOpen>
-                            Open
-                        </Button>
-                        <Button
-                            variant="outline"
-                            onClick={async (e) => {
-                                console.log('Delete project', project.project_id)
-                                e.stopPropagation();
-                                await handleDelete(project.project_id);
-                                refetch();
-                            }}
-                        >
-                            <Trash size={16} />
-                            Delete
-                        </Button>
-                    </CardFooter>
-                </Card>
+                <ProjectCard key={project.project_id} project={project} chooseProject={chooseProject} handleDelete={handleDelete} refetch={refetch} />
             ))}
         </>
     )
