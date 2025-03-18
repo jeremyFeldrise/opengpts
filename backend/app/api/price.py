@@ -17,7 +17,8 @@ stripe.api_key = os.environ["STRIPE_PRIVATE_KEY"]
 @router.get("/agent")
 async def get_agent_price(user: AuthedUser, agent_name:str) -> dict:
     """Get the price of a thread."""
-    print("agent_name", agent_name)
+    if not agent_name:
+        return {"price": 1}
     threads_info = await storage.get_agent_price(agent_name)
     print("threads_info", threads_info)
     if not threads_info["price"]:
