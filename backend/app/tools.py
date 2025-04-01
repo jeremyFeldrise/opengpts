@@ -308,7 +308,7 @@ def _get_connery_actions():
 def _get_dalle_tools():
     return Tool(
         "Dall-E-Image-Generator",
-        DallEAPIWrapper(size="1024x1024", quality="hd").run,
+        DallEAPIWrapper(size="1024x1024", quality="hd", model="dall-e-3").run,
         "A wrapper around OpenAI DALL-E API. Useful for when you need to generate images from a text description. Input should be an image description.",
     )
 

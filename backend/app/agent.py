@@ -58,12 +58,12 @@ from app.tools import (
 
 Tool = Union[
     ActionServer,
-    Connery,
+    # Connery,
     DDGSearch,
     Arxiv,
-    YouSearch,
-    SecFilings,
-    PressReleases,
+    # YouSearch,
+    # SecFilings,
+    # PressReleases,
     PubMed,
     Wikipedia,
     Tavily,
@@ -86,8 +86,8 @@ class AgentType(str, Enum):
     CLAUDE3_OPUS = "Claude 3 (Opus)"
     # BEDROCK_CLAUDE2 = "Claude 2 (Amazon Bedrock)"
     MIXTRAL = "Mixtral"
-    GEMINI = "GEMINI"
-    OLLAMA = "Ollama"
+    # GEMINI = "GEMINI"
+    # OLLAMA = "Ollama"
     GROQ70B = "GROQ (llama3-70b-8192)"
     GROQ70B_VERSATILE = "GROQ (llama3.3-70b-versatile) Versatile"
     GROQDEEPSEEK="GROQ (deepseek-r1-distill-llama-70b)"
