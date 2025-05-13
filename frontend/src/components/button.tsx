@@ -51,13 +51,19 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        <div>
-          {leftElem}
-        </div>
+        {leftElem && (
+          <div>
+            {leftElem}
+          </div>
+        )}
         <Slottable>{children}</Slottable>
-        <div>
-          {rightElem}
-        </div>
+        {
+          rightElem && (
+            <div>
+              {rightElem}
+            </div>
+          )
+        }
       </Comp>
     )
   }

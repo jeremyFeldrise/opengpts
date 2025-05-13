@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useThreadAndAssistant } from "./hooks/useThreadAndAssistant.ts";
 import { Message } from "./types.ts";
 import { OrphanChat } from "./components/OrphanChat.tsx";
+import AppLayout from "./components/AppLayout.tsx";
 
 function App(props: { edit?: boolean }) {
   const navigate = useNavigate();
@@ -128,32 +129,7 @@ function App(props: { edit?: boolean }) {
 
 
   return (
-    <Layout
-      subtitle={
-        assistantConfig ? (
-          <span className="inline-flex items-center gap-1">
-            {assistantConfig.name}
-            <InformationCircleIcon
-              className="w-5 h-5 text-indigo-600 cursor-pointer"
-              onClick={() => {
-                selectConfig(assistantConfig.assistant_id);
-              }}
-            />
-          </span>
-        ) : null
-      }
-      sidebarOpen={sidebarOpen}
-      setSidebarOpen={setSidebarOpen}
-      sidebar={
-        <ChatList
-          chats={chats}
-          configs={configs}
-          enterChat={selectChat}
-          deleteChat={deleteChat}
-          enterConfig={selectConfig}
-        />
-      }
-    >
+    <AppLayout>
       {currentChat && assistantConfig && (
         <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
       )}
@@ -193,7 +169,7 @@ function App(props: { edit?: boolean }) {
         />
       )}
       {isLoading && <div>Loading...</div>}
-    </Layout>
+    </AppLayout>
   );
 }
 
