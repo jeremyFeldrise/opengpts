@@ -139,15 +139,15 @@ export default function SidebarComponent() {
               className="w-full justify-start"
               asChild
               leftElem={<Plus />}
-            ><a href="/dashboard">New Chat</a></Button>
+            ><a href="/project">New Chat</a></Button>
           </div>
           <div>
             <Button
               className="w-full justify-start"
               variant="ghost"
               leftElem={<Briefcase />}
-              onClick={() => setIsOpen(true)}
-            >Projects</Button>
+              asChild
+            ><a href="/project">Project</a></Button>
           </div>
         </div>
         <div className="grow">

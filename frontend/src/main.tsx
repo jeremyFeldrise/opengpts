@@ -11,6 +11,7 @@ import Project from "./components/Project.tsx";
 import AuthCallback from "./components/AuthCallback.tsx";
 import ProductDisplay from "./components/ProductDisplay.tsx";
 import PaymentStatus from "./components/PaymentStatus.tsx";
+import AddProjectCard from "./components/AddProjectCard.tsx";
 
 function getCookie(name: string) {
   const cookie = document.cookie
@@ -40,9 +41,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<App />} />
+          <Route path="/" element={<Project />} />
           <Route path="/login" element={<Login />} />
-          <Route path='/project' element={<Project></Project>} />
+          <Route path='/project' element={<Project />} />
+          <Route path="/new_project" element={<AddProjectCard />} />
           <Route path='/app' element={<App></App>} />
           <Route path="/thread/:chatId" element={<App />} />
           <Route path="/product-display" element={<ProductDisplay />} />
