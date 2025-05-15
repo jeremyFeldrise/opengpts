@@ -1,8 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Chat } from "./components/Chat";
-import { ChatList } from "./components/ChatList";
-import { Layout } from "./components/Layout";
 import { NewChat } from "./components/NewChat";
 import { useChatList } from "./hooks/useChatList";
 import { useSchemas } from "./hooks/useSchemas";
@@ -22,12 +19,20 @@ import AppLayout from "./components/AppLayout.tsx";
 function App(props: { edit?: boolean }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const steps = ['Step 1', 'Step 2', 'Step 3']
+  const [currentStep, setCurrentStep] = useState(0)
   const { chats, createChat, updateChat, deleteChat } = useChatList();
   const { configs, saveConfig, deleteConfig } = useConfigList();
   const { startStream, stopStream, stream } = useStreamState();
   const { configSchema, configDefaults } = useSchemas();
 
   const { currentChat, assistantConfig, isLoading } = useThreadAndAssistant();
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prev) => prev + 1)
+    }
+  }
 
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
@@ -130,6 +135,30 @@ function App(props: { edit?: boolean }) {
 
   return (
     <AppLayout>
+      <div>
+        <div className="flex justify-between mb-8">
+          {steps.map((label, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+              >
+                {index + 1}
+              </div>
+              <span className="text-sm mt-2">{label}</span>
+            </div>
+          ))}
+        </div>
+        <div className="text-center">
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+            onClick={handleNext}
+            disabled={currentStep === steps.length - 1}
+          >
+            Next
+          </button>
+        </div>
+      </div>
       {currentChat && assistantConfig && (
         <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
       )}

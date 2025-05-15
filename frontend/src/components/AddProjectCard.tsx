@@ -5,13 +5,14 @@ import { addProject } from '../api/projects'
 import { useMutation } from 'react-query'
 import AppLayout from './AppLayout'
 import { useNavigate } from 'react-router-dom'
+import { Check, X } from "lucide-react"
 
-export default function AddProjectCard(refetch: any) {
+export default function AddProjectCard() {
   const navigate = useNavigate()
   const mutation = useMutation({
     mutationFn: ({ name, description }: { name: string, description: string }) => addProject(name, description),
     onSuccess: () => {
-      refetch.props()
+      navigate('/app')
     }
   })
 
@@ -37,11 +38,10 @@ export default function AddProjectCard(refetch: any) {
             <div>
               <Label htmlFor="description">Description</Label>
               <Input id="description" placeholder="Enter project description" required />
-              <textarea></textarea>
             </div>
             <div className="grid grid-cols-2 gap-8">
-              <Button type="button" variant="outline" size="lg" onClick={() => navigate(-1)}>Cancel</Button>
-              <Button type="submit" size="lg">Add Project</Button>
+              <Button type="button" variant="outline" size="lg" rightElem={<X />} onClick={() => navigate(-1)}>Cancel</Button>
+              <Button type="submit" size="lg" rightElem={<Check />}>Add Project</Button>
             </div>
           </form>
         </div>

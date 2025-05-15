@@ -1,8 +1,4 @@
-'use client'
-
 import { useQuery } from 'react-query'
-
-import { Card, CardContent } from "./card"
 import { getProjects, selectProject, deleteProject } from '../api/projects'
 import { useNavigate } from 'react-router-dom'
 import { useConfigList } from '../hooks/useConfigList'
@@ -13,8 +9,6 @@ interface Project {
   name: string
   description: string
 }
-
-
 
 export default function ProjectList() {
   const { data: projects, isLoading, isError, refetch } = useQuery<Project[]>('projects', getProjects)
@@ -50,20 +44,12 @@ export default function ProjectList() {
 
 function LoadingCard() {
   return (
-    <Card>
-      <CardContent className="flex items-center justify-center h-32">
-        <p>Loading...</p>
-      </CardContent>
-    </Card>
+    <div className='text-center'>Loading...</div>
   )
 }
 
 function ErrorCard() {
   return (
-    <Card>
-      <CardContent className="flex items-center justify-center h-32">
-        <p className="text-red-500">Error loading projects</p>
-      </CardContent>
-    </Card>
+    <div className="text-center text-red-500">Error loading projects</div>
   )
 }

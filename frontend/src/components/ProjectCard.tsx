@@ -56,7 +56,7 @@ function ProjectCard({ project, chooseProject, handleDelete, refetch }: { projec
     );
   }
   return (
-    <Card key={project.project_id} onClick={() => chooseProject(project.project_id, project.name)}>
+    <Card key={project.project_id}>
       <CardHeader>
         <div className="flex justify-between items-center">
           <CardTitle>{project.name}</CardTitle>
