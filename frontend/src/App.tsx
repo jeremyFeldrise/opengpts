@@ -19,8 +19,6 @@ import AppLayout from "./components/AppLayout.tsx";
 function App(props: { edit?: boolean }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const steps = ['Step 1', 'Step 2', 'Step 3']
-  const [currentStep, setCurrentStep] = useState(0)
   const { chats, createChat, updateChat, deleteChat } = useChatList();
   const { configs, saveConfig, deleteConfig } = useConfigList();
   const { startStream, stopStream, stream } = useStreamState();
@@ -28,11 +26,6 @@ function App(props: { edit?: boolean }) {
 
   const { currentChat, assistantConfig, isLoading } = useThreadAndAssistant();
 
-  const handleNext = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep((prev) => prev + 1)
-    }
-  }
 
   useEffect(() => {
     if (localStorage.getItem("token") === null) {
@@ -135,57 +128,42 @@ function App(props: { edit?: boolean }) {
 
   return (
     <AppLayout>
-      <div>
-        <div className="flex justify-between mb-8">
-          {steps.map((label, index) => (
-            <div key={index} className="flex flex-col items-center">
-              <div
-                className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
-                  }`}
-              >
-                {index + 1}
-              </div>
-              <span className="text-sm mt-2">{label}</span>
-            </div>
-          ))}
-        </div>
-        <div className="text-center">
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-            onClick={handleNext}
-            disabled={currentStep === steps.length - 1}
-          >
-            Next
-          </button>
-        </div>
-      </div>
       {currentChat && assistantConfig && (
         <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
       )}
       {currentChat && !assistantConfig && (
-        <OrphanChat chat={currentChat} updateChat={updateChat} />
+        <>
+          <div>Ito</div>
+          <OrphanChat chat={currentChat} updateChat={updateChat} />
+        </>
       )}
       {!currentChat && assistantConfig && !props.edit && (
-        <NewChat
-          startChat={startChat}
-          configSchema={configSchema}
-          configDefaults={configDefaults}
-          configs={configs}
-          saveConfig={saveConfig}
-          enterConfig={selectConfig}
-          deleteConfig={deleteConfig}
-        />
+        <>
+          <div>New chat</div>
+          <NewChat
+            startChat={startChat}
+            configSchema={configSchema}
+            configDefaults={configDefaults}
+            configs={configs}
+            saveConfig={saveConfig}
+            enterConfig={selectConfig}
+            deleteConfig={deleteConfig}
+          />
+        </>
       )}
       {!currentChat && assistantConfig && props.edit && (
-        <Config
-          className="mb-6"
-          config={assistantConfig}
-          configSchema={configSchema}
-          configDefaults={configDefaults}
-          saveConfig={saveConfig}
-          enterConfig={selectConfig}
-          edit={props.edit}
-        />
+        <>
+          <div>Config</div>
+          <Config
+            className="mb-6"
+            config={assistantConfig}
+            configSchema={configSchema}
+            configDefaults={configDefaults}
+            saveConfig={saveConfig}
+            enterConfig={selectConfig}
+            edit={props.edit}
+          />
+        </>
       )}
       {!currentChat && !assistantConfig && !isLoading && (
         <Config

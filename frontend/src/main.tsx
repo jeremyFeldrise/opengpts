@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Project />} />
+          <Route path="/" element={<App />} />
           <Route path="/login" element={<Login />} />
           <Route path='/project' element={<Project />} />
           <Route path="/new_project" element={<AddProjectCard />} />

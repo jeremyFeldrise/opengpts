@@ -16,6 +16,7 @@ import { Tool, ToolConfig, ToolSchema } from "../utils/formTypes";
 import { useToolsSchemas } from "../hooks/useToolsSchemas";
 import { marked, use } from "marked";
 import { getAgentPrice } from "../hooks/useAgentPrice";
+import { Button } from "./button";
 
 function Types(props: {
   field: SchemaField;
@@ -338,6 +339,8 @@ export function Config(props: {
   enterConfig: (id: string | null) => void;
   edit?: boolean;
 }) {
+  const steps = ['Step 1', 'Step 2', 'Step 3']
+  const [currentStep, setCurrentStep] = useState(0)
   const [values, setValues] = useState(
     props.config?.config ?? props.configDefaults,
   );
@@ -351,7 +354,18 @@ export function Config(props: {
   const dropzone = useDropzone(DROPZONE_CONFIG);
   const [isPublic, setPublic] = useState(props.config?.public ?? false);
   const { price, isLoading, refetchPrice } = getAgentPrice(values?.configurable?.["type==agent/agent_type"] as string);
-  console.log("Price", price);
+
+  const handlePrev = () => {
+    if (currentStep !== 0) {
+      setCurrentStep((prev) => prev - 1)
+    }
+  }
+
+  const handleNext = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep((prev) => prev + 1)
+    }
+  }
 
   useEffect(() => {
     if (!values) return;
@@ -409,14 +423,6 @@ export function Config(props: {
           className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
-      <button
-        type="submit"
-        disabled={inflight}
-        className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-      >
-        {inflight ? "Saving..." : "Save"}
-      </button>
-      <PublicToggle enabled={isPublic} setEnabled={setPublic} />
     </div>
   ) : (
     <>
@@ -425,145 +431,196 @@ export function Config(props: {
       )}
     </>
   );
+
   return (
-    <form
-      className={cn("space-y-8", props.className)}
-      onSubmit={async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        const form = e.target as HTMLFormElement;
-        const key = (form.elements.namedItem("key") as HTMLInputElement).value;
-        if (!key) return;
-        setInflight(true);
-        const vals = { ...values };
-        if (vals?.configurable) {
-          vals.configurable = { ...vals.configurable };
-          vals.configurable["type==agent/tools"] = [...selectedTools];
-        }
-        const assistantId = await props.saveConfig(
-          key,
-          vals!,
-          files,
-          isPublic,
-          props.config?.assistant_id,
-        );
-        props.enterConfig(assistantId);
-        setInflight(false);
-      }}
-    >
-      {settings}
-      {typeField && (
-        <Types
-          field={typeField}
-          value={typeValue as string}
-          setValue={(value: string) =>
-            setValues({
-              ...values,
-              configurable: { ...values!.configurable, [typeKey]: value },
-            })
-          }
-          readonly={readonly}
-        />
-      )}
-
-      {typeSpec?.description && (
-        <div className="space-y-2">
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <div className="text-sm text-gray-500">{typeSpec.description}</div>
+    <>
+      <div>
+        <div className="flex justify-between mb-8">
+          {steps.map((label, index) => (
+            <div key={index} className="flex flex-col items-center">
+              <div
+                className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                  }`}
+              >
+                {index + 1}
+              </div>
+              <span className="text-sm mt-2">{label}</span>
+            </div>
+          ))}
         </div>
-      )}
+      </div>
+      <form
+        className={cn("space-y-8", props.className)}
+        onSubmit={async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          const form = e.target as HTMLFormElement;
+          const key = (form.elements.namedItem("key") as HTMLInputElement).value;
+          if (!key) return;
+          setInflight(true);
+          const vals = { ...values };
+          if (vals?.configurable) {
+            vals.configurable = { ...vals.configurable };
+            vals.configurable["type==agent/tools"] = [...selectedTools];
+          }
+          const assistantId = await props.saveConfig(
+            key,
+            vals!,
+            files,
+            isPublic,
+            props.config?.assistant_id,
+          );
+          props.enterConfig(assistantId);
+          setInflight(false);
+        }}
+      >
+        <div className={currentStep === 0 ? 'block' : 'hidden'}>
+          <div>PART 1</div>
+          {settings}
+          {typeField && (
+            <Types
+              field={typeField}
+              value={typeValue as string}
+              setValue={(value: string) =>
+                setValues({
+                  ...values,
+                  configurable: { ...values!.configurable, [typeKey]: value },
+                })
+              }
+              readonly={readonly}
+            />
+          )}
 
-      {!props.config && typeSpec?.files && (
-        <FileUploadDropzone
-          state={dropzone}
-          files={files}
-          setFiles={setFiles}
-        />
-      )}
-      <div className={cn("space-y-8", readonly && "opacity-50")}>
-        {orderBy(
-          Object.entries(
-            props.configSchema?.properties.configurable.properties ?? {},
-          ),
-          ([key]) => ORDER.indexOf(last(key.split("/"))!),
-        ).map(([key, value]) => {
-          const title = value.title;
-          if (key.split("/")[0].includes("==")) {
-            const [parentKey, parentValue] = key.split("/")[0].split("==");
-            if (values?.configurable?.[parentKey] !== parentValue) {
-              return null;
-            }
-          } else {
-            return null;
-          }
-          if (
-            last(key.split("/")) === "retrieval_description" &&
-            !files.length
-          ) {
-            return null;
-          }
-          if (value.type === "string" && value.enum) {
-            return (
-              <SingleOptionField
-                key={key}
-                id={key}
-                field={value}
-                title={title}
-                value={values?.configurable?.[key] as string}
-                setValue={(value: string) =>
-                  setValues({
-                    ...values,
-                    configurable: { ...values!.configurable, [key]: value },
-                  })
+          {typeSpec?.description && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">Description</label>
+              <div className="text-sm text-gray-500">{typeSpec.description}</div>
+            </div>
+          )}
+
+          {!props.config && typeSpec?.files && (
+            <FileUploadDropzone
+              state={dropzone}
+              files={files}
+              setFiles={setFiles}
+            />
+          )}
+        </div>
+
+        <div className={currentStep === 1 ? 'block' : 'hidden'}>
+          <div>PART 2</div>
+
+          <div className={cn("space-y-8", readonly && "opacity-50")}>
+            {orderBy(
+              Object.entries(
+                props.configSchema?.properties.configurable.properties ?? {},
+              ),
+              ([key]) => ORDER.indexOf(last(key.split("/"))!),
+            ).map(([key, value]) => {
+              const title = value.title;
+              if (key.split("/")[0].includes("==")) {
+                const [parentKey, parentValue] = key.split("/")[0].split("==");
+                if (values?.configurable?.[parentKey] !== parentValue) {
+                  return null;
                 }
-                readonly={readonly}
-              />
-            );
-          } else if (value.type === "string") {
-            return (
-              <StringField
-                key={key}
-                id={key}
-                field={value}
-                title={title}
-                value={values?.configurable?.[key] as string}
-                setValue={(value: string) =>
-                  setValues({
-                    ...values,
-                    configurable: { ...values!.configurable, [key]: value },
-                  })
-                }
-                readonly={readonly}
-              />
-            );
-          } else if (value.type === "boolean") {
-            return (
-              <SingleOptionField
-                key={key}
-                id={key}
-                field={{
-                  ...value,
-                  type: "string",
-                  enum: ["Yes", "No"],
-                }}
-                title={title}
-                value={values?.configurable?.[key] ? "Yes" : "No"}
-                setValue={(value: string) =>
-                  setValues({
-                    ...values,
-                    configurable: {
-                      ...values!.configurable,
-                      [key]: value === "Yes",
-                    },
-                  })
-                }
-                readonly={readonly}
-              />
-            );
-          } else if (key === "type==agent/tools") {
-            return (
+              } else {
+                return null;
+              }
+              if (
+                last(key.split("/")) === "retrieval_description" &&
+                !files.length
+              ) {
+                return null;
+              }
+              if (value.type === "string" && value.enum) {
+                return (
+                  <SingleOptionField
+                    key={key}
+                    id={key}
+                    field={value}
+                    title={title}
+                    value={values?.configurable?.[key] as string}
+                    setValue={(value: string) =>
+                      setValues({
+                        ...values,
+                        configurable: { ...values!.configurable, [key]: value },
+                      })
+                    }
+                    readonly={readonly}
+                  />
+                );
+              } else if (value.type === "string") {
+                return (
+                  <StringField
+                    key={key}
+                    id={key}
+                    field={value}
+                    title={title}
+                    value={values?.configurable?.[key] as string}
+                    setValue={(value: string) =>
+                      setValues({
+                        ...values,
+                        configurable: { ...values!.configurable, [key]: value },
+                      })
+                    }
+                    readonly={readonly}
+                  />
+                );
+              } else if (value.type === "boolean") {
+                return (
+                  <SingleOptionField
+                    key={key}
+                    id={key}
+                    field={{
+                      ...value,
+                      type: "string",
+                      enum: ["Yes", "No"],
+                    }}
+                    title={title}
+                    value={values?.configurable?.[key] ? "Yes" : "No"}
+                    setValue={(value: string) =>
+                      setValues({
+                        ...values,
+                        configurable: {
+                          ...values!.configurable,
+                          [key]: value === "Yes",
+                        },
+                      })
+                    }
+                    readonly={readonly}
+                  />
+                );
+              } else if (key === "type==agent/tools") {
+                return (
+                  <ToolSelectionField
+                    key={key}
+                    selectedTools={selectedTools}
+                    onAddTool={handleAddTool}
+                    onRemoveTool={handleRemoveTool}
+                    onUpdateToolConfig={handleUpdateToolConfig}
+                    readonly={readonly}
+                    retrievalOn={files.length > 0}
+                  />
+                );
+              }
+            })}
+            <div className="flex flex-row ">Thread price :
+              {
+                isLoading ? (
+                  <div>Loading...</div>
+                ) : (
+                  <div> {price?.price} Credits</div>
+                )
+              }
+            </div>
+          </div>
+        </div>
+        <div className={currentStep === 2 ? 'block' : 'hidden'}>
+          <div>PART 3</div>
+          {
+            values?.configurable?.['type'] === 'agent' && props.configSchema?.properties.configurable.properties['type==agent/tools'] && (
               <ToolSelectionField
-                key={key}
+                key="type==agent/tools"
                 selectedTools={selectedTools}
                 onAddTool={handleAddTool}
                 onRemoveTool={handleRemoveTool}
@@ -571,19 +628,28 @@ export function Config(props: {
                 readonly={readonly}
                 retrievalOn={files.length > 0}
               />
-            );
-          }
-        })}
-        <div className="flex flex-row ">Thread price :
-          {
-            isLoading ? (
-              <div>Loading...</div>
-            ) : (
-              <div> {price?.price} Credits</div>
             )
           }
+          <PublicToggle enabled={isPublic} setEnabled={setPublic} />
+          <button
+            type="submit"
+            disabled={inflight}
+            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            {inflight ? "Saving..." : "Save"}
+          </button>
         </div>
-      </div>
-    </form>
+        <div className="text-center">
+          <Button variant="ghost" onClick={handlePrev}>Back</Button>
+          <button
+            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
+            onClick={handleNext}
+            disabled={currentStep === steps.length - 1}
+          >
+            Next
+          </button>
+        </div>
+      </form>
+    </>
   );
 }
