@@ -339,7 +339,7 @@ export function Config(props: {
   enterConfig: (id: string | null) => void;
   edit?: boolean;
 }) {
-  const steps = ['Step 1', 'Step 2', 'Step 3']
+  const steps = ['General Details', 'AI Configuration', 'Tools']
   const [currentStep, setCurrentStep] = useState(0)
   const [values, setValues] = useState(
     props.config?.config ?? props.configDefaults,
@@ -434,23 +434,25 @@ export function Config(props: {
 
   return (
     <>
-      <div>
+      <div className="relative m-auto w-full max-w-[496px] mb-20">
+        <div className="h-[2px] w-full bg-purple-200 absolute top-[50%]">
+          <div style={{ width: `${100 * (currentStep + 1) / steps.length}%` }} className="h-[2px] bg-purple-500 absolute"></div>
+        </div>
         <div className="flex justify-between mb-8">
           {steps.map((label, index) => (
-            <div key={index} className="flex flex-col items-center">
+            <div key={index} className="flex flex-col items-center relative">
               <div
-                className={`w-8 h-8 flex items-center justify-center rounded-full text-white ${index <= currentStep ? 'bg-blue-600' : 'bg-gray-300'
+                className={`w-4 h-4 flex items-center justify-center rounded-full text-white ${index <= currentStep ? 'bg-purple-500' : 'bg-purple-200'
                   }`}
               >
-                {index + 1}
               </div>
-              <span className="text-sm mt-2">{label}</span>
+              <span className="text-sm mt-2 absolute whitespace-nowrap top-6">{label}</span>
             </div>
           ))}
         </div>
       </div>
       <form
-        className={cn("space-y-8", props.className)}
+        className={cn("space-y-8 max-w-[800px] m-auto", props.className)}
         onSubmit={async (e) => {
           e.preventDefault();
           e.stopPropagation();
@@ -475,7 +477,8 @@ export function Config(props: {
         }}
       >
         <div className={currentStep === 0 ? 'block' : 'hidden'}>
-          <div>PART 1</div>
+          <div className="text-center text-3xl font-bold mb-8">General Details</div>
+          <div className="text-gray-400 text-base text-center mb-10">Define your bot's essential information, such as its name and type. These parameters determine the basic functionality available.</div>
           {settings}
           {typeField && (
             <Types
@@ -508,7 +511,8 @@ export function Config(props: {
         </div>
 
         <div className={currentStep === 1 ? 'block' : 'hidden'}>
-          <div>PART 2</div>
+          <div className="text-center text-3xl font-bold mb-8">AI Setup</div>
+          <div className="text-gray-400 text-base text-center mb-10">Select the AI model and define the instructions that will guide your bot's behavior. This is where you customize its capabilities and communication style.</div>
 
           <div className={cn("space-y-8", readonly && "opacity-50")}>
             {orderBy(
@@ -616,7 +620,8 @@ export function Config(props: {
           </div>
         </div>
         <div className={currentStep === 2 ? 'block' : 'hidden'}>
-          <div>PART 3</div>
+          <div className="text-center text-3xl font-bold mb-8">Add tools</div>
+          <div className="text-gray-400 text-base text-center mb-10">Select the AI model and define the instructions that will guide your bot's behavior. This is where you customize its capabilities and communication style.</div>
           {
             values?.configurable?.['type'] === 'agent' && props.configSchema?.properties.configurable.properties['type==agent/tools'] && (
               <ToolSelectionField
