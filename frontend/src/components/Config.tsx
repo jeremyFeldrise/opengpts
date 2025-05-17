@@ -1,5 +1,5 @@
-import React, { Fragment, useCallback, useEffect, useState } from "react";
-import { ShareIcon, ChevronDown, ChevronUp } from "lucide-react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ShareIcon, ChevronDown, ChevronUp, Headset, X, ArrowRight, Check } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { orderBy, last } from "lodash";
 import { v4 as uuidv4 } from "uuid";
@@ -17,6 +17,9 @@ import { useToolsSchemas } from "../hooks/useToolsSchemas";
 import { marked, use } from "marked";
 import { getAgentPrice } from "../hooks/useAgentPrice";
 import { Button } from "./button";
+import { Input } from "./input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./select";
+import { Switch } from "./switch";
 
 function Types(props: {
   field: SchemaField;
@@ -29,21 +32,22 @@ function Types(props: {
     props.field.enum?.map((id) => TYPES[id as keyof typeof TYPES]) ?? [];
 
   return (
-    <div className="space-y-2">
-      <label className="block text-sm font-medium text-gray-700">Select Type</label>
-      <select
-        className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+    <div className="mb-4">
+      <div className="mb-2 text-base">Select Type</div>
+      <Select
         disabled={props.readonly}
         value={props.value}
-        onChange={(e) => props.setValue(e.target.value)}
+        onValueChange={(value) => props.setValue(value)}
       >
-        <option value="">Select a type</option>
-        {options.map((option) => (
-          <option key={option.id} value={option.id}>
-            {option.title}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="border-gray-200 shadow">
+          <SelectValue placeholder="Select a type" />
+        </SelectTrigger>
+        <SelectContent className="bg-white">
+          {options.map((option) => (
+            <SelectItem key={option.id} value={option.id}>{option.title}</SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -58,19 +62,19 @@ function StringField(props: {
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={props.id} className="block text-sm font-medium text-gray-700">
+      <div className="text-base mb-2">
         {props.title}
         {props.field.description && (
           <span className="ml-1 text-sm text-gray-500" title={props.field.description}>ⓘ</span>
         )}
-      </label>
+      </div>
       <textarea
         id={props.id}
         value={props.value}
         readOnly={props.readonly}
         disabled={props.readonly}
         onChange={(e) => props.setValue(e.target.value)}
-        className="mt-1 block w-full sm:text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 min-h-[100px]"
+        className="mt-1 p-4 bg-transparent border border-gray-200 shadow block w-full sm:text-sm border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 min-h-[100px]"
       />
     </div>
   );
@@ -85,27 +89,30 @@ function SingleOptionField(props: {
   setValue: (value: string) => void;
 }) {
   return (
-    <div className="space-y-2">
-      <label htmlFor={props.id} className="block text-sm font-medium text-gray-700">
+    <div className="">
+      <div className="text-base mb-2">
         {props.field.title}
-        {props.field.description && (
-          <span className="ml-1 text-sm text-gray-500" title={props.field.description}>ⓘ</span>
-        )}
-      </label>
-      <select
-        id={props.id}
-        disabled={props.readonly}
+        {
+          props.field.description && (
+            <span className="text-sm pl-2" title={props.field.description}>ⓘ</span>
+          )
+        }
+      </div>
+      <Select
         value={props.value}
-        onChange={(e) => props.setValue(e.target.value)}
-        className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        onValueChange={(value) => props.setValue(value)}
       >
-        <option value="">Select {props.field.title}</option>
-        {orderBy(props.field.enum)?.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
+        <SelectTrigger className="border-gray-200 shadow">
+          <SelectValue placeholder={props.field.title} />
+        </SelectTrigger>
+        <SelectContent className="bg-white">
+          {orderBy(props.field.enum)?.map((option) => (
+            <SelectItem key={option} value={option}>
+              {option}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
     </div>
   );
 }
@@ -184,6 +191,18 @@ function ToolSelectionField(props: {
   const { tools: availableTools, loading } = useToolsSchemas();
   const [filteredTools, setFilteredTools] = useState<ToolSchema[]>([]);
 
+  const handleCheckedTool = (e: ChangeEvent<HTMLInputElement>) => {
+    const state = e.target.checked
+    if (state) {
+      handleSelectTool(e.target.value)
+    } else {
+      const toolSchema = availableTools.find((t) => t.name === e.target.value)
+      const id = toolSchema?.name === "Retrieval" ? "retrieval" : uuidv4()
+
+      onRemoveTool(id)
+    }
+  }
+
   const handleSelectTool = useCallback(
     (toolName: string) => {
       const toolSchema = availableTools.find((t) => t.name === toolName);
@@ -241,32 +260,42 @@ function ToolSelectionField(props: {
     return <div className="text-gray-500">Loading...</div>;
   }
 
-
-
   return (
-    <div className="space-y-4">
-      <label className="block text-sm font-medium text-gray-700">Tools</label>
-      {selectedTools.map((t) => (
-        <ToolDisplay
-          key={`tool-display-${t.id}`}
-          tool={t}
-          onRemoveTool={() => onRemoveTool(t.id)}
-          onUpdateToolConfig={(conf) => onUpdateToolConfig(t.id, conf)}
-          readonly={readonly || t.name === "Retrieval"}
-        />
-      ))}
+    <div className="grid grid-cols-2 gap-4 mb-10">
       {!readonly && (
-        <select
-          onChange={(e) => handleSelectTool(e.target.value)}
-          className="block w-full py-2 pl-3 pr-10 mt-1 text-base border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        >
-          <option value="">Add a tool</option>
-          {filteredTools.map((tool) => (
-            <option key={tool.name} value={tool.name}>
-              {tool.name}
-            </option>
-          ))}
-        </select>
+        <>
+          {
+            filteredTools.map((item, i) => (
+              <label key={i} htmlFor={`option-${item.name}`} className="cursor-pointer my-4">
+                <input
+                  type="checkbox"
+                  name="options"
+                  id={`option-${item.name}`}
+                  value={item.name}
+                  className="peer invisible absolute"
+                  onChange={(e) => handleCheckedTool(e)}
+                />
+                <div className="
+                  rounded-lg 
+                  p-6 
+                  flex flex-col
+                  shadow-[0px_0px_10px_0px_rgba(56,56,56,0.15)]
+                  transition-all 
+                  peer-checked:border-blue-600 
+                  peer-checked:bg-purple-50 
+                  peer-checked:ring-2 
+                  peer-checked:ring-purple-300
+                  h-full"
+                >
+                  <h3 className="text-lg font-medium mb-2">{item.name}</h3>
+                  <p className="text-sm font-light text-gray-400">
+                    {item.description}
+                  </p>
+                </div>
+              </label>
+            ))
+          }
+        </>
       )}
     </div>
   );
@@ -305,14 +334,12 @@ function PublicToggle(props: {
 }) {
   return (
     <div className={cn("flex items-center space-x-2", props.className)}>
-      <input
-        type="checkbox"
+      <Switch
         id="public-mode"
         checked={props.enabled}
-        onChange={(e) => props.setEnabled(e.target.checked)}
-        className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+        onCheckedChange={(value) => props.setEnabled(value)}
       />
-      <label htmlFor="public-mode" className="text-sm text-gray-700">Public?</label>
+      <label htmlFor="public-mode" className="text-base">Make this bot public</label>
     </div>
   );
 }
@@ -412,15 +439,15 @@ export function Config(props: {
   const readonly = !!props.config && !props.edit && !inflight;
 
   const settings = !readonly ? (
-    <div className="flex flex-col items-center gap-4 mb-6 sm:flex-row">
+    <div className="mb-4">
+      <div className="text-md mb-2">Bot Name</div>
       <div className="flex-1 w-full">
-        <input
+        <Input
           type="text"
           name="key"
           id="key"
           placeholder="Name your bot"
           defaultValue={props.config?.name}
-          className="block w-full mt-1 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
         />
       </div>
     </div>
@@ -479,180 +506,186 @@ export function Config(props: {
         <div className={currentStep === 0 ? 'block' : 'hidden'}>
           <div className="text-center text-3xl font-bold mb-8">General Details</div>
           <div className="text-gray-400 text-base text-center mb-10">Define your bot's essential information, such as its name and type. These parameters determine the basic functionality available.</div>
-          {settings}
-          {typeField && (
-            <Types
-              field={typeField}
-              value={typeValue as string}
-              setValue={(value: string) =>
-                setValues({
-                  ...values,
-                  configurable: { ...values!.configurable, [typeKey]: value },
-                })
-              }
-              readonly={readonly}
-            />
-          )}
+          <div className="m-auto max-w-[640px]">
+            {settings}
+            {typeField && (
+              <Types
+                field={typeField}
+                value={typeValue as string}
+                setValue={(value: string) =>
+                  setValues({
+                    ...values,
+                    configurable: { ...values!.configurable, [typeKey]: value },
+                  })
+                }
+                readonly={readonly}
+              />
+            )}
 
-          {typeSpec?.description && (
-            <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
-              <div className="text-sm text-gray-500">{typeSpec.description}</div>
-            </div>
-          )}
+            {typeSpec?.description && (
+              <div className="flex px-8 py-4 rounded-xl mb-8 shadow space-x-4 border">
+                <div>
+                  <Headset size={32} className="text-purple-500" />
+                </div>
+                <div>
+                  <div className="text-lg mb-2">{typeSpec.title}</div>
+                  <div className="text-sm text-gray-400">{typeSpec.description}</div>
+                </div>
+              </div>
+            )}
 
-          {!props.config && typeSpec?.files && (
-            <FileUploadDropzone
-              state={dropzone}
-              files={files}
-              setFiles={setFiles}
-            />
-          )}
+            {!props.config && typeSpec?.files && (
+              <FileUploadDropzone
+                state={dropzone}
+                files={files}
+                setFiles={setFiles}
+              />
+            )}
+          </div>
         </div>
 
         <div className={currentStep === 1 ? 'block' : 'hidden'}>
           <div className="text-center text-3xl font-bold mb-8">AI Setup</div>
           <div className="text-gray-400 text-base text-center mb-10">Select the AI model and define the instructions that will guide your bot's behavior. This is where you customize its capabilities and communication style.</div>
-
-          <div className={cn("space-y-8", readonly && "opacity-50")}>
-            {orderBy(
-              Object.entries(
-                props.configSchema?.properties.configurable.properties ?? {},
-              ),
-              ([key]) => ORDER.indexOf(last(key.split("/"))!),
-            ).map(([key, value]) => {
-              const title = value.title;
-              if (key.split("/")[0].includes("==")) {
-                const [parentKey, parentValue] = key.split("/")[0].split("==");
-                if (values?.configurable?.[parentKey] !== parentValue) {
+          <div className="m-auto max-w-[640px]">
+            <div className={cn("space-y-8", readonly && "opacity-50")}>
+              {orderBy(
+                Object.entries(
+                  props.configSchema?.properties.configurable.properties ?? {},
+                ),
+                ([key]) => ORDER.indexOf(last(key.split("/"))!),
+              ).map(([key, value]) => {
+                const title = value.title;
+                if (key.split("/")[0].includes("==")) {
+                  const [parentKey, parentValue] = key.split("/")[0].split("==");
+                  if (values?.configurable?.[parentKey] !== parentValue) {
+                    return null;
+                  }
+                } else {
                   return null;
                 }
-              } else {
-                return null;
-              }
-              if (
-                last(key.split("/")) === "retrieval_description" &&
-                !files.length
-              ) {
-                return null;
-              }
-              if (value.type === "string" && value.enum) {
-                return (
-                  <SingleOptionField
-                    key={key}
-                    id={key}
-                    field={value}
-                    title={title}
-                    value={values?.configurable?.[key] as string}
-                    setValue={(value: string) =>
-                      setValues({
-                        ...values,
-                        configurable: { ...values!.configurable, [key]: value },
-                      })
-                    }
-                    readonly={readonly}
-                  />
-                );
-              } else if (value.type === "string") {
-                return (
-                  <StringField
-                    key={key}
-                    id={key}
-                    field={value}
-                    title={title}
-                    value={values?.configurable?.[key] as string}
-                    setValue={(value: string) =>
-                      setValues({
-                        ...values,
-                        configurable: { ...values!.configurable, [key]: value },
-                      })
-                    }
-                    readonly={readonly}
-                  />
-                );
-              } else if (value.type === "boolean") {
-                return (
-                  <SingleOptionField
-                    key={key}
-                    id={key}
-                    field={{
-                      ...value,
-                      type: "string",
-                      enum: ["Yes", "No"],
-                    }}
-                    title={title}
-                    value={values?.configurable?.[key] ? "Yes" : "No"}
-                    setValue={(value: string) =>
-                      setValues({
-                        ...values,
-                        configurable: {
-                          ...values!.configurable,
-                          [key]: value === "Yes",
-                        },
-                      })
-                    }
-                    readonly={readonly}
-                  />
-                );
-              } else if (key === "type==agent/tools") {
-                return (
-                  <ToolSelectionField
-                    key={key}
-                    selectedTools={selectedTools}
-                    onAddTool={handleAddTool}
-                    onRemoveTool={handleRemoveTool}
-                    onUpdateToolConfig={handleUpdateToolConfig}
-                    readonly={readonly}
-                    retrievalOn={files.length > 0}
-                  />
-                );
-              }
-            })}
-            <div className="flex flex-row ">Thread price :
-              {
-                isLoading ? (
-                  <div>Loading...</div>
-                ) : (
-                  <div> {price?.price} Credits</div>
-                )
-              }
+                if (
+                  last(key.split("/")) === "retrieval_description" &&
+                  !files.length
+                ) {
+                  return null;
+                }
+                if (value.type === "string" && value.enum) {
+                  return (
+                    <SingleOptionField
+                      key={key}
+                      id={key}
+                      field={value}
+                      title={title}
+                      value={values?.configurable?.[key] as string}
+                      setValue={(value: string) =>
+                        setValues({
+                          ...values,
+                          configurable: { ...values!.configurable, [key]: value },
+                        })
+                      }
+                      readonly={readonly}
+                    />
+                  );
+                } else if (value.type === "string") {
+                  return (
+                    <StringField
+                      key={key}
+                      id={key}
+                      field={value}
+                      title={title}
+                      value={values?.configurable?.[key] as string}
+                      setValue={(value: string) =>
+                        setValues({
+                          ...values,
+                          configurable: { ...values!.configurable, [key]: value },
+                        })
+                      }
+                      readonly={readonly}
+                    />
+                  );
+                } else if (value.type === "boolean") {
+                  return (
+                    <SingleOptionField
+                      key={key}
+                      id={key}
+                      field={{
+                        ...value,
+                        type: "string",
+                        enum: ["Yes", "No"],
+                      }}
+                      title={title}
+                      value={values?.configurable?.[key] ? "Yes" : "No"}
+                      setValue={(value: string) =>
+                        setValues({
+                          ...values,
+                          configurable: {
+                            ...values!.configurable,
+                            [key]: value === "Yes",
+                          },
+                        })
+                      }
+                      readonly={readonly}
+                    />
+                  );
+                }
+              })}
+              <div className="flex justify-between items-center border border-gray-200 p-4 rounded-xl shadow">Thread price :
+                {
+                  isLoading ? (
+                    <div className="text-md text-gray-400">Loading...</div>
+                  ) : (
+                    <div className="text-md text-gray-400"> {price?.price} Credits</div>
+                  )
+                }
+              </div>
             </div>
           </div>
         </div>
         <div className={currentStep === 2 ? 'block' : 'hidden'}>
           <div className="text-center text-3xl font-bold mb-8">Add tools</div>
           <div className="text-gray-400 text-base text-center mb-10">Select the AI model and define the instructions that will guide your bot's behavior. This is where you customize its capabilities and communication style.</div>
+          <div className="m-auto">
+            {
+              values?.configurable?.['type'] === 'agent' && props.configSchema?.properties.configurable.properties['type==agent/tools'] && (
+                <ToolSelectionField
+                  key="type==agent/tools"
+                  selectedTools={selectedTools}
+                  onAddTool={handleAddTool}
+                  onRemoveTool={handleRemoveTool}
+                  onUpdateToolConfig={handleUpdateToolConfig}
+                  readonly={readonly}
+                  retrievalOn={files.length > 0}
+                />
+              )
+            }
+            <PublicToggle enabled={isPublic} setEnabled={setPublic} />
+          </div>
+        </div>
+        <div className="m-auto max-w-[640px] grid grid-cols-2 gap-4">
+          <Button disabled={currentStep === 0} rightElem={<X />} size="lg" variant="outline" onClick={handlePrev}>Back</Button>
           {
-            values?.configurable?.['type'] === 'agent' && props.configSchema?.properties.configurable.properties['type==agent/tools'] && (
-              <ToolSelectionField
-                key="type==agent/tools"
-                selectedTools={selectedTools}
-                onAddTool={handleAddTool}
-                onRemoveTool={handleRemoveTool}
-                onUpdateToolConfig={handleUpdateToolConfig}
-                readonly={readonly}
-                retrievalOn={files.length > 0}
-              />
+            currentStep === steps.length - 1 ? (
+
+              <Button
+                size="lg"
+                type="submit"
+                disabled={inflight}
+                rightElem={<Check />}
+              >
+                {inflight ? "Saving..." : "Save"}
+              </Button>
+            ) : (
+              <Button
+                size="lg"
+                onClick={handleNext}
+                disabled={currentStep === steps.length - 1}
+                rightElem={<ArrowRight />}
+              >
+                Next
+              </Button>
             )
           }
-          <PublicToggle enabled={isPublic} setEnabled={setPublic} />
-          <button
-            type="submit"
-            disabled={inflight}
-            className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            {inflight ? "Saving..." : "Save"}
-          </button>
-        </div>
-        <div className="text-center">
-          <Button variant="ghost" onClick={handlePrev}>Back</Button>
-          <button
-            className="bg-blue-600 text-white px-4 py-2 rounded disabled:opacity-50"
-            onClick={handleNext}
-            disabled={currentStep === steps.length - 1}
-          >
-            Next
-          </button>
         </div>
       </form>
     </>

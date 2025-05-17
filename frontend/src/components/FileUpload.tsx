@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { DropzoneState } from "react-dropzone";
 import { XCircleIcon } from "@heroicons/react/24/outline";
+import { Upload } from "lucide-react";
 
 const baseStyle = {
   flex: 1,
@@ -10,9 +11,8 @@ const baseStyle = {
   padding: "20px",
   borderWidth: 2,
   borderRadius: 2,
-  borderColor: "#eeeeee",
+  borderColor: "#9662eb",
   borderStyle: "dashed",
-  backgroundColor: "#fafafa",
   color: "#bdbdbd",
   outline: "none",
   transition: "border .24s ease-in-out",
@@ -76,20 +76,17 @@ export function FileUploadDropzone(props: {
 
   return (
     <section className={props.className}>
-      <aside>
-        <Label id="files" title="Files" />
+      <div>
+        <div className="text-base mb-2">Add files</div>
         <div className="prose">
           <ul>{files}</ul>
         </div>
-      </aside>
-      <div {...getRootProps({ style })}>
+      </div>
+      <div className="bg-purple-100" {...getRootProps({ style })}>
         <input {...getInputProps()} />
-        <p>
-          Drag n' drop some files here, or click to select files.
-          <br />
-          Accepted files: .txt, .csv, .html, .docx, .pdf.
-          <br />
-          No file should exceed 10 MB.
+        <div className="rounded-full bg-white border-2 border-gray-300 p-2 mb-3"><Upload /></div>
+        <p className="text-center font-light">
+          <span className="text-purple-400">Click to download</span> or drop the file/image here
         </p>
         {fileRejections.length > 0 && (
           <div className="flex items-center rounded-md bg-yellow-50 mt-4 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20 prose">
