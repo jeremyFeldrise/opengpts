@@ -249,10 +249,10 @@ function ToolSelectionField(props: {
     let toolSchemas = availableTools.filter(
       (tool) => tool.name !== "Retrieval",
     );
-    toolSchemas = toolSchemas.filter(
+    /* toolSchemas = toolSchemas.filter(
       (tool) =>
         !selectedTools.some((t) => t.name === tool.name && !tool.multiUse),
-    );
+    ); */
     setFilteredTools(toolSchemas);
   }, [availableTools, selectedTools]);
 
