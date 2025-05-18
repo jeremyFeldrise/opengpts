@@ -92,28 +92,34 @@ export function Chat(props: ChatProps) {
 
   return (
     <div className="flex-1 flex flex-col items-stretch pb-[76px] pt-2">
-      {messages?.map((msg, i) =>
-        editing[msg.id] ? (
-          <MessageEditor
-            key={msg.id}
-            message={editing[msg.id]}
-            onUpdate={recordEdits}
-            abandonEdits={() => abandonEdits(msg)}
-          />
-        ) : (
-          <MessageViewer
-            {...msg}
-            key={msg.id}
-            runId={
-              i === messages.length - 1 && props.stream?.status === "done"
-                ? props.stream?.run_id
-                : undefined
-            }
-            startEditing={() => recordEdits(msg)}
-            alwaysShowControls={i === messages.length - 1}
-          />
-        ),
-      )}
+      {messages?.map((msg, i) => {
+        const isOdd = i % 2 === 1
+        if (editing[msg.id]) {
+          return (
+            <MessageEditor
+              key={msg.id}
+              message={editing[msg.id]}
+              onUpdate={recordEdits}
+              abandonEdits={() => abandonEdits(msg)}
+            />
+          )
+        } else {
+          return (
+            <MessageViewer
+              {...msg}
+              key={msg.id}
+              runId={
+                i === messages.length - 1 && props.stream?.status === "done"
+                  ? props.stream?.run_id
+                  : undefined
+              }
+              startEditing={() => recordEdits(msg)}
+              alwaysShowControls={i === messages.length - 1}
+              sender={isOdd ? 'odd' : 'even'}
+            />
+          )
+        }
+      })}
       {(props.stream?.status === "inflight" || messages === null) && (
         <div className="mb-2 text-lg font-black leading-6 text-gray-400 animate-pulse">
           ...
@@ -141,7 +147,7 @@ export function Chat(props: ChatProps) {
             Click to continue.
           </div>
         )}
-      <div className="fixed bottom-0 left-0 right-0 p-4 lg:left-72">
+      <div className="absolute bottom-0 left-0 right-0 p-4 left-0">
         {commitEdits && Object.keys(editing).length > 0 ? (
           <CommitEdits editing={editing} commitEdits={commitEdits} />
         ) : (

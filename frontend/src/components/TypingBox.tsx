@@ -13,6 +13,8 @@ import { MessageWithFiles } from "../utils/formTypes.ts";
 import { DROPZONE_CONFIG, TYPE_NAME } from "../constants.ts";
 import { Config } from "../hooks/useConfigList.ts";
 import { Chat } from "../types";
+import { Button } from "./button.tsx";
+import { SendHorizontal } from "lucide-react";
 
 function getFileTypeIcon(fileType: string) {
   switch (fileType) {
@@ -126,8 +128,8 @@ export default function TypingBox(props: {
         <div
           className={cn(
             "self-end w-fit grid grid-cols-[auto,1fr,auto]" +
-              " gap-2 p-2 bg-white rounded-md text-sm text-gray-900" +
-              " shadow-sm border border-gray-300",
+            " gap-2 p-2 bg-white rounded-md text-sm text-gray-900" +
+            " shadow-sm border border-gray-300",
             isInflight && "opacity-50 cursor-not-allowed",
           )}
         >
@@ -135,7 +137,7 @@ export default function TypingBox(props: {
         </div>
       ) : null}
       <form
-        className="mt-2 flex rounded-md shadow-sm"
+        className="mt-2"
         onSubmit={async (e) => {
           e.preventDefault();
           if (isInflight) return;
@@ -149,69 +151,60 @@ export default function TypingBox(props: {
           setFiles([]);
         }}
       >
-        {" "}
-        <div
-          className={cn(
-            "relative flex flex-grow items-stretch focus-within:z-10",
-            isInflight && "opacity-50 cursor-not-allowed",
-          )}
-        >
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-            <ChatBubbleLeftIcon
-              className="h-5 w-5 text-gray-400"
-              aria-hidden="true"
+        <div className="flex flex-col items-end border-gray-300 border rounded-lg shadow p-3">
+          <div
+            className={cn(
+              "relative flex w-full flex-grow items-stretch focus-within:z-10",
+              isInflight && "opacity-50 cursor-not-allowed",
+            )}
+          >
+            <input
+              type="text"
+              name="messsage"
+              id="message"
+              autoFocus
+              autoComplete="off"
+              className="block w-full border-0 bg-transparent py-2 px-3 text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="Send a message"
+              readOnly={isInflight}
             />
+            {isDocumentRetrievalActive && (
+              <div className="cursor-pointer absolute m-1 p-3 inset-y-0 right-0 flex items-center pr-3 hover:bg-gray-50">
+                <DocumentPlusIcon
+                  className="h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                  onClick={open}
+                />
+              </div>
+            )}
           </div>
-          <input
-            type="text"
-            name="messsage"
-            id="message"
-            autoFocus
-            autoComplete="off"
-            className="block w-full rounded-none rounded-l-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-            placeholder="Send a message"
-            readOnly={isInflight}
-          />
-          {isDocumentRetrievalActive && (
-            <div className="cursor-pointer absolute m-1 p-3 inset-y-0 right-0 flex items-center pr-3 hover:bg-gray-50">
-              <DocumentPlusIcon
-                className="h-5 w-5 text-gray-400"
-                aria-hidden="true"
-                onClick={open}
-              />
-            </div>
-          )}
-        </div>
-        <button
-          type="submit"
-          disabled={isInflight && !props.onInterrupt}
-          onClick={
-            props.onInterrupt
-              ? (e) => {
+          <Button
+            type="submit"
+            disabled={isInflight && !props.onInterrupt}
+            onClick={
+              props.onInterrupt
+                ? (e) => {
                   e.preventDefault();
                   props.onInterrupt?.();
                 }
-              : undefined
-          }
-          className={cn(
-            "relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 " +
-              "py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 bg-white",
-            isInflight && !props.onInterrupt && "opacity-50 cursor-not-allowed",
-          )}
-        >
-          {props.onInterrupt ? (
-            <XCircleIcon
-              className="-ml-0.5 h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          ) : (
-            <PaperAirplaneIcon
-              className="-ml-0.5 h-5 w-5 text-gray-400"
-              aria-hidden="true"
-            />
-          )}
-          {isInflight ? (props.onInterrupt ? "Cancel" : "Sending...") : "Send"}
-        </button>
+                : undefined
+            }
+            className={cn(
+              "w-10 h-10 relative -ml-px inline-flex items-center gap-x-1.5 rounded-full px-3 " +
+              "py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 bg-white",
+              isInflight && !props.onInterrupt && "opacity-50 cursor-not-allowed",
+            )}
+          >
+            {props.onInterrupt ? (
+              <XCircleIcon
+                className="-ml-0.5 h-5 w-5 text-gray-400"
+                aria-hidden="true"
+              />
+            ) : (
+              <SendHorizontal size={32} />
+            )}
+          </Button>
+        </div>
       </form>
     </div>
   );

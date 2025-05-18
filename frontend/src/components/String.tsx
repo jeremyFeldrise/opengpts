@@ -14,13 +14,13 @@ export function StringViewer(props: {
 }) {
   return props.markdown ? (
     <div
-      className={cn("text-gray-900 prose", props.className)}
+      className={cn("text-base font-light", props.className)}
       dangerouslySetInnerHTML={{
         __html: DOMPurify.sanitize(marked(props.value, OPTIONS)).trim(),
       }}
     />
   ) : (
-    <div className={cn("text-gray-900 prose", props.className)}>
+    <div className={cn("text-base font-light", props.className)}>
       {props.value}
     </div>
   );
