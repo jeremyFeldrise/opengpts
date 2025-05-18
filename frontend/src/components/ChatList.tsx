@@ -27,7 +27,7 @@ export function ChatList(props: {
 
   return (
     <>
-      <ul role="list" className="mt-2 -mx-2 space-y-1">
+      <ul role="list" className="mt-2 space-y-3">
         {props.chats?.map((chat) => (
           <li key={chat.thread_id} className="w-full flex justify-between mb-2">
             <Button
@@ -36,10 +36,10 @@ export function ChatList(props: {
               className="p-0 text-left"
             >
               <div>
-                <div className="truncate text-base max-w-[165px]">
-                  {chat.name?.[0] ?? " "}
+                <div className="truncate font-light text-base max-w-[165px]">
+                  {chat.name ?? " "}
                 </div>
-                <div className="text-md text-gray-400 truncate max-w-[165px]">
+                <div className="text-md font-light text-gray-400 truncate max-w-[165px]">
                   {
                     props.configs?.find(
                       (config) => config.assistant_id === chat.assistant_id,
@@ -60,7 +60,7 @@ export function ChatList(props: {
             ><Ellipsis /></Button>
             {/* Menu Dropdown */}
             {visibleMenu === chat.thread_id && (
-              <div className="relative right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+              <div className="absolute right-0 z-10 w-56 mt-2 origin-top-right bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <div
                   className="py-1"
                   role="menu"
