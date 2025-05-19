@@ -155,7 +155,6 @@ const AppLayout: FC<propsType> = ({ children }) => {
         } />
       <div className="transition-all duration-300 ease-in-out mx-auto pl-[277px]">
         <div className="max-w-[1073px] mx-auto p-10 min-h-screen relative">
-          <button onClick={() => setIsOpen(true)}>TEST</button>
           {children}
         </div>
       </div>
