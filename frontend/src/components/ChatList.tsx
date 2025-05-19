@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 import { ChatListProps } from "../hooks/useChatList";
-import { useThreadAndAssistant } from "../hooks/useThreadAndAssistant.ts";
 import { ConfigListProps } from "../hooks/useConfigList.ts";
 import { Button } from "./button.tsx";
 import { Ellipsis } from "lucide-react";
@@ -10,7 +9,7 @@ export function ChatList(props: {
   chats: ChatListProps["chats"];
   configs: ConfigListProps["configs"];
   enterChat: (id: string | null) => void;
-  deleteChat: (id: string) => void;
+  deleteChat: (id: string, name: string) => void;
   enterConfig: (id: string | null) => void;
 }) {
   // const { currentChat, assistantConfig } = useThreadAndAssistant();
@@ -73,13 +72,7 @@ export function ChatList(props: {
                     role="menuitem"
                     onClick={(event) => {
                       event.preventDefault();
-                      if (
-                        window.confirm(
-                          `Are you sure you want to delete chat "${chat.name}"?`,
-                        )
-                      ) {
-                        props.deleteChat(chat.thread_id);
-                      }
+                      props.deleteChat(chat.thread_id, chat.name);
                     }}
                   >
                     Delete

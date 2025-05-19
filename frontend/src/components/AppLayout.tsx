@@ -1,4 +1,4 @@
-import { FC, ReactNode, useCallback } from "react"
+import { FC, ReactNode, useCallback, useState } from "react"
 import SidebarComponent from "./sidebar-component"
 import { useChatList } from "../hooks/useChatList"
 import { Message } from "../types.ts";
@@ -11,17 +11,47 @@ import { useNavigate } from "react-router-dom";
 import { useStreamState } from "../hooks/useStreamState";
 import { useThreadAndAssistant } from "../hooks/useThreadAndAssistant";
 import { ChatList } from "./ChatList";
+import ModalComponent from "./modalComponent.tsx";
+import { Button } from "./button.tsx";
+import { Trash, X } from "lucide-react";
 
 type propsType = {
   children?: ReactNode
 }
 
+type DeletedType = {
+  id: string,
+  name: string
+}
+
 const AppLayout: FC<propsType> = ({ children }) => {
+  const [isOpen, setIsOpen] = useState(false)
+  const [isLoadingDel, setIsLoadingDel] = useState(false)
+  const [deleteId, setDeleteId] = useState<DeletedType | null>(null)
   const navigate = useNavigate()
   const { chats, createChat, updateChat, deleteChat } = useChatList();
   const { configs, saveConfig, deleteConfig } = useConfigList();
   const { startStream, stopStream, stream } = useStreamState();
   const { currentChat, assistantConfig, isLoading } = useThreadAndAssistant();
+
+  const handleClose = () => {
+    setIsOpen(false)
+    setDeleteId(null)
+    setIsLoadingDel(false)
+  }
+
+  const handleConfirm = (id: string, name: string) => {
+    setIsOpen(true)
+    setDeleteId({
+      id,
+      name
+    })
+  }
+
+  const handleDelete = async () => {
+    setIsLoadingDel(true)
+    await deleteChat(deleteId?.id || '').finally(() => handleClose())
+  }
 
   const startTurn = useCallback(
     async (
@@ -119,15 +149,38 @@ const AppLayout: FC<propsType> = ({ children }) => {
             chats={chats}
             enterConfig={selectConfig}
             enterChat={selectChat}
-            deleteChat={deleteChat}
+            deleteChat={handleConfirm}
             configs={configs}
           />
         } />
       <div className="transition-all duration-300 ease-in-out mx-auto pl-[277px]">
         <div className="max-w-[1073px] mx-auto p-10 min-h-screen relative">
+          <button onClick={() => setIsOpen(true)}>TEST</button>
           {children}
         </div>
       </div>
+      <ModalComponent isOpen={isOpen} onClose={handleClose} title={deleteId?.name || ''}>
+        <div className="">
+          <div className="text-sm mb-4 text-gray-400 font-light">Warning: This action cannot be undone. All intelligences, agents, and data associated with this project will be permanently deleted. Applications using this project will no longer be able to access its functionalities.</div>
+          <div className="grid grid-cols-2 gap-4">
+            <Button
+              disabled={isLoadingDel}
+              variant="outline"
+              rightElem={<X />}
+              onClick={() => {
+                setIsOpen(false)
+                setDeleteId(null)
+              }}>Cancel</Button>
+            <Button
+              disabled={isLoadingDel}
+              onClick={handleDelete}
+              rightElem={<Trash />}
+            >
+              {isLoadingDel ? "Please wait..." : "Confirm"}
+            </Button>
+          </div>
+        </div>
+      </ModalComponent>
     </div>
   )
 }
