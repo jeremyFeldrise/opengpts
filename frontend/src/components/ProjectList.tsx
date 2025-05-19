@@ -24,7 +24,8 @@ export default function ProjectList() {
   const navigate = useNavigate();
 
   async function chooseProject(projectId: string, projectName: string) {
-    await selectProject(projectId, projectName);
+    const project = projects?.find((item) => item.project_id === projectId)
+    await selectProject(projectId, projectName, project?.description || '');
     const firstAssistant = configs?.[0]?.assistant_id ?? null;
     navigate(firstAssistant ? `/assistant/${firstAssistant}` : "/app");
     window.scrollTo({ top: 0 });

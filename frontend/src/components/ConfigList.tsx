@@ -1,7 +1,6 @@
-import { TYPES } from "../constants";
+import { Pencil, Trash } from "lucide-react";
 import { Config, ConfigListProps } from "../hooks/useConfigList";
 import { cn } from "../utils/cn";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 
 function ConfigItem(props: {
@@ -16,38 +15,27 @@ function ConfigItem(props: {
         onClick={() => props.enterConfig(props.config.assistant_id)}
         className={cn(
           props.config.assistant_id === props.currentConfig?.assistant_id
-            ? "bg-gray-100 border-gray-300"
-            : "bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50",
-          "group flex items-center gap-x-3 rounded-lg p-3 text-sm leading-6 cursor-pointer transition-all duration-200 border shadow-sm",
+            ? "bg-gray-100"
+            : "bg-white hover:border-gray-300 hover:bg-gray-50",
+          "border-gray-100 group flex items-center gap-x-3 rounded-lg py-3 px-4 text-sm leading-6 cursor-pointer transition-all duration-200 border shadow",
         )}
       >
-        <div
-          className={cn(
-            "flex h-10 w-10 shrink-0 items-center justify-center rounded-md text-sm font-semibold",
-            props.config.assistant_id === props.currentConfig?.assistant_id
-              ? "bg-black text-white"
-              : "bg-gray-100 text-black group-hover:bg-black group-hover:text-white",
-          )}
-        >
-          {props.config.name?.[0] ?? " "}
-        </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <span className="font-medium text-black truncate">
+            <span className="text-lg truncate">
               {props.config.name}
             </span>
             <div className="flex">
-
               <Link
                 className="ml-2 text-gray-500 transition-colors duration-200 hover:text-black"
                 to={`/assistant/${props.config.assistant_id}/edit`}
                 onClick={(event) => event.stopPropagation()}
               >
-                <PencilSquareIcon className="w-4 h-4" />
+                <Pencil className="text-blue-400" />
               </Link>
               <button className="ml-2 text-gray-500 transition-colors duration-200 hover:text-black">
-                <TrashIcon
-                  className="w-4 h-4 text-gray-500 transition-colors duration-200 hover:text-black"
+                <Trash
+                  className="text-blue-400"
                   onClick={(event) => {
                     event.stopPropagation();
                     props.deleteConfig(props.config.assistant_id);
@@ -56,8 +44,11 @@ function ConfigItem(props: {
               </button>
             </div>
           </div>
-          <div className="mt-1 text-xs text-gray-500">
+          <div className="mt-1 text-sm truncate text-gray-500">
             {props.config.name}
+          </div>
+          <div className="flex mt-2">
+            <div className="bg-gradient-to-l from-blue-500 to-purple-500 px-2 py-1 text-white text-xs rounded-full ">GPT 4o</div>
           </div>
         </div>
       </div>

@@ -15,10 +15,18 @@ import { useThreadAndAssistant } from "./hooks/useThreadAndAssistant.ts";
 import { Message } from "./types.ts";
 import { OrphanChat } from "./components/OrphanChat.tsx";
 import AppLayout from "./components/AppLayout.tsx";
+import { Button } from "./components/button.tsx";
+import { ChevronDown } from "lucide-react";
+
+type ProjectType = {
+  name: string,
+  description: string
+}
 
 function App(props: { edit?: boolean }) {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [projectInfo, setProjectInfo] = useState<ProjectType | null>(null)
   const { chats, createChat, updateChat, deleteChat } = useChatList();
   const { configs, saveConfig, deleteConfig } = useConfigList();
   const { startStream, stopStream, stream } = useStreamState();
@@ -31,7 +39,13 @@ function App(props: { edit?: boolean }) {
     if (localStorage.getItem("token") === null) {
       navigate("/login");
     }
-  });
+
+    setProjectInfo({
+      name: localStorage.getItem("project_name") || "",
+      description: localStorage.getItem("description") || ""
+    })
+
+  }, []);
 
   const startTurn = useCallback(
     async (
@@ -139,7 +153,11 @@ function App(props: { edit?: boolean }) {
       )}
       {!currentChat && assistantConfig && !props.edit && (
         <>
-          <div>New chat</div>
+          <div className="flex justify-between items-center mb-6">
+            <div className="text-3xl">{projectInfo?.name}</div>
+            <Button rightElem={<ChevronDown />} >Action</Button>
+          </div>
+          <div className="text-base text-gray-400 mb-10 font-light">{projectInfo?.description}</div>
           <NewChat
             startChat={startChat}
             configSchema={configSchema}

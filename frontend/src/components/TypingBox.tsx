@@ -151,7 +151,7 @@ export default function TypingBox(props: {
           setFiles([]);
         }}
       >
-        <div className="flex flex-col items-end border-gray-300 border rounded-lg shadow p-3">
+        <div className="bg-gray-100 flex flex-col items-end border-gray-300 border rounded-lg shadow p-3">
           <div
             className={cn(
               "relative flex w-full flex-grow items-stretch focus-within:z-10",
