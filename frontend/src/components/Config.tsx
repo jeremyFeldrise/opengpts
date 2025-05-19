@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useState, MouseEvent } from "react";
 import { ShareIcon, ChevronDown, ChevronUp, Headset, X, ArrowRight, Check } from "lucide-react";
 import { useDropzone } from "react-dropzone";
 import { orderBy, last } from "lodash";
@@ -388,7 +388,8 @@ export function Config(props: {
     }
   }
 
-  const handleNext = () => {
+  const handleNext = (e: MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     if (currentStep < steps.length - 1) {
       setCurrentStep((prev) => prev + 1)
     }
@@ -678,7 +679,7 @@ export function Config(props: {
             ) : (
               <Button
                 size="lg"
-                onClick={handleNext}
+                onClick={(e) => handleNext(e)}
                 disabled={currentStep === steps.length - 1}
                 rightElem={<ArrowRight />}
               >
