@@ -64,10 +64,10 @@ export function ConfigList(props: {
 }) {
   return (
     <>
-      <div className="text-xs font-semibold leading-6 text-gray-400">
+      <div className="text-lg font-semibold leading-6 mb-3">
         Your Saved Bots
       </div>
-      <ul role="list" className="mt-2 -mx-2 space-y-1">
+      <ul role="list" className="space-y-1">
         {props.configs
           ?.filter((a) => a.mine)
           .map((assistant) => (
@@ -85,10 +85,10 @@ export function ConfigList(props: {
           )}
       </ul>
 
-      <div className="mt-4 text-xs font-semibold leading-6 text-gray-400">
+      <div className="my-4 text-lg font-semibold leading-6">
         Public Bots
       </div>
-      <ul role="list" className="mt-2 -mx-2 space-y-1">
+      <ul role="list" className="space-y-1">
         {props.configs
           ?.filter((a) => !a.mine)
           .map((assistant) => (

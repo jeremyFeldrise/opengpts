@@ -79,11 +79,9 @@ export default function SidebarComponent({ chat, newChat }: SidebarProps) {
             >Project</Button>
           </div>
         </div>
-        <div className="grow max-h-[350px] overflow-auto">
-          <ScrollArea>
-            <div className="text-lg mb-2">Your Chats</div>
-            {chat}
-          </ScrollArea>
+        <div className="grow ">
+          <div className="text-lg mb-2">Your Chats</div>
+          {chat}
           <div>
             <Button className="w-full justify-between text-base p-0" variant="ghost" rightElem={<ArrowRight />}>View All Chats</Button>
           </div>

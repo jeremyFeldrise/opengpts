@@ -153,12 +153,9 @@ function App(props: { edit?: boolean }) {
       )}
       {!currentChat && assistantConfig && !props.edit && (
         <>
-          <div className="flex justify-between items-center mb-6">
-            <div className="text-3xl">{projectInfo?.name}</div>
-            <Button rightElem={<ChevronDown />} >Action</Button>
-          </div>
-          <div className="text-base text-gray-400 mb-10 font-light">{projectInfo?.description}</div>
           <NewChat
+            name={projectInfo?.name}
+            description={projectInfo?.description}
             startChat={startChat}
             configSchema={configSchema}
             configDefaults={configDefaults}

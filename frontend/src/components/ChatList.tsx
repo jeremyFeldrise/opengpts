@@ -26,7 +26,7 @@ export function ChatList(props: {
 
   return (
     <>
-      <ul role="list" className="mt-2 space-y-3">
+      <ul role="list" className="mt-2 space-y-3 max-h-[350px] overflow-auto">
         {props.chats?.map((chat) => (
           <li key={chat.thread_id} className="w-full flex justify-between mb-2">
             <Button
