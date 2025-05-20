@@ -7,6 +7,7 @@ import logo from "../assets/images/logo_espimo.png"
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from 'react-query';
 import { getThreadInfo } from '../api/auth';
+import { ScrollArea } from "./scroll-area.tsx";
 
 function RoundedPlusComponent() {
   return (
@@ -61,7 +62,7 @@ export default function SidebarComponent({ chat, newChat }: SidebarProps) {
         <div className="mb-[30px] flex justify-center">
           <img src={logo} alt="Logo" />
         </div>
-        <div className="mb-14">
+        <div className="mb-10">
           <div>
             <Button
               className="w-full justify-start"
@@ -78,9 +79,11 @@ export default function SidebarComponent({ chat, newChat }: SidebarProps) {
             >Project</Button>
           </div>
         </div>
-        <div className="grow">
-          <div className="text-lg mb-2">Your Chats</div>
-          {chat}
+        <div className="grow max-h-[350px] overflow-auto">
+          <ScrollArea>
+            <div className="text-lg mb-2">Your Chats</div>
+            {chat}
+          </ScrollArea>
           <div>
             <Button className="w-full justify-between text-base p-0" variant="ghost" rightElem={<ArrowRight />}>View All Chats</Button>
           </div>
@@ -118,7 +121,7 @@ export default function SidebarComponent({ chat, newChat }: SidebarProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-      </div>
+      </div >
     </>
   )
 }
