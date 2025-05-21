@@ -176,10 +176,12 @@ const ToolDisplay = (props: {
 
 type ItemToolProps = {
   item: ToolSchema,
+  readonly: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onUpdateToolConfig: (conf: ToolConfig) => void;
 }
 
-function ItemTool({ item, onChange }: ItemToolProps) {
+function ItemTool({ item, readonly, onChange, onUpdateToolConfig }: ItemToolProps) {
   const [displayConfig, setDisplayConfig] = useState(false)
 
   return (
@@ -212,11 +214,27 @@ function ItemTool({ item, onChange }: ItemToolProps) {
           {
             Object.keys(item.config.properties).length !== 0 && (
               <div>
-                <Button variant="ghost" onClick={() => setDisplayConfig(!displayConfig)}><ChevronDown /></Button>
+                <Button variant="ghost" className="w-full flex justify-between p-0 mt-4" onClick={() => setDisplayConfig(!displayConfig)}>Configuration {
+                  displayConfig ? (
+                    <ChevronUp />
+                  ) : (
+                    <ChevronDown />)}</Button>
                 {
                   displayConfig && (
-                    <div>
-                      <Input type="text" />
+                    <div className="mt-4">
+                      {Object.entries(item.config.properties).map(([key, value]) => (
+                        <div key={key} className="mb-3 space-y-2">
+                          <label htmlFor={key} className="block text-sm font-medium">{value.title}</label>
+                          <Input
+                            id={key}
+                            value={value.title}
+                            onChange={(e) => onUpdateToolConfig({ [key]: e.target.value })}
+                            readOnly={readonly}
+                            disabled={readonly}
+                          />
+                        </div>
+                      ))}
+
                     </div>
                   )
                 }
@@ -322,7 +340,15 @@ function ToolSelectionField(props: {
           {
             filteredTools.map((item, i) => {
               return (
-                <ItemTool key={i} item={item} onChange={(e) => handleCheckedTool(e)} />
+                <ItemTool
+                  key={i}
+                  item={item}
+                  onChange={(e) => handleCheckedTool(e)}
+                  readonly={readonly}
+                  onUpdateToolConfig={function (conf: ToolConfig): void {
+                    throw new Error("Function not implemented.");
+                  }}
+                />
               )
             })
           }
