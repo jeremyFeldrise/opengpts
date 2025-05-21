@@ -204,8 +204,7 @@ function ItemTool({ item, readonly, onChange, onUpdateToolConfig }: ItemToolProp
           peer-checked:border-blue-600 
           peer-checked:bg-purple-50 
           peer-checked:ring-2 
-          peer-checked:ring-purple-300
-          h-full"
+          peer-checked:ring-purple-300 min-h-[140px]"
         >
           <h3 className="text-lg font-medium mb-2">{item.name}</h3>
           <p className="text-sm font-light text-gray-400">
@@ -227,7 +226,7 @@ function ItemTool({ item, readonly, onChange, onUpdateToolConfig }: ItemToolProp
                           <label htmlFor={key} className="block text-sm font-medium">{value.title}</label>
                           <Input
                             id={key}
-                            value={value.title}
+                            value={value.default}
                             onChange={(e) => onUpdateToolConfig({ [key]: e.target.value })}
                             readOnly={readonly}
                             disabled={readonly}
@@ -300,6 +299,13 @@ function ToolSelectionField(props: {
     [onAddTool, availableTools],
   );
 
+  const handleUpdate = (toolName: string, conf: ToolConfig) => {
+    const tool = selectedTools.find((t) => t.name === toolName);
+    if (!tool) return;
+
+    onUpdateToolConfig(tool.id, conf)
+  }
+
   useEffect(() => {
     const retrieval = availableTools.find((t) => t.name === "Retrieval");
     if (!retrieval) return;
@@ -345,9 +351,7 @@ function ToolSelectionField(props: {
                   item={item}
                   onChange={(e) => handleCheckedTool(e)}
                   readonly={readonly}
-                  onUpdateToolConfig={function (conf: ToolConfig): void {
-                    throw new Error("Function not implemented.");
-                  }}
+                  onUpdateToolConfig={(conf) => handleUpdate(item.name, conf)}
                 />
               )
             })
