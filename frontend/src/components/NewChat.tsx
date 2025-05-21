@@ -1,7 +1,6 @@
 import { ConfigList } from "./ConfigList";
 import { Schemas } from "../hooks/useSchemas";
 import TypingBox from "./TypingBox";
-import { Config } from "./Config";
 import {
   ConfigListProps,
   Config as ConfigInterface,

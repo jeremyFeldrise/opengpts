@@ -174,6 +174,61 @@ const ToolDisplay = (props: {
   );
 };
 
+type ItemToolProps = {
+  item: ToolSchema,
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+}
+
+function ItemTool({ item, onChange }: ItemToolProps) {
+  const [displayConfig, setDisplayConfig] = useState(false)
+
+  return (
+    <>
+      <label htmlFor={`option-${item.name}`} className="cursor-pointer">
+        <input
+          type="checkbox"
+          name="options"
+          id={`option-${item.name}`}
+          value={item.name}
+          className="peer invisible absolute"
+          onChange={(e) => onChange(e)}
+        />
+        <div className="
+          rounded-lg 
+          p-6 
+          flex flex-col
+          shadow-[0px_0px_10px_0px_rgba(56,56,56,0.15)]
+          transition-all 
+          peer-checked:border-blue-600 
+          peer-checked:bg-purple-50 
+          peer-checked:ring-2 
+          peer-checked:ring-purple-300
+          h-full"
+        >
+          <h3 className="text-lg font-medium mb-2">{item.name}</h3>
+          <p className="text-sm font-light text-gray-400">
+            {item.description}
+          </p>
+          {
+            Object.keys(item.config.properties).length !== 0 && (
+              <div>
+                <Button variant="ghost" onClick={() => setDisplayConfig(!displayConfig)}><ChevronDown /></Button>
+                {
+                  displayConfig && (
+                    <div>
+                      <Input type="text" />
+                    </div>
+                  )
+                }
+              </div>
+            )
+          }
+        </div>
+      </label>
+    </>
+  )
+}
+
 function ToolSelectionField(props: {
   readonly: boolean;
   retrievalOn: boolean;
@@ -249,10 +304,10 @@ function ToolSelectionField(props: {
     let toolSchemas = availableTools.filter(
       (tool) => tool.name !== "Retrieval",
     );
-    /* toolSchemas = toolSchemas.filter(
+    toolSchemas = toolSchemas.filter(
       (tool) =>
         !selectedTools.some((t) => t.name === tool.name && !tool.multiUse),
-    ); */
+    );
     setFilteredTools(toolSchemas);
   }, [availableTools, selectedTools]);
 
@@ -261,39 +316,15 @@ function ToolSelectionField(props: {
   }
 
   return (
-    <div className="grid grid-cols-2 gap-4 mb-10">
+    <div className="grid grid-cols-2 gap-x-6 gap-y-8 mb-10">
       {!readonly && (
         <>
           {
-            filteredTools.map((item, i) => (
-              <label key={i} htmlFor={`option-${item.name}`} className="cursor-pointer my-4">
-                <input
-                  type="checkbox"
-                  name="options"
-                  id={`option-${item.name}`}
-                  value={item.name}
-                  className="peer invisible absolute"
-                  onChange={(e) => handleCheckedTool(e)}
-                />
-                <div className="
-                  rounded-lg 
-                  p-6 
-                  flex flex-col
-                  shadow-[0px_0px_10px_0px_rgba(56,56,56,0.15)]
-                  transition-all 
-                  peer-checked:border-blue-600 
-                  peer-checked:bg-purple-50 
-                  peer-checked:ring-2 
-                  peer-checked:ring-purple-300
-                  h-full"
-                >
-                  <h3 className="text-lg font-medium mb-2">{item.name}</h3>
-                  <p className="text-sm font-light text-gray-400">
-                    {item.description}
-                  </p>
-                </div>
-              </label>
-            ))
+            filteredTools.map((item, i) => {
+              return (
+                <ItemTool key={i} item={item} onChange={(e) => handleCheckedTool(e)} />
+              )
+            })
           }
         </>
       )}

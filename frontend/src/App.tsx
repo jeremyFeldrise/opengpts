@@ -15,8 +15,6 @@ import { useThreadAndAssistant } from "./hooks/useThreadAndAssistant.ts";
 import { Message } from "./types.ts";
 import { OrphanChat } from "./components/OrphanChat.tsx";
 import AppLayout from "./components/AppLayout.tsx";
-import { Button } from "./components/button.tsx";
-import { ChevronDown } from "lucide-react";
 
 type ProjectType = {
   name: string,
@@ -146,39 +144,31 @@ function App(props: { edit?: boolean }) {
         <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
       )}
       {currentChat && !assistantConfig && (
-        <>
-          <div>Ito</div>
-          <OrphanChat chat={currentChat} updateChat={updateChat} />
-        </>
+        <OrphanChat chat={currentChat} updateChat={updateChat} />
       )}
       {!currentChat && assistantConfig && !props.edit && (
-        <>
-          <NewChat
-            name={projectInfo?.name}
-            description={projectInfo?.description}
-            startChat={startChat}
-            configSchema={configSchema}
-            configDefaults={configDefaults}
-            configs={configs}
-            saveConfig={saveConfig}
-            enterConfig={selectConfig}
-            deleteConfig={deleteConfig}
-          />
-        </>
+        <NewChat
+          name={projectInfo?.name}
+          description={projectInfo?.description}
+          startChat={startChat}
+          configSchema={configSchema}
+          configDefaults={configDefaults}
+          configs={configs}
+          saveConfig={saveConfig}
+          enterConfig={selectConfig}
+          deleteConfig={deleteConfig}
+        />
       )}
       {!currentChat && assistantConfig && props.edit && (
-        <>
-          <div>Config</div>
-          <Config
-            className="mb-6"
-            config={assistantConfig}
-            configSchema={configSchema}
-            configDefaults={configDefaults}
-            saveConfig={saveConfig}
-            enterConfig={selectConfig}
-            edit={props.edit}
-          />
-        </>
+        <Config
+          className="mb-6"
+          config={assistantConfig}
+          configSchema={configSchema}
+          configDefaults={configDefaults}
+          saveConfig={saveConfig}
+          enterConfig={selectConfig}
+          edit={props.edit}
+        />
       )}
       {!currentChat && !assistantConfig && !isLoading && (
         <Config

@@ -143,7 +143,7 @@ export default function Login() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      navigate('/project')
+      navigate('/')
     }
   }, [isLoggedIn, navigate])
 
