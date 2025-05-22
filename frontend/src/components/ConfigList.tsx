@@ -12,7 +12,6 @@ function ConfigItem(props: {
   return (
     <li key={props.config.assistant_id} className="mb-2">
       <div
-        onClick={() => props.enterConfig(props.config.assistant_id)}
         className={cn(
           props.config.assistant_id === props.currentConfig?.assistant_id
             ? "bg-gray-100"
@@ -65,9 +64,9 @@ export function ConfigList(props: {
   return (
     <>
       <div className="text-lg font-semibold leading-6 mb-3">
-        Your Saved Bots
+        Bots
       </div>
-      <ul role="list" className="space-y-1">
+      <ul role="list" className="space-y-4">
         {props.configs
           ?.filter((a) => a.mine)
           .map((assistant) => (

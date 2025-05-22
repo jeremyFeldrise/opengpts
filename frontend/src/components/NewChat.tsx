@@ -12,6 +12,7 @@ import { useThreadAndAssistant } from "../hooks/useThreadAndAssistant.ts";
 import { Button } from "./button.tsx";
 import { ChevronDown } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./dropdown-menu.tsx";
+import { useState } from "react";
 
 interface NewChatProps extends ConfigListProps {
   name?: string
@@ -28,6 +29,7 @@ interface NewChatProps extends ConfigListProps {
 
 export function NewChat(props: NewChatProps) {
   const navigator = useNavigate();
+  const [choosenAssist, setChoosenAssist] = useState<string | number | null>()
   const { assistantId } = useParams();
 
   const { assistantConfig, isLoading } = useThreadAndAssistant();
@@ -67,7 +69,7 @@ export function NewChat(props: NewChatProps) {
             />
           </div>
         </div>
-        <div className="fixed left-0 lg:left-72 bottom-0 right-0 p-4">
+        <div className="absolute bottom-0 left-0 right-0 p-4 left-0">
           <TypingBox
             onSubmit={async (msg: MessageWithFiles) => {
               if (assistantConfig) {
@@ -76,6 +78,30 @@ export function NewChat(props: NewChatProps) {
             }}
             currentConfig={assistantConfig}
             currentChat={null}
+            action={
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button rightElem={<ChevronDown className="w-4 h-4 text-gray-500" />} variant="outline" className="rounded-full px-3 mr-3 w-full flex items-center space-x-2">
+                    {
+                      choosenAssist ? choosenAssist : 'Choose bot'
+                    }
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56 bg-white">
+                  {props.configs
+                    ?.filter((a) => a.mine)
+                    .map((assistant) => (
+                      <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                        navigator(`/assistant/${assistant.assistant_id}`)
+                        setChoosenAssist(assistant.name)
+                      }}>{assistant.name}</DropdownMenuItem>
+                    )) ?? (
+                      <div>Loading...</div>
+                    )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+            }
           />
         </div>
       </div>

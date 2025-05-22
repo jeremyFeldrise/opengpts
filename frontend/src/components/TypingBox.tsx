@@ -1,13 +1,11 @@
 import {
-  PaperAirplaneIcon,
-  ChatBubbleLeftIcon,
   XCircleIcon,
   DocumentPlusIcon,
   DocumentTextIcon,
   DocumentIcon,
 } from "@heroicons/react/20/solid";
 import { cn } from "../utils/cn";
-import { Fragment, useCallback, useEffect, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { MessageWithFiles } from "../utils/formTypes.ts";
 import { DROPZONE_CONFIG, TYPE_NAME } from "../constants.ts";
@@ -52,6 +50,7 @@ export default function TypingBox(props: {
   inflight?: boolean;
   currentConfig: Config;
   currentChat: Chat | null;
+  action?: ReactNode;
 }) {
   const [inflight, setInflight] = useState(false);
   const isInflight = props.inflight || inflight;
@@ -59,7 +58,7 @@ export default function TypingBox(props: {
   const [isDocumentRetrievalActive, setIsDocumentRetrievalActive] =
     useState(false);
 
-  const { currentConfig, currentChat } = props;
+  const { currentConfig, currentChat, action } = props;
 
   useEffect(() => {
     let configurable = null;
@@ -138,14 +137,14 @@ export default function TypingBox(props: {
       ) : null}
       <form
         className="mt-2"
-        onSubmit={async (e) => {
+        onSubmit={(e) => {
           e.preventDefault();
           if (isInflight) return;
           const form = e.target as HTMLFormElement;
           const message = form.message.value;
           if (!message) return;
           setInflight(true);
-          await props.onSubmit({ message, files });
+          props.onSubmit({ message, files });
           setInflight(false);
           form.message.value = "";
           setFiles([]);
@@ -178,32 +177,39 @@ export default function TypingBox(props: {
               </div>
             )}
           </div>
-          <Button
-            type="submit"
-            disabled={isInflight && !props.onInterrupt}
-            onClick={
-              props.onInterrupt
-                ? (e) => {
-                  e.preventDefault();
-                  props.onInterrupt?.();
-                }
-                : undefined
+          <div className="flex items-center">
+            {
+              action && (
+                <>{action}</>
+              )
             }
-            className={cn(
-              "w-10 h-10 relative -ml-px inline-flex items-center gap-x-1.5 rounded-full px-3 " +
-              "py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 bg-white",
-              isInflight && !props.onInterrupt && "opacity-50 cursor-not-allowed",
-            )}
-          >
-            {props.onInterrupt ? (
-              <XCircleIcon
-                className="-ml-0.5 h-5 w-5 text-gray-400"
-                aria-hidden="true"
-              />
-            ) : (
-              <SendHorizontal size={32} />
-            )}
-          </Button>
+            <Button
+              type="submit"
+              disabled={isInflight && !props.onInterrupt}
+              onClick={
+                props.onInterrupt
+                  ? (e) => {
+                    e.preventDefault();
+                    props.onInterrupt?.();
+                  }
+                  : undefined
+              }
+              className={cn(
+                "w-10 h-10 relative -ml-px inline-flex items-center gap-x-1.5 rounded-full px-3 " +
+                "py-2 text-sm font-semibold ring-1 ring-inset ring-gray-300 hover:bg-gray-50 bg-white",
+                isInflight && !props.onInterrupt && "opacity-50 cursor-not-allowed",
+              )}
+            >
+              {props.onInterrupt ? (
+                <XCircleIcon
+                  className="-ml-0.5 h-5 w-5 text-gray-400"
+                  aria-hidden="true"
+                />
+              ) : (
+                <SendHorizontal size={32} />
+              )}
+            </Button>
+          </div>
         </div>
       </form>
     </div>
