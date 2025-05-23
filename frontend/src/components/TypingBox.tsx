@@ -163,7 +163,7 @@ export default function TypingBox(props: {
               id="message"
               autoFocus
               autoComplete="off"
-              className="block w-full border-0 bg-transparent py-2 px-3 text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-full border-0 bg-transparent py-2 px-3 text-gray-900 ring-gray-300 placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
               placeholder="Send a message"
               readOnly={isInflight}
             />
