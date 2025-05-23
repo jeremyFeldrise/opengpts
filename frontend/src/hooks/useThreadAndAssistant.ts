@@ -37,7 +37,7 @@ export function useThreadAndAssistant() {
   return {
     currentChat,
     assistantConfig,
-    isLoading: isLoadingChat || isLoadingAssistant,
+    isLoading: isLoadingChat && isLoadingAssistant,
     invalidateChat,
   };
 }

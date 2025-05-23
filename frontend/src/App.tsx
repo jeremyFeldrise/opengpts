@@ -136,51 +136,70 @@ function App(props: { edit?: boolean }) {
     [navigate],
   );
 
-
+  useEffect(() => {
+    console.log("currentChat: ", currentChat)
+    console.log("assistantConfig: ", assistantConfig)
+  }, [currentChat, assistantConfig])
 
   return (
     <AppLayout>
-      {currentChat && assistantConfig && (
-        <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
-      )}
-      {currentChat && !assistantConfig && (
-        <OrphanChat chat={currentChat} updateChat={updateChat} />
-      )}
-      {!currentChat && assistantConfig && !props.edit && (
-        <NewChat
-          name={projectInfo?.name}
-          description={projectInfo?.description}
-          startChat={startChat}
-          configSchema={configSchema}
-          configDefaults={configDefaults}
-          configs={configs}
-          saveConfig={saveConfig}
-          enterConfig={selectConfig}
-          deleteConfig={deleteConfig}
-        />
-      )}
-      {!currentChat && assistantConfig && props.edit && (
-        <Config
-          className="mb-6"
-          config={assistantConfig}
-          configSchema={configSchema}
-          configDefaults={configDefaults}
-          saveConfig={saveConfig}
-          enterConfig={selectConfig}
-          edit={props.edit}
-        />
-      )}
-      {!currentChat && !assistantConfig && !isLoading && (
-        <Config
-          className="mb-6"
-          config={null}
-          configSchema={configSchema}
-          configDefaults={configDefaults}
-          saveConfig={saveConfig}
-          enterConfig={selectConfig}
-        />
-      )}
-      {isLoading && <div>Loading...</div>}
+      {
+        isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <>
+            {currentChat && assistantConfig && (
+              <Chat startStream={startTurn} stopStream={stopStream} stream={stream} />
+            )}
+            {currentChat && !assistantConfig && (
+              <OrphanChat chat={currentChat} updateChat={updateChat} />
+            )}
+            {!currentChat && assistantConfig && !props.edit && (
+              <>
+                <div>New chat</div>
+                <NewChat
+                  name={projectInfo?.name}
+                  description={projectInfo?.description}
+                  startChat={startChat}
+                  configSchema={configSchema}
+                  configDefaults={configDefaults}
+                  configs={configs}
+                  saveConfig={saveConfig}
+                  enterConfig={selectConfig}
+                  deleteConfig={deleteConfig}
+                />
+              </>
+            )}
+            {!currentChat && assistantConfig && props.edit && (
+              <>
+                <div>config 1</div>
+                <Config
+                  className="mb-6"
+                  config={assistantConfig}
+                  configSchema={configSchema}
+                  configDefaults={configDefaults}
+                  saveConfig={saveConfig}
+                  enterConfig={selectConfig}
+                  edit={props.edit}
+                />
+              </>
+            )}
+            {!currentChat && !assistantConfig && (
+              <>
+                <div>Config 2</div>
+                <Config
+                  className="mb-6"
+                  config={null}
+                  configSchema={configSchema}
+                  configDefaults={configDefaults}
+                  saveConfig={saveConfig}
+                  enterConfig={selectConfig}
+                />
+              </>
+            )}
+          </>
+        )
+      }
     </AppLayout>
   );
 }

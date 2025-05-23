@@ -12,12 +12,7 @@ function ConfigItem(props: {
   return (
     <li key={props.config.assistant_id} className="mb-2">
       <div
-        className={cn(
-          props.config.assistant_id === props.currentConfig?.assistant_id
-            ? "bg-gray-100"
-            : "bg-white hover:border-gray-300 hover:bg-gray-50",
-          "border-gray-100 group flex items-center gap-x-3 rounded-lg py-3 px-4 text-sm leading-6 cursor-pointer transition-all duration-200 border shadow",
-        )}
+        className="rounded-xl border shadow px-6 py-4"
       >
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
