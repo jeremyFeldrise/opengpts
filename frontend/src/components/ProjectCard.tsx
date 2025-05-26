@@ -4,6 +4,7 @@ import { Button } from './button'
 import { Trash, FolderOpen, Pencil, ChevronRight } from 'lucide-react'
 import { updateProject } from '../api/projects'
 import { useMutation } from 'react-query'
+import { Input } from './input'
 
 interface Project {
   project_id: string
@@ -29,17 +30,16 @@ function ProjectCard({ project, chooseProject, handleDelete, refetch }: { projec
     return (
       <Card>
         <CardHeader>
-          <input
+          <Input
             value={editedName}
             onChange={(e) => setEditedName(e.target.value)}
-            className="w-full p-2 border rounded"
           />
         </CardHeader>
         <CardContent>
           <textarea
             value={editedDescription}
             onChange={(e) => setEditedDescription(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border rounded-lg bg-transparent shadow"
           />
         </CardContent>
         <CardFooter className='flex justify-end gap-2'>

@@ -8,7 +8,6 @@ function ConfigItem(props: {
   enterConfig: (id: string | null) => void;
   deleteConfig: (id: string) => void;
 }) {
-  console.log("config =>", props.config)
   return (
     <li key={props.config.assistant_id} className="mb-2">
       <div
