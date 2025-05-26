@@ -136,11 +136,6 @@ function App(props: { edit?: boolean }) {
     [navigate],
   );
 
-  useEffect(() => {
-    console.log("currentChat: ", currentChat)
-    console.log("assistantConfig: ", assistantConfig)
-  }, [currentChat, assistantConfig])
-
   return (
     <AppLayout>
       {
@@ -155,47 +150,38 @@ function App(props: { edit?: boolean }) {
               <OrphanChat chat={currentChat} updateChat={updateChat} />
             )}
             {!currentChat && assistantConfig && !props.edit && (
-              <>
-                <div>New chat</div>
-                <NewChat
-                  name={projectInfo?.name}
-                  description={projectInfo?.description}
-                  startChat={startChat}
-                  configSchema={configSchema}
-                  configDefaults={configDefaults}
-                  configs={configs}
-                  saveConfig={saveConfig}
-                  enterConfig={selectConfig}
-                  deleteConfig={deleteConfig}
-                />
-              </>
+              <NewChat
+                name={projectInfo?.name}
+                description={projectInfo?.description}
+                startChat={startChat}
+                configSchema={configSchema}
+                configDefaults={configDefaults}
+                configs={configs}
+                saveConfig={saveConfig}
+                enterConfig={selectConfig}
+                deleteConfig={deleteConfig}
+              />
             )}
             {!currentChat && assistantConfig && props.edit && (
-              <>
-                <div>config 1</div>
-                <Config
-                  className="mb-6"
-                  config={assistantConfig}
-                  configSchema={configSchema}
-                  configDefaults={configDefaults}
-                  saveConfig={saveConfig}
-                  enterConfig={selectConfig}
-                  edit={props.edit}
-                />
-              </>
+              <Config
+                className="mb-6"
+                config={assistantConfig}
+                configSchema={configSchema}
+                configDefaults={configDefaults}
+                saveConfig={saveConfig}
+                enterConfig={selectConfig}
+                edit={props.edit}
+              />
             )}
             {!currentChat && !assistantConfig && (
-              <>
-                <div>Config 2</div>
-                <Config
-                  className="mb-6"
-                  config={null}
-                  configSchema={configSchema}
-                  configDefaults={configDefaults}
-                  saveConfig={saveConfig}
-                  enterConfig={selectConfig}
-                />
-              </>
+              <Config
+                className="mb-6"
+                config={null}
+                configSchema={configSchema}
+                configDefaults={configDefaults}
+                saveConfig={saveConfig}
+                enterConfig={selectConfig}
+              />
             )}
           </>
         )

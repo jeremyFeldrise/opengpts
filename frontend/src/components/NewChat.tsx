@@ -78,7 +78,6 @@ export function NewChat(props: NewChatProps) {
             <Button rightElem={<ChevronDown />} >Action</Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuItem className="" onClick={() => console.log("test")}>Edit project</DropdownMenuItem>
             <DropdownMenuItem className="" onClick={() => navigator("/")}>Add bot</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

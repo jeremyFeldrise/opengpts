@@ -1,6 +1,5 @@
 import { Pencil, Trash } from "lucide-react";
 import { Config, ConfigListProps } from "../hooks/useConfigList";
-import { cn } from "../utils/cn";
 import { Link } from "react-router-dom";
 
 function ConfigItem(props: {
@@ -9,6 +8,7 @@ function ConfigItem(props: {
   enterConfig: (id: string | null) => void;
   deleteConfig: (id: string) => void;
 }) {
+  console.log("config =>", props.config)
   return (
     <li key={props.config.assistant_id} className="mb-2">
       <div
@@ -41,8 +41,12 @@ function ConfigItem(props: {
           <div className="mt-1 text-sm truncate text-gray-500">
             {props.config.name}
           </div>
-          <div className="flex mt-2">
-            <div className="bg-gradient-to-l from-blue-500 to-purple-500 px-2 py-1 text-white text-xs rounded-full ">GPT 4o</div>
+          <div className="flex mt-2 flex-wrap space-y-1">
+            {
+              props.config.config.configurable?.["type==agent/tools"] && props.config.config.configurable?.["type==agent/tools"].map((item) => (
+                <div className="bg-gradient-to-l from-blue-500 to-purple-500 px-2 py-1 text-white text-xs rounded-full whitespace-nowrap">{item.name}</div>
+              ))
+            }
           </div>
         </div>
       </div>
