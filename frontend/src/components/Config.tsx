@@ -726,7 +726,7 @@ export function Config(props: {
           </div>
         </div>
         <div className="m-auto max-w-[640px] grid grid-cols-2 gap-4">
-          <Button disabled={currentStep === 0} rightElem={<X />} size="lg" variant="outline" onClick={handlePrev}>Back</Button>
+          <Button disabled={currentStep === 0} rightElem={<X />} size="lg" variant="outline" onClick={handlePrev} type="button">Back</Button>
           {
             currentStep === steps.length - 1 ? (
 
