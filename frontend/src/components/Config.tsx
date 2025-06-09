@@ -146,6 +146,7 @@ const ToolDisplay = (props: {
       )}
       <div className="border-t border-gray-200">
         <button
+          type="button"
           className="flex items-center justify-between w-full px-4 py-5 text-left sm:px-6 focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -213,7 +214,7 @@ function ItemTool({ item, readonly, onChange, onUpdateToolConfig }: ItemToolProp
           {
             Object.keys(item.config.properties).length !== 0 && (
               <div>
-                <Button variant="ghost" className="w-full flex justify-between p-0 mt-4" onClick={() => setDisplayConfig(!displayConfig)}>Configuration {
+                <Button type="button" variant="ghost" className="w-full flex justify-between p-0 mt-4" onClick={() => setDisplayConfig(!displayConfig)}>Configuration {
                   displayConfig ? (
                     <ChevronUp />
                   ) : (
